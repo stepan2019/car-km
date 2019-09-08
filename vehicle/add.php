@@ -191,6 +191,7 @@
                         <div class="agileits-main only-plate">
                             <!--<i class="fas fa-list-ol"></i>-->
                             <input type="text" required="" name="plate" id="car_plate" onkeyup="this.value = this.value.toUpperCase();">
+                            <h3>Province</h3>
                         </div>
                     </div>
                     <div class="col-md-5 text-left mt-1">
@@ -361,7 +362,7 @@
     <script src="../js/jquery.min.js" ></script> 
     <script src="../js/bootstrap.min.js"></script> 
     <script src="../js/scrollPosStyler.js"></script>
-
+    <script type="text/javascript" src="../js/jquery.mask.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             var dbArrayPlateDate = [];
@@ -372,6 +373,11 @@
             for(var i = 0; i < obj.length; i++) {
                 dbArrayPlateDate.push(obj[i].plate);
             }
+            $('#car_plate').mask('AYYYYYY', {'translation': {
+                    A: {pattern: /[A-Z0-9]/},
+                    Y: {pattern: /[0-9]/}
+                }
+            });
 
             $("#car_plate").on("input", function(){
                 var currentInputPlate = $(this).val();

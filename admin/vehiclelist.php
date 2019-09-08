@@ -6,7 +6,7 @@
     <div class="mb-4">
         <span class="dashboard-txt">Total Vehicles : <?php echo $count; ?></span>
         <a href="home.php?query=vehiclehistory" class="btn btn-primary submit-fs btn-custom ml-5">Search Vehicle KM</a>
-        <a href="home.php?query=newfields" class="btn btn-primary submit-fs btn-custom ml-5">New Makes & Models</a>
+        <a href="home.php?query=newfields" class="btn btn-primary submit-fs btn-custom ml-5">New Makes & Models & Province</a>
     </div>
 	<table class="table table-bordered" id="wang-dataTable">
         <thead>
