@@ -45,7 +45,7 @@ if(isset($_POST['Test'])){
 	$extra_info="";
 	$mail = new mails();
 	$mail->init();
-	$mail->setSubject('Carpass Email');
+	$mail->setSubject('Car-KM Email');
 	$mail->setMessage('That is the mail for mail option');
 	$sent = $mail->send();
 	if($sent) $info = $lng['mailto']['message_sent'];

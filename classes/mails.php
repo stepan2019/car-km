@@ -152,8 +152,8 @@ class mails
         else $newLine = "\n";
         try {
             //Recipients
-            $this->mail->setFrom($mail_settings["username"], 'Carpass');
-            $this->mail->addReplyTo($mail_settings["username"], 'Carpass');
+            $this->mail->setFrom($mail_settings["username"], 'Car-KM');
+            $this->mail->addReplyTo($mail_settings["username"], 'Car-KM');
             $this->mail->addAddress($this->to, $this->to_name);     // Add a recipient
 
             if ($mail_settings["html_mails"]) {

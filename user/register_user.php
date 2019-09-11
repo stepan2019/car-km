@@ -36,7 +36,7 @@ if (isset($_POST['register'])) {
 
         $mail2send = new mails();
         $mail2send->init($_POST['email'], $_POST['name']);
-        $mail2send->setSubject(cleanStr('Thank you for registration on carpass'));
+        $mail2send->setSubject(cleanStr('Thank you for registration on Car-KM'));
         $msg = nl2br(cleanStr('<div><p>After activation you can ADD your vehicle,</p><p> please click on this link to activate your account. </p><p>Then link to activate</p>
                 <p>' . $act_link . '</p></div>')) . '';
         $mail2send->setMessage($msg);
@@ -44,7 +44,7 @@ if (isset($_POST['register'])) {
         $mail2admin = new mails();
         $mail2admin->init($mail_setting['username'], $_POST['name']);
         $mail2admin->to = $mail_setting['username'];
-        $mail2admin->to_name = 'Carpass Admin';
+        $mail2admin->to_name = 'Car-km Admin';
         $mail2admin->setSubject(cleanStr('User Registration'));
         $msg = nl2br(cleanStr('<div><p>User email address : '.$email.',</p><p> User name : '.$name.'. </p><p>Please check this user</p>
                 </div>')) . '';
