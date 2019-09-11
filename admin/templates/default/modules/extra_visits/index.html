@@ -1,0 +1,31 @@
+{include file="header.html"}
+
+<div class="page_title"><a href="{$live_site}/admin/modules.php">{$lng.panel.modules}</a> > {$lng_ev.extra_visits}</div>
+
+<div class="p30">
+<form name="ev_settings" method="post" enctype="multipart/form-data" action="">
+
+<div class="form_container">
+
+{if isset($error) && $error != ""}<div class="error">{$error}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng_ev.no}</div>
+	<div class="right_form">
+		<input type="text" size="6" name="no" id="no" value="{if isset($ev_settings.no) && $ev_settings.no}{$ev_settings.no}{/if}" />
+		<div class="information">{$lng_ev.info.no}</div>
+	</div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" onClick='{if $demo}alert("{$lng.general.errors.demo}");return false;{/if}'>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+{include file="footer.html"}

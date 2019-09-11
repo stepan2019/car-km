@@ -1,0 +1,47 @@
+
+var invalid_phone_err = '{$lng.listings.errors.invalid_phone}';
+
+// initialise plugin
+$("#{$v.caption}").intlTelInput({
+	{if $v.extensions!=''}
+	onlyCountries: [{$v.extensions}],
+	{/if}
+	// Specify the countries to appear at the top of the list.	
+	preferredCountries: [], 
+	{if $v.other_val}initialCountry: "auto",{/if}
+	geoIpLookup: function(callback) {
+    $.get('http://ipinfo.io', function() {}, "jsonp").always(function(resp) {
+      var countryCode = (resp && resp.country) ? resp.country : "";
+      callback(countryCode);
+    });
+  },
+  utilsScript: "{$live_site}/libs/jQuery/plugins/intlTelInput/utils.js"
+});
+
+
+var reset = function() {
+  $("#{$v.caption}").removeClass("err");
+  $(".err_label").remove();
+};
+
+// on blur: validate
+$("#{$v.caption}").blur(function() {
+
+  if ($.trim($("#{$v.caption}").val())) {
+    if (!$("#{$v.caption}").intlTelInput("isValidNumber")) {
+
+		$("#{$v.caption}").addClass("err");
+		// add as child to first right_form
+		$(".err_label").remove();
+		$("#{$v.caption}").closest( ".right_form").prepend('<label class="err_label">'+invalid_phone_err+'</label>');
+		
+    }
+    else { 
+		//alert($("#{$v.caption}").intlTelInput("getNumber"));
+		$("#{$v.caption}_hidden").val($("#{$v.caption}").intlTelInput("getNumber"));
+	}
+  }
+});
+
+// on keyup / change flag: reset
+$("#{$v.caption}").on("keyup change", reset);

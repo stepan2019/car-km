@@ -1,0 +1,87 @@
+{include file="header.html"}
+
+<script type="text/javascript" src="{$live_site}/admin/modules/tag_cloud/js/tags.js"></script>
+
+<div class="page_title">
+<div class="lfloat" width="200"><a href="{$live_site}/admin/modules.php">{$lng.panel.modules}</a> > {$lng_tag_cloud.tag_cloud} > {$lng_tag_cloud.tags}</div>
+<div class="rfloat mt5">
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="{$live_site}/admin/modules/tag_cloud/index.php"><span class="tab2-right">{$lng_tag_cloud.tag_cloud}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab1-left">
+	<a href="{$live_site}/admin/modules/tag_cloud/tags.php"><span class="tab1-right">{$lng_tag_cloud.tags}</span></a>
+	</div></div>
+
+</div>
+</div>
+
+
+<div class="p30">
+
+<form name="tc" id="tc" method="post" action="">
+
+<div class="lfloat" style="width: 600px;">
+
+<div class="lfloat mr10">
+<input type="image" value="delete_selected" name="delete_selected" src="{$template_path}images/delete_all.png" title="{$lng.general.delete_all}" class="tooltip" onclick="{if $demo}alert('{$lng.general.errors.demo}'); return false;{else}return myConfirm('{$lng.settings.confirm_delete_all|addslashes}'){/if}" style="border: 0px;"></div>
+
+</div>{* lfloat *}
+
+<div class="rfloat">
+{include file="paginator.html"}
+</div>
+
+<div class="clearfix"></div>
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th width="30" class="hleft"><input type="checkbox" class="noborder" name="check_all" id="check_all" /></th>
+	<th>{$lng_tag_cloud.tag}</th>
+	<th></th>
+	<th width="100" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$array_tags item=v}
+<tr id="row{$v.id}">
+	<td><input type="checkbox" class="noborder" name="tg{$v.id}" id="tg{$v.id}"></td>
+	<td>{$v.word}</td>
+	<td>{$v.no}</td>
+	<td>
+		<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDeleteTag('{$v.id}','{$lng_tag_cloud.confirm_delete}');{/if}"><img src="{$template_path}images/delete.png" class="tooltip" title="{$lng.general.delete}" alt=""></a>
+	</td>
+</tr>
+{/foreach}
+
+{if !$no }
+<tr><td colspan=6>&nbsp;{$lng_tag_cloud.no_tags}</td></tr>
+{/if}
+</table>
+</form>
+
+{if $no}<div class="rfloat mt20">{include file="paginator.html"}</div>{/if}
+
+<div class="clearfix"></div>
+
+</div> {* p30 *}
+
+<script type="text/javascript">
+{literal}
+
+$(document).ready(function() {
+
+	$("#check_all").click(function()
+	{
+
+		if ($('#check_all').is(':checked')) checkAll(document);
+		else uncheckAll(document);
+
+	});
+}); // end document ready
+
+
+{/literal}
+</script>
+
+{include file="footer.html"}

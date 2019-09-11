@@ -17,7 +17,7 @@
         if($result) {
             $result = $config->getPaypalSetting();
             $currentData = $result->fetch_assoc();
-            header("location:/admin/home.php?query=paypal");
+//            header("location:/admin/home.php?query=paypal");
         } else {
             $response = "Sorry, is failed to update";
         }

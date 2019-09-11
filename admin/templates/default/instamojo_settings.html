@@ -1,0 +1,33 @@
+<div class="form_container">
+
+{if $error != ""}<div class="error">{$error}</div>{/if}
+{if $info != ""}<div class="info">{$info}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">API Key</div>
+	<div class="right_form"><input type="text" maxlength="100" size="40" name="instamojo_api_key" id="instamojo_api_key" value="{$processor_settings.instamojo_api_key}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Auth Token</div>
+	<div class="right_form"><input type="text" maxlength="200" size="40" name="instamojo_auth_token" id="instamojo_auth_token" value="{$processor_settings.instamojo_auth_token}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Private Salt</div>
+	<div class="right_form"><input type="text" maxlength="200" size="40" name="instamojo_salt" id="instamojo_salt" value="{$processor_settings.instamojo_salt}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Test mode</div>
+	<div class="right_form"><input type="checkbox" name="instamojo_test" id="instamojo_test" {if $processor_settings.instamojo_test==1}checked="checked"{/if} /></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit_instamojo" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}

@@ -1,0 +1,108 @@
+{include file="header.html"}
+
+<div class="page_title"><a href="{$live_site}/admin/modules.php">{$lng.panel.modules}</a> > <a href="{$live_site}/admin/modules/price_extra/index.php">{$lng_pe.price_extra}</a> > {if isset($id) && $id}{$lng_pe.edit_config}{else}{$lng_pe.add_config}{/if}</div>
+
+<div class="p30">
+<form enctype="multipart/form-data" name="add" method="post" action="{if isset($id) && $id}edit.php?id={$id}{else}add.php{/if}">
+
+<div class="form_container">
+
+{if isset($error) && $error}<div class="error">{$error}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.custom_fields.fieldset}</div>
+	<div class="right_form">
+	<input type="radio" name="all_fieldsets" value="1" {if !isset($pconfig.id) || !$pconfig.id || !isset($pconfig.fielset) || $pconfig.fielset==0}checked="checked"{/if}>&nbsp;&nbsp;{$lng.custom_fields.all_fieldsets}
+	&nbsp;&nbsp;<input type="radio" name="all_fieldsets" value="0" {if isset($pconfig.fieldset) && $pconfig.fieldset!=0}checked="checked"{/if}>&nbsp;&nbsp;{$lng.custom_fields.choose_fieldsets}
+	&nbsp;&nbsp;
+	<select multiple="multiple" name="fieldset[]" id="fieldset" class="mselect">
+		{foreach from=$array_fieldsets item=v}
+		<option value="{$v.id}" {if isset($pconfig.fieldset) && in_array($v.id, ','|explode:$pconfig.fieldset)}selected="selected"{/if}>{$v.name}</option>
+		{/foreach}
+	</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_pe.use_negotiable}</div>
+	<div class="right_form"><input type="checkbox" name="use_negotiable" id="use_negotiable" {if isset($pconfig.use_negotiable) && $pconfig.use_negotiable}checked="checked"{/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_pe.negotiable}</div>
+	<div class="right_form">
+	  {foreach from =$languages item=v}
+	  <input type="text" name="negotiable_{$v.id}" size="30" class="mb10" {if isset($pconfig.negotiable[$v.id])}value="{$pconfig.negotiable[$v.id]}"{/if}/>{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}</br>
+	  {/foreach}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_pe.use_free}</div>
+	<div class="right_form"><input type="checkbox" name="use_free" id="use_free" {if isset($pconfig.use_free) && $pconfig.use_free}checked="checked"{/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_pe.free}</div>
+	<div class="right_form">
+	  {foreach from =$languages item=v}
+	  <input type="text" name="free_{$v.id}" size="30" class="mb10" {if isset($pconfig.free[$v.id])}value="{$pconfig.free[$v.id]}"{/if}/>{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}</br>
+	  {/foreach}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_pe.use_tags}</div>
+	<div class="right_form"><input type="checkbox" name="use_tags" id="use_tags" {if isset($pconfig.use_tags) && $pconfig.use_tags}checked="checked"{/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_pe.tags}</div>
+	<div class="right_form">
+	  <div class="information mb10">{$lng_pe.info.add_tags}</div>
+	  {foreach from =$languages item=v}
+	  <textarea name="tags_{$v.id}" lines="4" cols="30" class="mb10" />{if isset($pconfig.negotiable[$v.id])}{$pconfig.tags[$v.id]}{/if}</textarea>{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}</br>
+	  {/foreach}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_pe.use_extra_option1}</div>
+	<div class="right_form"><input type="checkbox" name="use_extra_option1" id="use_extra_option1" {if isset($pconfig.use_extra_option1) && $pconfig.use_extra_option1}checked="checked"{/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_pe.extra_option1}</div>
+	<div class="right_form">
+	  {foreach from =$languages item=v}
+	  <input type="text" name="extra_option1_{$v.id}" size="30" class="mb10" {if isset($pconfig.extra_option1[$v.id])}value="{$pconfig.extra_option1[$v.id]}"{/if}/>{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}</br>
+	  {/foreach}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_pe.use_extra_option2}</div>
+	<div class="right_form"><input type="checkbox" name="use_extra_option2" id="use_extra_option2" {if isset($pconfig.use_extra_option2) && $pconfig.use_extra_option2}checked="checked"{/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_pe.extra_option2}</div>
+	<div class="right_form">
+	  {foreach from =$languages item=v}
+	  <input type="text" name="extra_option2_{$v.id}" size="30" class="mb10" {if isset($pconfig.extra_option2[$v.id])}value="{$pconfig.extra_option2[$v.id]}"{/if}/>{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}</br>
+	  {/foreach}
+	</div>
+</div>
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{if isset($id) && $id}{$lng.general.edit}{else}{$lng.general.add}{/if}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+{include file="footer.html"}
+

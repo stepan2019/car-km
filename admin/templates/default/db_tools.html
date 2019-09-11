@@ -1,0 +1,113 @@
+<div class="main">
+<div class="p30">
+<form name="db" method="post" action="home.php?query=db_tools" enctype="multipart/form-data">
+
+
+{if $error != ""} <div class="error">{$error}</div>{/if}
+{if $info != ""} <div class="info">{$info}</div>{/if}
+
+<table cellpadding="0" cellspacing="0" align="center" class="datatable" style="margin: 0 50px 30px 50px;">
+<tr id="theading">
+	<th class="hleft">{$lng.database.date}</th>
+	<th>{$lng.database.file}</th>
+	<th>{$lng.database.size}</th>
+	<th>{$lng.database.download}</th>
+	<th width="70" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$backups_array item=v}
+<tr>
+	<td>{$v.date|date_format:"%A, %B %e, %Y"}</td>
+	<td><a href="download.php?fname={urlencode($v.file)}">{$v.file}</a></td>
+	<td>{$v.size_formatted}</td>
+	<td><a href="download.php?fname={urlencode($v.file)}"><img src="images/download-db.png" title="{$lng.database.download}"></a></td>
+	<td>
+		<a href="javascript:;" onClick = "onDelete('{$v.file}','{$lng.database.confirm_delete}','db')"><img src="images/delete.png" title="{$lng.general.delete}" alt=""></a>
+		{if !$demo}<a href="home.php?query=db_tools&restore={$v.file}">{/if}<img src="images/restore.png" class="tooltip icon" title="{$lng.database.restore}" alt="" {if $demo}onClick="alert('{$lng.general.errors.demo}');"{/if}>{if !$demo}</a>{/if}
+	</td>
+</tr>
+{/foreach}
+
+{if $no_backups==0}
+	<tr><td colspan="5">{$lng.database.no_backups}</td></tr>
+{/if}
+
+</table>
+
+<div class="form_container" style="padding-top: 0 !important;">
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.database.backup|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form">&nbsp;</div>
+	<div class="right_form">
+		<input type="radio" name="compress" value="0" checked> &nbsp;&nbsp;{$lng.database.uncompressed}&nbsp;&nbsp;
+		<input type="radio" name="compress" value="1"> &nbsp;&nbsp;{$lng.database.compressed}
+	</div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Backup" value="{$lng.database.backup}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.database.import|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form">&nbsp;</div>
+	<div class="right_form"><input name="upload_restore" type="file" /></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Restore" value="{$lng.database.import}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.database.scheduled_backups|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form">&nbsp;</div>
+	<div class="right_form"><input type="checkbox" name="enabled" {if $schedule.enabled==1}checked{/if} />&nbsp;{$lng.general.enable}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">&nbsp;</div>
+	<div class="right_form">
+		<input type="radio" name="backup_compress" value="0" {if $schedule.backup_compress=='0'}checked{/if} /> &nbsp;&nbsp;{$lng.database.uncompressed}&nbsp;&nbsp;
+		<input type="radio" name="backup_compress" value="1" {if $schedule.backup_compress=='1'}checked{/if} /> &nbsp;&nbsp;{$lng.database.compressed}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">&nbsp;</div>
+	<div class="right_form">
+		<input name="backup_freq" type="radio" value="daily" {if $schedule.backup_freq=="daily"}checked="checked"{/if} />&nbsp;{$lng.database.daily}&nbsp;&nbsp;
+		<input name="backup_freq" type="radio" value="weekly" {if $schedule.backup_freq=="weekly" || !$schedule.backup_freq }checked="checked"{/if} />&nbsp;{$lng.database.weekly}&nbsp;&nbsp;
+		<input name="backup_freq" type="radio" value="monthly" {if $schedule.backup_freq=="monthly"}checked="checked"{/if} />&nbsp;{$lng.database.monthly}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.database.keep_only}</div>
+	<div class="right_form"><input type="text" name="keep" size="4" value="{$schedule.keep}" />&nbsp;{$lng.database.backups}</div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Save_schedule" value="{$lng.general.save_changes}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+
+
+
+</form>
+</div> {* p30 *}
+</div>

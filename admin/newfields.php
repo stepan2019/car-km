@@ -3,8 +3,6 @@
 	$resDelMake = "";
 	$resAddModel = "";
 	$resDelModel = "";
-	$resAddProvin = "";
-	$resDelProvin = "";
 
 	if(isset($_POST['add_make'])) {
         $new_make = $_POST['new_make'];
@@ -36,37 +34,6 @@
     	} else {
             $resDelMake = "Sorry, is failed to delete";
     	}
-    }
-    if(isset($_POST['add_provin'])) {
-        $new_provin = $_POST['new_provin'];
-        $new_provins = explode ("\r\n",$new_provin);
-        foreach($new_provins as $v){
-            $exist = $config->existProvin($v);
-            if($exist) {
-                $resAddProvin = "The make already exists.";
-            } else {
-                $result = $config->add_provin($v);
-                if($result) {
-                    $resAddProvin = "The new make has been added successfully.";
-                } else {
-                    $resAddProvin = "Sorry, is failed to add";
-                }
-            }
-        }
-    }
-
-    if(isset($_POST['del_provin'])) {
-        $provinlist = array();
-        foreach ($_POST['provinlist'] as $selectedOption) {
-            $provinlist[] = $selectedOption;
-        }
-
-        $result = $config->deleteProvin($provinlist);
-        if($result) {
-            $resDelprovin = "The selected values has been deleted successfully.";
-        } else {
-            $resDelprovin = "Sorry, is failed to delete";
-        }
     }
 
     if(isset($_POST['add_model'])) {
@@ -108,52 +75,8 @@
     }
 ?>
 
-<div class="text-center dashboard-txt mb-4">You can add new Make and Model if there doesn't exist.</div>
+<div class="text-center dashboard-txt mb-4">You can add new Make and Model and Province if there doesn't exist.</div>
 <hr>
-<div class="row col-md-12">
-    <div class="col-md-1"></div>
-    <form method="post" class="col-md-6">
-        <div class="row col-md-12 text-center">
-            <!--<div class="agileits-main mb-3">-->
-            <!--    <i class="fas fa-plus-circle"></i>-->
-            <!--    <input type="text" name="new_make" required="" placeholder="Input new car make.">-->
-            <!--</div>-->
-            <div class="agileits-main mb-3">
-                <textarea type="text" name="new_provin" style="width:250px;height:250px"></textarea>
-            </div>
-            <div class="ml-1">
-                <button type="submit" class="btn btn-primary btn-custom" name="add_provin">Add New Province <i class="fas fa-angle-double-right" style="position: relative;"></i></button>
-            </div>
-            <?php if($resAddProvin != "") { ?>
-                <p><label class="control-label mt-3"><?php echo $resAddProvin; ?></label></p>
-            <?php } ?>
-        </div>
-    </form>
-    <form method="post" class="col-md-5">
-        <div class="row col-md-12 text-center">
-            <div class="agileits-main mb-3">
-                <select name="provinlist[]" required="" id="makelist" multiple="" style="min-width: 270px; height: 260px;">
-                    <?php
-                    $getProvinList = $config->getProvinList();
-                    while($getProvinList_fetch = $getProvinList->fetch_assoc()) {
-                        ?>
-                        <option value="<?php echo $getProvinList_fetch['name']; ?>">
-                            <?php echo $getProvinList_fetch['name']; ?>
-                        </option>
-                        <?php
-                    }
-                    ?>
-                </select>
-            </div>
-            <div class="ml-1">
-                <button type="submit" class="btn btn-primary btn-custom" name="del_provin">Delete <i class="far fa-trash-alt" style="position: relative;"></i></button>
-            </div>
-        </div>
-        <?php if($resDelProvin != "") { ?>
-            <p><label class="control-label mt-3"><?php echo $resDelProvin; ?></label></p>
-        <?php } ?>
-    </form>
-</div>
 <div class="row col-md-12">
     <div class="col-md-1"></div>
     <form method="post" class="col-md-6">

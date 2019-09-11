@@ -1,0 +1,23 @@
+<div class="clearfix">
+	<div class="left_form">{$v.name}:</div>	
+	<div class="right_form">
+	  {if $values_array.price>0 || ($values_array.price==0 && $pe_settings[$fieldset].use_free==0)}
+	  
+	  {$values_array.price_curr}
+	  {if $pe_settings[$fieldset].use_negotiable==1 && $values_array.negotiable==1}&nbsp;{$pe_settings[$fieldset].lang[$crt_lang]['negotiable']}{/if}
+	  {if $pe_settings[$fieldset].use_extra_option1==1 && $values_array.extra_option1==1}&nbsp;{$pe_settings[$fieldset].lang[$crt_lang]['extra_option1']}{/if}
+	  {if $pe_settings[$fieldset].use_extra_option2==1 && $values_array.extra_option2==1}&nbsp;{$pe_settings[$fieldset].lang[$crt_lang]['extra_option2']}{/if}
+
+	  {elseif $values_array.price==0 && $pe_settings[$fieldset].use_free==1}
+	  
+	  {$pe_settings[$fieldset].lang[$crt_lang]['free']}
+	  
+	  {elseif $values_array.price==-1 && $pe_settings[$fieldset].use_tags==1}
+
+	  {$values_array.price_tag}
+	  
+	  {else}
+	  -
+	  {/if}
+	</div>
+</div>

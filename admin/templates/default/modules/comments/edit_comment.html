@@ -1,0 +1,73 @@
+{include file="header.html"}
+
+{if $comments_settings.html_editor}
+<script type="text/javascript" src="{$live_site}/libs/nicEdit/nicEdit.min.js"></script>
+
+<script type="text/javascript">
+{literal}	
+bkLib.onDomLoaded(function() { nicEditors.allTextAreas({iconsPath : '../../../libs/nicEdit/nicEditorIcons.gif', fullPanel : true}) });
+{/literal}
+</script>
+{/if}
+
+<div class="page_title">
+<div class="lfloat" width="200"><a href="{$live_site}/admin/modules.php">{$lng.panel.modules}</a> > <a href="{$live_site}/admin/modules/comments/index.php">{$lng_comments.comments}</a> > {$lng.general.edit}</div>
+<div class="rfloat mt5">
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab1-left">
+	<a href="{$live_site}/admin/modules/comments/index.php"><span class="tab1-right">{$lng_comments.comments}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="{$live_site}/admin/modules/comments/settings.php"><span class="tab2-right">{$lng_comments.settings}</span></a>
+	</div></div>
+
+</div>
+</div>
+
+<div class="p30">
+<form name="edit_comment" method="post" action="edit_comment.php?id={$id}">
+
+<div class="form_container">
+
+<div class="clearfix">
+	<div class="left_form">{$lng_comments.comment_for}</div>
+	<div class="right_form sc1"><a href="{$live_site}/details.php?id={$comment.listing_id}" target="_blank">{$comment.title}</a> | {$lng_comments.posted_on} {$comment.date_nice}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_comments.name}<span class="mandatory">*</span></div>
+	<div class="right_form"><input type="text" name="name" size="30" value="{$comment.name}"></div>
+</div>
+
+{if $comments_settings.use_email}
+<div class="clearfix">
+	<div class="left_form">{$lng_comments.email}{if $comments_settings.use_email==1}<span class="mandatory">*</span>{/if}</div>
+	<div class="right_form"><input type="text" name="email" size="30" value="{$comment.email}"></div>
+</div>
+{/if}
+
+{if $comments_settings.use_website}
+<div class="clearfix">
+	<div class="left_form">{$lng_comments.email}{if $comments_settings.use_website==1}<span class="mandatory">*</span>{/if}</div>
+	<div class="right_form"><input type="text" name="website" size="30" value="{$comment.website}"></div>
+</div>
+{/if}
+
+<div class="clearfix">
+	<div class="left_form"><span class="mandatory">*</span></div>
+	<div class="right_form"><textarea name="content" rows="10" cols="70">{$comment.content}</textarea></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+{include file="footer.html"}

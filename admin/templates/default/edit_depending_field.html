@@ -1,0 +1,221 @@
+{include file="header.html"}
+
+<div class="page_title">{$lng.panel.settings} >{if $type=="cf"}<a href="manage_custom_fields.php">{$lng.panel.custom_fields}</a>{else}<a href="user_fields.php">{$lng.panel.user_fields}</a>{/if} > {$lng.panel.edit_depending_field}: {$field_name}</div>
+
+<div class="p30">
+<div class="form_container" style="padding-top: 0px;">
+
+<form name="depending" method="post" action="{$self}?id={$id}&type={$type}">
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$dep.name1|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="lfloat" style="width: 350px; margin-left: 200px;">
+<div>{$lng.general.add} {$lng.general.to} {$dep.name1} {$lng.general.list}</div>
+{if $type=="cf"}
+	{if $multiple_fsets}
+		{$lng.custom_fields.fieldset}&nbsp;&nbsp;
+		<select id="fieldset" name="fieldset" onchange="changeLoc(this, 'edit_depending_field.php', 'current_fieldset' , 'id={$id}&type={$type}')">
+			<option value="0" {if $current_fieldset==0} selected="selected" {/if}>{$lng.custom_fields.all_fieldsets}</option>
+			{foreach from=$fieldsets item=v}
+			<option value="{$v.id}" {if $current_fieldset==$v.id} selected="selected" {/if}>{$v.name}</option>
+			{/foreach}
+		</select>
+	{else}
+	<input type="hidden" name="fieldset" value="{$fieldsets[0].id}">
+	{/if}
+{/if}
+<div><textarea name="{$dep.caption1}" rows=7 cols=35></textarea></div>
+
+<div class="buttons" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+	<span class="positive"><input type="submit" name="add1" value="{$lng.general.add}" /></span>
+</div>
+
+</div> {* end lfloat *}
+
+<div class="lfloat">
+<div>{$dep.name1} {$lng.general.list}</div>
+<div>
+<select multiple="multiple" id="{$dep.caption1}_list" name="{$dep.caption1}_list[]" size=10 style="width: 250px" class="mselect">
+	{foreach from=$array1 item=v}
+	<option value="{$v.id}">{$v.name}</option>
+	{/foreach}
+</select>
+</div>
+<div class="buttons" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+	<span class="positive"><input type="submit" name="delete_{$dep.caption1}" value="{$lng.general.delete}" /></span>
+</div>
+	{if $languages|@count>1}<div class="inline rfloat" style="margin-top: 10px;">&nbsp;&nbsp;<a href="translate_depending.php?id={$dep.id}&type={$type}{if $type=='cf' && $current_fieldset}&fieldset={$current_fieldset}{/if}">
+	<div class="buttonwrapper lfloat"><div class="rbutton1-left"><span class="rbutton1-right">{$lng.custom_fields.translate}</span></div></div>
+	</a></div>
+	{/if}
+</div>
+
+<div class="clearfix"></div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$dep.name2|replace:" ":"&nbsp;"}</strong></div></div>
+<div class="lfloat" style="width: 350px; margin-left: 200px;">
+	<div>
+		{$dep.name1}&nbsp;&nbsp;
+		<select id="sel_{$dep.caption1}" name="sel_{$dep.caption1}" onchange="selDep(2, '{$dep.no}' , '{$dep.id}', '{$dep.caption1}', '{if $dep.no>=2}{$dep.caption2}{/if}'); {if $dep.no>2}selDep(3, '{$dep.no}' , '{$dep.id}', '{$dep.caption2}', '{$dep.caption3}');{/if} {if $dep.no>3}selDep(4, '{$dep.no}' , '{$dep.id}', '{$dep.caption3}', '{if $dep.no>=4}{$dep.caption4}{/if}');{/if} {if $dep.no>4}selDep(5, '{$dep.no}' , '{$dep.id}', '{$dep.caption4}', '{if $dep.no>=5}{$dep.caption5}{/if}');{/if}">
+			{foreach from=$array1 item=v}
+			<option value="{$v.id}" {if $current2==$v.id} selected="selected" {/if}>{$v.name}</option>
+			{/foreach}
+		</select>
+	</div>
+	<div>{$lng.general.add} {$lng.general.to} {$dep.name2} {$lng.general.list}</div>
+	<div><textarea name="{$dep.caption2}" rows=7 cols=35></textarea></div>
+	<div class="buttons" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="add2" value="{$lng.general.add}" /></span>
+	</div>
+
+</div> {* end lfloat *}
+
+<div class="lfloat">
+	<div>{$dep.name2} {$lng.general.list}</div>
+	<div>
+		<select multiple="multiple" id="{$dep.caption2}_list" name="{$dep.caption2}_list[]" size=10 style="width: 250px" class="mselect">
+			{foreach from=$array2 item=v}
+			<option value="{$v.id}">{$v.name}</option>
+			{/foreach}
+		</select>
+	</div>
+	<div class="buttons" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="delete_{$dep.caption2}" value="{$lng.general.delete}" /></span>
+	</div>
+	{if $languages|@count>1}<div class="inline rfloat" style="margin-top: 10px;">&nbsp;&nbsp;<a href="translate_depending.php?id={$dep.id}&type={$type}{if $type=='cf' && $current_fieldset}&fieldset={$current_fieldset}{/if}{if $current2}&current1={$current2}{/if}">
+	<div class="buttonwrapper lfloat"><div class="rbutton1-left"><span class="rbutton1-right">{$lng.custom_fields.translate}</span></div></div>
+	</a></div>
+	{/if}
+</div>
+
+<div class="clearfix"></div>
+
+{if $dep.no>=3}
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$dep.name3|replace:" ":"&nbsp;"}</strong></div></div>
+<div class="lfloat" style="width: 350px; margin-left: 200px;">
+
+	<div>{$dep.name2}&nbsp;&nbsp;
+		<select id="sel_{$dep.caption2}" name="sel_{$dep.caption2}" onchange="selDep(3, '{$dep.no}' , '{$dep.id}', '{$dep.caption2}', '{$dep.caption3}'); {if $dep.no>3}selDep(4, '{$dep.no}' , '{$dep.id}', '{$dep.caption3}', '{if $dep.no>=4}{$dep.caption4}{/if}');{/if} {if $dep.no>4}selDep(5, '{$dep.no}' , '{$dep.id}', '{$dep.caption4}', '{if $dep.no>=5}{$dep.caption5}{/if}');{/if}">
+			{foreach from=$array2 item=v}
+			<option value="{$v.id}" {if $current3==$v.id} selected="selected" {/if}>{$v.name}</option>
+			{/foreach}
+		</select>
+	</div>
+
+	<div>{$lng.general.add} {$lng.general.to} {$dep.name3} {$lng.general.list}</div>
+	<div><textarea name="{$dep.caption3}" rows=7 cols=35></textarea></div>
+	<div class="buttons" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="add3" value="{$lng.general.add}" /></span>
+	</div>
+
+</div> {* end lfloat *}
+
+<div class="lfloat">
+	<div>{$dep.name3} {$lng.general.list}</div>
+	<div>
+		<select multiple="multiple" id="{$dep.caption3}_list" name="{$dep.caption3}_list[]" size=10 style="width: 250px" class="mselect">
+			{foreach from=$array3 item=v}
+			<option value="{$v.id}">{$v.name}</option>
+			{/foreach}
+		</select>
+	</div>
+	<div class="buttons" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="delete_{$dep.caption3}" value="{$lng.general.delete}" /></span>
+	</div>
+	{if $languages|@count>1}<div class="inline rfloat" style="margin-top: 10px;">&nbsp;&nbsp;<a href="translate_depending.php?id={$dep.id}&type={$type}{if $type=='cf' && $current_fieldset}&fieldset={$current_fieldset}{/if}{if $current2}&current1={$current2}{/if}{if $current3}&current2={$current3}{/if}">
+	<div class="buttonwrapper lfloat"><div class="rbutton1-left"><span class="rbutton1-right">{$lng.custom_fields.translate}</span></div></div>
+	</a></div>
+	{/if}
+</div>
+
+<div class="clearfix"></div>
+{/if}
+
+{if $dep.no>=4}
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$dep.name4|replace:" ":"&nbsp;"}</strong></div></div>
+<div class="lfloat" style="width: 350px; margin-left: 200px;">
+
+	<div>
+	{$dep.name3}&nbsp;&nbsp;
+		<select id="sel_{$dep.caption3}" name="sel_{$dep.caption3}" onchange="selDep(4, '{$dep.no}' , '{$dep.id}', '{$dep.caption3}', '{$dep.caption4}'); {if $dep.no>4}selDep(5, '{$dep.no}' , '{$dep.id}', '{$dep.caption4}', '{if $dep.no>=5}{$dep.caption5}{/if}');{/if}">
+			{foreach from=$array3 item=v}
+			<option value="{$v.id}" {if $current4==$v.id} selected="selected" {/if}>{$v.name}</option>
+			{/foreach}
+		</select>
+	</div>
+	<div>{$lng.general.add} {$lng.general.to} {$dep.name4} {$lng.general.list}</div>
+	<div><textarea name="{$dep.caption4}" rows=7 cols=35></textarea></div>
+	<div class="buttons" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="add4" value="{$lng.general.add}" /></span>
+	</div>
+</div> {* end lfloat *}
+
+<div class="lfloat">
+	<div>{$dep.name4} {$lng.general.list}</div>
+	<div>
+	<select multiple="multiple" id="{$dep.caption4}_list" name="{$dep.caption4}_list[]" size=10 style="width: 250px" class="mselect">
+		{foreach from=$array4 item=v}
+		<option value="{$v.id}">{$v.name}</option>
+		{/foreach}
+	</select>
+	</div>
+	<div class="buttons"{if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="delete_{$dep.caption4}" value="{$lng.general.delete}" /></span>
+	</div>
+	{if $languages|@count>1}<div class="inline rfloat" style="margin-top: 10px;">&nbsp;&nbsp;<a href="translate_depending.php?id={$dep.id}&type={$type}{if $type=='cf' && $current_fieldset}&fieldset={$current_fieldset}{/if}{if $current2}&current1={$current2}{/if}{if $current3}&current2={$current3}{/if}{if $current4}&current3={$current4}{/if}">
+	<div class="buttonwrapper lfloat"><div class="rbutton1-left"><span class="rbutton1-right">{$lng.custom_fields.translate}</span></div></div>
+	</a></div>
+	{/if}
+</div>
+
+<div class="clearfix"></div>
+{/if}
+
+{if $dep.no>=5}
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$dep.name5|replace:" ":"&nbsp;"}</strong></div></div>
+<div class="lfloat" style="width: 350px; margin-left: 200px;">
+
+	<div>
+	{$dep.name4}&nbsp;&nbsp;
+		<select id="sel_{$dep.caption4}" name="sel_{$dep.caption4}" onchange="selDep(5, '{$dep.no}' , '{$dep.id}', '{$dep.caption4}', '{$dep.caption5}');">
+			{foreach from=$array4 item=v}
+			<option value="{$v.id}" {if $current5==$v.id} selected="selected" {/if}>{$v.name}</option>
+			{/foreach}
+		</select>
+	</div>
+	<div>{$lng.general.add} {$lng.general.to} {$dep.name5} {$lng.general.list}</div>
+	<div><textarea name="{$dep.caption5}" rows=7 cols=35></textarea></div>
+	<div class="buttons" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="add5" value="{$lng.general.add}" /></span>
+	</div>
+</div> {* end lfloat *}
+
+<div class="lfloat">
+	<div>{$dep.name5} {$lng.general.list}</div>
+	<div>
+	<select multiple="multiple" id="{$dep.caption5}_list" name="{$dep.caption5}_list[]" size=10 style="width: 250px" class="mselect">
+		{foreach from=$array5 item=v}
+		<option value="{$v.id}">{$v.name}</option>
+		{/foreach}
+	</select>
+	</div>
+	<div class="buttons"{if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="delete_{$dep.caption5}" value="{$lng.general.delete}" /></span>
+	</div>
+	{if $languages|@count>1}<div class="inline rfloat" style="margin-top: 10px;">&nbsp;&nbsp;<a href="translate_depending.php?id={$dep.id}&type={$type}{if $type=='cf' && $current_fieldset}&fieldset={$current_fieldset}{/if}{if $current2}&current1={$current2}{/if}{if $current3}&current2={$current3}{/if}{if $current4}&current3={$current4}{/if}{if $current5}&current4={$current5}{/if}">
+	<div class="buttonwrapper lfloat"><div class="rbutton1-left"><span class="rbutton1-right">{$lng.custom_fields.translate}</span></div></div>
+	</a></div>
+	{/if}
+</div>
+
+<div class="clearfix"></div>
+{/if}
+
+<div class="information">{$lng.lists.help_add_lists}</div>
+</form>
+
+</div> {* end form_ container *}
+
+</div> {* end p30 *}
+
+{include file="footer.html"}

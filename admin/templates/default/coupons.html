@@ -1,0 +1,45 @@
+{include file="header.html"}
+
+<div class="page_title">{$lng.panel.listings} > {$lng.panel.coupons}</div>
+
+<div class="p30">
+
+<div><a href="add_coupon.php"><img src="{$template_path}images/add.png" class="tooltip" title="{$lng.general.add}" alt=""></a></div>
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th width="20" class="hleft">{$lng.general.id}</th>
+	<th>{$lng.coupons.code}</th>
+	<th width=250>{$lng.coupons.discount}</th>
+	<th width=250>{$lng.coupons.use_by}</th>
+	<th width=250>{$lng.coupons.available_for}</th>
+	<th width=250>{$lng.coupons.allow_usage}</th>
+	<th width="50" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$array_coupons item=v}
+<tr>
+	<td><div id="id{$v.id}">#{$v.id}</div></td>
+	<td>{$v.code}</td>
+	<td>{if $v.type=="fixed"}{$appearance.default_currency}{/if}{$v.discount}{if $v.type=="percent"}%{/if}</td>
+	<td>{$v.groups_list}</td>
+	<td>{if isset($v.ads) && $v.ads}[ {$lng.coupons.ads} ] {/if}  {if isset($v.subscriptions) && $v.subscriptions}[ {$lng.coupons.subscriptions} ]{/if} 
+	 {if isset($v.options) && $v.options}[ {$lng.coupons.options} ]{/if}  {if isset($v.store) && $v.store}[ {$lng.coupons.store} ]{/if}</td>
+	<td>{if isset($v.allow) && $v.allow}{$v.allow}&nbsp;{if $v.allow==1}{$lng.coupons.time}{else}{$lng.coupons.times}{/if}{else}{$lng.general.unlimited}{/if}</td>
+	<td>
+		<span><a href="edit_coupon.php?id={$v.id}"><img src="{$template_path}images/edit.png" class="tooltip icon" title="{$lng.general.edit}" alt=""></a></span>
+
+		<span><a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDelete('{$v.id}','{$lng.coupons.confirm_delete}','coupon');{/if}"><img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt=""></a></span>
+	</td>
+</tr>
+{/foreach}
+
+{if !$no }
+<tr><td colspan="7">{$lng.coupons.no_coupons}</td></tr>
+{/if}
+
+</table>
+
+</div> {* end p30 *}
+
+{include file="footer.html"}

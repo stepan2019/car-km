@@ -1,0 +1,77 @@
+/* flux yellow rtl */
+a { 
+	color: #4475fe; 
+}
+a:hover { 
+	color: #6f95fd; 
+}
+ul.nolist li:hover { 
+	color: #4475fe; 
+}
+header { 
+	background-color: #fbbe1b; 
+}
+#fav_button { 
+	background: #ffcd47 url(../images/favorite-icon.png) 8px 8px no-repeat; 
+}
+.search-button input { 
+	background: #96b1fd !important; 
+	color: #3b3b3b !important; 
+}
+
+.tabs > label:hover { 
+	background: #96b1fd; 
+	border: 1px solid #7691dd; 
+	color: #fff; 
+}
+.tabs > input:checked + label { 
+	border-top: 3px solid #7a9cfc;
+}
+	
+.browse-tabs label { 
+	color: #4475fe;
+}
+.browse-tabs label:hover { 
+	color: #6f95fd;
+}
+.browse-tabs input:checked + label { 
+	background: #fbbe1b;
+}
+.browse-tabs input:checked + label:hover { 
+	background: #fbce2b;
+}
+
+.cat-path { 
+	color: #4475fe; 
+}
+.btn1 { 
+	background: #fbbe1b; 
+}
+
+.plan_button {
+	border: 2px solid #6a8be9;
+	color: #324c93;
+}
+.plan_button:hover { 
+	background: #6a8be9;
+	color: #fff;
+}
+
+footer a:hover { 
+	color: #6f95fd; 
+}
+
+#nav ul li:hover {
+    background: #97b1fd;
+}
+
+@media all and (min-width: 600px) {
+	.post-listing-btn { 
+		background: #3a3a3a; 
+		color: #fff; 
+	}
+	#nav li:hover {
+		background: #97b1fd;
+	}
+
+}

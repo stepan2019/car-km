@@ -1,0 +1,122 @@
+{include file="header.html"}
+{include file="data/fancybox.html"}
+
+<div class="page_title">{$lng.panel.tools} > {$lng.panel.custom_pages}</div>
+
+<div class="p30">
+<form name="custom_pages" method="post" action="manage_custom_pages.php">
+
+<div class="lfloat">
+{if !$is_mod || $mod_sections.custom_pages.add==1}
+<a href="add_custom_page.php"><img src="{$template_path}images/add.png" class="tooltip icon" title="{$lng.general.add}" alt=""></a>
+{/if}
+</div>
+<div class="rfloat">
+<input type="text" name="search">
+<div class="buttons">
+	<strong><input type="submit" name="Search" value="{$lng.general.search}" /></strong>
+</div>
+</div>
+<div class="clearfix"></div>
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th width="40" class="hleft">{$lng.general.id}</th>
+	<th width="40">{$lng.general.position}</th>
+	<th>{$lng.custom_pages.title}</th>
+	<th>{$lng.custom_pages.type}</th>
+	<th>{$lng.custom_pages.link}</th>
+	<th width="60">{$lng.general.order}</th>
+	<th width="100" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$array_custom_pages item=v}
+<tr class="{if !$v.active} inactive{/if}">
+	<td>#{$v.id}</td>
+	<td>{$v.order_no}</td>
+	<td><a href="javascript:;" class="view" id="view{$v.id}">{$v.title}</a></td>
+	<td>
+	{if $v.type==1}{$lng.custom_pages.custom_content}{else}{$lng.custom_pages.external_link}{/if}
+	<br/>
+	{if $v.navlink==1}{$lng.custom_pages.main_navlink}{elseif $v.navlink==2}{$lng.custom_pages.secondary_navlink}{else}{$lng.custom_pages.not_linked}{/if}
+	</td>
+	<td><a href="{if $v.type==2}{$v.hreflink}{else}{$live_site}/content.php?id={$v.id}{/if}">{if $v.type==2}{$v.hreflink}{else}{$live_site}/content.php?id={$v.id}{/if}</a></td>
+	<td>
+		{if !$is_mod || $mod_sections.custom_pages.edit==1}
+		{if $v.order_no>1}
+		<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onMoveUp({$v.id}, 'custom_page'){/if}"><img src="{$template_path}images/up.png" class="tooltip icon" title="{$lng.general.move_up}" alt=""></a>
+		{else}
+		<img src="{$template_path}images/up-off.png">
+		{/if}
+
+		{if $v.last==0}
+		<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onMoveDown({$v.id}, 'custom_page'){/if}"><img src="{$template_path}images/down.png" class="tooltip icon" title="{$lng.general.move_down}" alt=""></a>
+		{else}
+		<img src="{$template_path}images/down-off.png">
+		{/if}
+		{/if}
+	</td>
+	<td>
+
+		<a href="javascript:;" class="view" id="view{$v.id}">
+		<img src="{$template_path}images/info.png" class="tooltip icon" title="{$lng.custom_pages.view_content}" alt="">
+		</a>
+
+		{if !$is_mod || $mod_sections.custom_pages.edit==1}
+		<a href="edit_custom_page.php?id={$v.id}"><img src="{$template_path}images/edit.png" class="tooltip icon" title="{$lng.general.edit}" alt=""></a>
+		
+		{if $v.type==1}<a href="edit_content.php?id={$v.id}"><img src="{$template_path}images/edit_content.png" class="tooltip icon" title="{$lng.custom_pages.edit_content}" alt=""></a>{/if}
+		
+		<span id="div_active{$v.id}">
+		{if $v.active==0}
+			<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onEnable('{$v.id}', 'custom_page', '');{/if}">
+			<img id="active{$v.id}" src="{$template_path}images/enable.png" class="tooltip icon" title="{$lng.general.enable}" alt="">
+			</a>
+		{else}
+			<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDisable('{$v.id}', 'custom_page', '');{/if}">
+			<img id="active{$v.id}" src="{$template_path}images/disable.png" class="tooltip icon" title="{$lng.general.disable}" alt="">
+			</a>
+		{/if}
+		</span>	
+		{/if} {* end if mod and edit *}
+
+		{if !$is_mod || $mod_sections.custom_pages.delete==1}
+		{if $v.read_only==0}<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDelete('{$v.id}','{$lng.custom_pages.confirm_delete|addslashes}','custom_page');{/if}"><img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt=""></a>{/if}
+		{/if}
+	</td>
+</tr>
+{/foreach}
+
+{if $no_pages==0}
+	<tr><td colspan="7">{$lng.custom_pages.no_custom_pages}</td></tr>
+{/if}
+
+</table>
+</form>
+</div> {* p30 *}
+
+<script type="text/javascript">
+{literal}
+
+$(document).ready(function() {
+
+$("a.view").click(function(event){
+	var cp_id = jQuery(this).attr("id").substr(4);
+	$.fancybox({
+		'width'         		: 800,
+		'height'        		: 700,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'margin'		: '0',
+		'padding'		: '0',
+		'titleShow'		: false,
+		'type'			: 'iframe',
+		'href'			: '{/literal}{$live_site}{literal}/admin/include/view_custom_page.php?id='+cp_id
+	});
+});
+
+});
+{/literal}
+</script>
+
+{include file="footer.html"}

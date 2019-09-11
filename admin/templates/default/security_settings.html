@@ -1,0 +1,98 @@
+{include file="header.html"}
+
+<div class="page_title">{$lng.panel.security} > {$lng.panel.security_settings}</div>
+
+<div class="p30">
+<form name="settings" method="post" action="security_settings.php">
+
+<div class="form_container">
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.panel.failed_login_attempts|replace:" ":"&nbsp;"}</strong></div></div>
+
+{if $error != ""}<div class="error">{$error}</div>{/if}
+{if $successful}<div class="info">{$lng.settings.settings_saved}</div>{/if}
+
+<div class="clearfix cronjob centered" {if $security_settings.block_user_attempts==0 && $security_settings.block_admin_attempts==0}style="display: none;"{/if}>
+	<div class="warning ml20 mr20 mb20">
+		{$lng.settings.security_cron_job|replace:'::CONFIG_ABS_PATH::':$abs_path}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.block_admin_attempts}</div>
+	<div class="right_form">
+	  <input type="checkbox" name="block_admin_attempts" id="block_admin_attempts" {if $security_settings.block_admin_attempts==1}checked="checked"{/if} />
+	  &nbsp;{$lng.general.after}&nbsp;<input type="text" name="allowed_admin_attempts" id="allowed_admin_attempts" size="6" value="{$security_settings.allowed_admin_attempts}" style="text-align: center" {if $security_settings.block_admin_attempts==0}disabled="disabled"{/if} />
+	  &nbsp;{$lng.settings.failed_attempts}
+	  &nbsp;{$lng.general.for}&nbsp;<input type="text" name="block_admin_attempts_for" id="block_admin_attempts_for" size="6" value="{$security_settings.block_admin_attempts_for}" style="text-align: center" {if $security_settings.block_admin_attempts==0}disabled="disabled"{/if} />&nbsp;{$lng.general.hour_s}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.block_user_attempts}</div>
+	<div class="right_form">
+	  <input type="checkbox" name="block_user_attempts" id="block_user_attempts" {if $security_settings.block_user_attempts==1}checked="checked"{/if} />
+	  &nbsp;{$lng.general.after}&nbsp;<input type="text" name="allowed_user_attempts" id="allowed_user_attempts" size="6" value="{$security_settings.allowed_user_attempts}" style="text-align: center" {if $security_settings.block_user_attempts==0}disabled="disabled"{/if} />
+	  &nbsp;{$lng.settings.failed_attempts}
+	  &nbsp;{$lng.general.for}&nbsp;<input type="text" name="block_user_attempts_for" id="block_user_attempts_for" size="6" value="{$security_settings.block_user_attempts_for}" style="text-align: center" {if $security_settings.block_user_attempts==0}disabled="disabled"{/if} />&nbsp;{$lng.general.hour_s}
+	</div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat"  onClick='{if $demo}alert("{$lng.general.errors.demo}");return false;{/if}'>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.save_changes}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+<script type="text/javascript">
+{literal}
+$(document).ready(function(){
+
+	$("#block_admin_attempts").click(function () { 
+
+	    if ($('input#block_admin_attempts').is(':checked')) {
+
+		$("#allowed_admin_attempts" ).prop( "disabled", false );
+		$("#block_admin_attempts_for" ).prop( "disabled", false );
+		
+	
+	    }
+	    else {
+	    
+		$("#allowed_admin_attempts" ).prop( "disabled", true );
+		$("#block_admin_attempts_for" ).prop( "disabled", true );
+		
+		if (!$('input#block_user_attempts').is(':checked')) $(".cronjob" ).hide();
+		
+	    }
+
+      });
+
+      	$("#block_user_attempts").click(function () { 
+
+	    if ($('input#block_user_attempts').is(':checked')) {
+		$("#allowed_user_attempts" ).prop( "disabled", false );
+		$("#block_user_attempts_for" ).prop( "disabled", false );
+		
+	    }
+	    else {
+		$("#allowed_user_attempts" ).prop( "disabled", true );
+		$("#block_user_attempts_for" ).prop( "disabled", true );
+
+		if (!$('input#block_admin_attempts').is(':checked')) $(".cronjob" ).hide();
+		
+	    }
+
+      });
+      
+
+});
+{/literal}
+</script>
+
+{include file="footer.html"}

@@ -1,0 +1,147 @@
+/* flux green rtl */
+.default_logo { 
+	background: url("../images/flux-logo-gray.png") no-repeat 0 0; 
+}
+a { 
+	color: #49a9bc; 
+}
+a:hover { 
+	color: #59b869; 
+}
+.search-button input { 
+	background: #555 !important; 
+	color: #fff !important; 
+}
+
+.tabs > label:hover { 
+	background: #59b869; 
+	border: 1px solid #399849; 
+	color: #fff; 
+}
+
+.tabs > input:checked + label { 
+	border-top: 3px solid #59b869;
+}
+
+.browse-tabs label { 
+	color: #49a9bc;
+}
+.browse-tabs label:hover { 
+	color: #59b869;
+}
+
+.browse-tabs input:checked + label { 
+	background: #ffc021;
+}
+
+.browse-tabs input:checked + label:hover { 
+	background: #ffd031;
+}
+
+.cat-path { 
+	color: #49a9bc; 
+}
+.cat-path a { 
+	color: #49a9bc; 
+}
+.btn1 { 
+	background: #ffc021; 
+}
+
+.plan_button {
+	border: 2px solid #7cad95;
+	color: #5c8d75;
+}
+.plan_button:hover { 
+	background: #7cad95;
+	color: #fff;
+}
+footer {
+	background: #394648;
+}
+footer a:hover { 
+	color: #68d87a; 
+}
+
+.more {
+	background: #59b869;
+}
+
+#nav ul li:hover {
+    background: #eee;
+}
+
+.outline { 
+	color: #49a9bc;
+}
+a.outline:hover { 
+	color: #59b869 !important;
+}
+#choose_location a { 
+	background: #7cad95; 
+}
+.mlink:hover { 
+	color: #49a9bc; 
+}
+
+#quick-search {
+	background-color: #59b869;
+}
+.positive {
+	background: #59b869;
+}
+.btn-green {
+	background: #59b869;	
+}
+.negative {
+	background: #ea4f44;
+}
+.btn3 {
+	background: #ea4f44;
+}
+.wide_btn2 {
+	background: #ea4f44;
+}
+
+#nav li.post-listing { 
+	background: #ffc021; 
+	border-bottom: 1px solid #efb011; 
+}
+#nav li.post-listing:hover { 
+	background: #ffc021; 
+	opacity: 0.8; 
+}
+#nav li.post-listing a { 
+	border-bottom: 1px solid #ffd031;
+}
+#nav li:not(.post-listing) a:hover {
+    background: #59b869;
+	text-shadow: none;
+	color: #fff;
+}
+#nav li a.starfav:hover { 
+	background: #59b869 url("../images/star_white.png") 90% 50% no-repeat; 
+}
+.dark-bg {
+	background: #4f5657;
+}
+@media all and (max-width: 600px) {
+	#nav li.post-listing { 
+		background: #59b869; 
+		border-bottom: 1px solid #49a859; 
+	}
+	#nav li.post-listing:hover { 
+		background: #59b869; 
+		opacity: 0.8; 
+	}
+	#nav li.post-listing a { 
+		border-bottom: 1px solid #69c879;
+	}
+}
+
+@media all and (min-width: 600px) {
+	#nav li:hover {
+		background: #eee;
+	}
+
+}

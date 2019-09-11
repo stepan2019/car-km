@@ -1,0 +1,29 @@
+
+<div class="form_container">
+
+{if $error != ""}<div class="error">{$error}</div>{/if}
+{if $info != ""}<div class="info">{$info}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.2co_sid}</div>
+	<div class="right_form"><input type="text" maxlength="100" size="40" name="to_checkout_sid" id="to_checkout_sid" value="{$processor_settings.to_checkout_sid}" />	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png" class="tooltip icon" title="{$lng.settings.info.2co_secret}" alt="" />&nbsp;{$lng.settings.2co_secret}</div>
+	<div class="right_form"><input type="text" maxlength="16" size="20" name="to_checkout_secret" id="to_checkout_secret" value="{$processor_settings.to_checkout_secret}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png" class="tooltip icon" title="{$lng.settings.info.2co_demo}" alt="" />&nbsp;{$lng.settings.2co_demo}</div>
+	<div class="right_form"><input type="checkbox" name="to_checkout_demo" id="to_checkout_demo" {if $processor_settings.to_checkout_demo==1}checked="checked"{/if} /></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit_2co" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div>

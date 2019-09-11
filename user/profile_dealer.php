@@ -2,6 +2,8 @@
     $response = "";
     $response2 = "";
 
+    global $lng;
+
     $id = $user_info['id'];
 
     if(isset($_POST['update'])) {
@@ -45,42 +47,42 @@
     <form method="post">
         <div class="row col-md-12">
             <div class="col-md-3 text-left mt-4">
-                <label class="control-label">FullName</label>
+                <label class="control-label"><?php echo $lng['useraccount']['Fullname'];?></label>
                 <div class="agileits-main">
                     <i class="fas fa-signature"></i>
                     <input type="text" value="<?php echo $user_info['name']; ?>" required="" name="name">
                 </div>
             </div>
             <div class="col-md-3 text-left mt-4">
-                <label class="control-label">Address</label>
+                <label class="control-label"><?php echo $lng['useraccount']['Address'];?></label>
                 <div class="agileits-main">
                     <i class="fas fa-map-marker-alt"></i>
                     <input type="text" value="<?php echo $user_info['address']; ?>" required="" name="address">
                 </div>
             </div>
             <div class="col-md-3 text-left mt-4">
-                <label class="control-label">Email</label>
+                <label class="control-label"><?php echo $lng['useraccount']['email'];?></label>
                 <div class="agileits-main">
                     <i class="far fa-envelope"></i>
                     <input type="email" value="<?php echo $user_info['email']; ?>" required="" name="email">
                 </div>
             </div>
             <div class="col-md-3 text-left mt-4">
-                <label class="control-label">Phone Number</label>
+                <label class="control-label"><?php echo $lng['useraccount']['Phone_Number'];?></label>
                 <div class="agileits-main">
                     <i class="fas fa-phone"></i>
                     <input type="tel" value="<?php echo $user_info['phone']; ?>" required="" name="phone">
                 </div>
             </div>
             <div class="col-md-3 text-left mt-4">
-                <label class="control-label">Company</label>
+                <label class="control-label"><?php echo $lng['users']['Company'];?></label>
                 <div class="agileits-main">
                     <i class="far fa-building"></i>
                     <input type="text" value="<?php echo $user_info['company']; ?>" required="" name="company">
                 </div>
             </div>
             <div class="col-md-3 text-left mt-4">
-                <label class="control-label">Website</label>
+                <label class="control-label"><?php echo $lng['users']['Website'];?></label>
                 <div class="agileits-main">
                     <i class="fas fa-network-wired"></i>
                     <input type="url" value="<?php echo $user_info['website']; ?>" required="" name="website">
@@ -88,32 +90,32 @@
             </div>
         </div>
         <div class="text-center submit mt-5">
-            <input type="submit" class="btn btn-primary submit-fs btn-custom" value="Update" name="update">
+            <input type="submit" class="btn btn-primary submit-fs btn-custom" value="<?php echo $lng['useraccount']['Update'];?>" name="update">
             <?php if($response != "") { ?>
                 <p><label class="control-label mt-3"><?php echo $response; ?></label></p>
             <?php } ?>
-            <a href="/index.php" class="btn btn-primary submit-fs btn-custom">Cancel</a>
+            <a href="/index.php" class="btn btn-primary submit-fs btn-custom"><?php echo $lng['useraccount']['Cancel'];?></a>
         </div>
         <div class="clearfix"></div>
     </form>
     <form method="post">
         <div class="row col-md-12">
             <div class="col-md-3 text-left mt-4">
-                <label class="control-label">Current Password</label>
+                <label class="control-label"><?php echo $lng['useraccount']['Current_Password'];?></label>
                 <div class="agileits-main">
                     <i class="fas fa-unlock-alt"></i>
                     <input type="password" required="" name="current_password">
                 </div>
             </div>
             <div class="col-md-3 text-left mt-4">
-                <label class="control-label">New Password</label>
+                <label class="control-label"><?php echo $lng['useraccount']['New_password'];?></label>
                 <div class="agileits-main">
                     <i class="fas fa-unlock-alt"></i>
                     <input type="password" required="" name="new_password">
                 </div>
             </div>
             <div class="col-md-3 text-left mt-4">
-                <label class="control-label">Confirm New Password</label>
+                <label class="control-label"><?php echo $lng['useraccount']['Confirm_New_Password'];?></label>
                 <div class="agileits-main">
                     <i class="fas fa-unlock-alt"></i>
                     <input type="password" required="" name="confirm_password">
@@ -121,7 +123,7 @@
             </div>
         </div>
         <div class="text-center submit mt-5">
-            <input type="submit" class="btn btn-primary submit-fs btn-custom" value="Change" name="change">
+            <input type="submit" class="btn btn-primary submit-fs btn-custom" value="<?php echo $lng['useraccount']['change_password'];?>" name="change">
             <?php if($response2 != "") { ?>
                 <p><label class="control-label mt-3"><?php echo $response2; ?></label></p>
             <?php } ?>

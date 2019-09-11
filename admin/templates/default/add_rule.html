@@ -1,0 +1,144 @@
+{include file="header.html"}
+
+<div class="page_title">{$lng.panel.settings} > <a href="manage_rules.php">{$lng.panel.manage_rules}</a> > {if !isset($id) || !$id}{$lng.rules.add_rule}{else}{$lng.rules.edit_rule}{/if}</div>
+
+<div class="p30">
+<form name="add_fset" method="post" action="{$self}{if isset($id) && $id}?id={$id}{/if}">
+
+<div class="form_container">
+
+{if $error}<div class="error">{$error}</div>{/if}
+
+
+<div class="clearfix">
+	<div class="left_form">{$lng.rules.type}</div>
+	<div class="right_form">
+		<select id="type" name="type" onchange="onChooseRuleType(this.form)" onclick="onChooseRuleType(this.form)">
+			<option value="allowed" {if isset($rule.type) && $rule.type=="allowed"}selected="selected"{/if}>{$lng.rules.allowed}</option>
+			<option value="required" {if isset($rule.type) && $rule.type=="required"}selected="selected"{/if}>{$lng.rules.required}</option>
+			<option value="required_gr" {if isset($rule.type) && $rule.type=="required_gr"}selected="selected"{/if}>{$lng.rules.required_gr}</option>
+		</select>
+		<span id="span_info"></span>
+	</div>
+</div>
+<div id="info_allowed" style="display: none;">{$lng.rules.info.allowed}</div>
+<div id="info_required" style="display: none;">{$lng.rules.info.required}</div>
+<div id="info_required_gr" style="display: none;">{$lng.rules.info.required_gr}</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.rules.for_category}</div>
+	<div class="right_form">
+	<input type="radio" class="noborder" name="choose_categ" value="all" checked="checked" onchange="onChooseCateg(this.form)" onClick="onChooseCateg(this.form)" >&nbsp;{$lng.banners.all_categories}
+	&nbsp;<input type="radio" class="noborder" name="choose_categ" value="choose" onchange="onChooseCateg(this.form)" onClick="onChooseCateg(this.form)" >&nbsp;{$lng.banners.choose_categories}
+	</div>
+</div>
+
+<div class="clearfix" id="div_categories" style="display: none">
+	<div class="left_form">&nbsp;</div>
+	<div class="right_form">
+	<select multiple="multiple" name="categories[]" id="categories" class="mselect">
+	{foreach from=$categories item=v}
+		<option value="{$v.id}">{$v.str_start}{$v.name}</option>
+	{/foreach}
+	</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.rules.for_field}</div>
+	<div class="right_form">
+		<select name="field">
+			{foreach from = $fields item = v}
+			<option value="{$v.caption}" {if isset($rule.field) && $rule.field==$v.caption}selected="selected"{/if}>{$v.name}</option>
+			{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="clearfix" id="div_values" style="display: none">
+	<div class="left_form">{$lng.rules.values}</div>
+	<div class="right_form">
+		<input type="text" name="selected_values" value="{if isset($rule.selected_values)}{$rule.selected_values}{/if}" size="60" />
+		<br/>{$lng.rules.multiple}
+	</div>
+</div>
+
+{* part for allow type *}
+
+<div id="div_allow" style="display: none">
+
+<div class="clearfix">
+	<div class="left_form">{$lng.rules.allow_on}</div>
+	<div class="right_form">
+		<select name="second_field">
+			{foreach from = $fields item = v}
+			<option value="{$v.caption}" {if isset($rule.second_field) && $rule.second_field==$v.caption}selected="selected"{/if}>{$v.name}</option>
+			{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.rules.only_values}</div>
+	<div class="right_form">
+	<input type="text" name="allowed_values" value="{if isset($rule.allowed_values)}{$rule.allowed_values}{/if}" size="60" />
+	<br/>{$lng.rules.multiple}
+	</div>
+</div>
+
+</div>{* end div_allow *}
+
+{* end part for allow type *}
+
+{* part for required type *}
+<div class="clearfix" id="div_required" style="display: none">
+	<div class="left_form">{$lng.rules.require_value_for}</div>
+	<div class="right_form">
+		<select name="required_field">
+			{foreach from = $fields item = v}
+			<option value="{$v.caption}" {if isset($rule.required_field) && $rule.required_field==$v.caption}selected="selected"{/if}>{$v.name}</option>
+			{/foreach}
+		</select>
+	</div>
+</div>
+{* end part for allow type *}
+
+{* part for required_gr type *}
+<div class="clearfix" id="div_required_gr" style="display: none">
+	<div class="left_form">{$lng.rules.required_group}</div>
+	<div class="right_form">
+		<select name="required_group">
+			{foreach from = $groups item = v}
+			<option value="{$v.id}" {if isset($rule.required_group) && $rule.required_group==$v.id}selected="selected"{/if}>{$v.name}</option>
+			{/foreach}
+		</select>
+	</div>
+</div>
+{* end part for allow type *}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.rules.error_message}</div>
+	<div class="right_form"><input type="text" name="error_message" size="60" value="{if isset($rule.error_message)}{$rule.error_message}{/if}" /></div>
+</div>
+
+
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+
+</form>
+</div>
+
+<script type="text/javascript">
+
+var old_type="{if isset($rule.type)}{$rule.type}{/if}";
+onChooseRuleType(document.forms["addrule"]);
+</script>
+
+{include file="footer.html"}

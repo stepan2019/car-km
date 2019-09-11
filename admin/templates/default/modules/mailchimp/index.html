@@ -1,0 +1,44 @@
+{include file="header.html"}
+
+<div class="page_title"><a href="{$live_site}/admin/modules.php">{$lng.panel.modules}</a> > {$lng_mailchimp.mailchimp}</div>
+
+<div class="p30">
+<form method="post" action="" enctype="multipart/form-data">
+
+<div class="form_container">
+
+{if isset($error) && $error}<div class="error">{$error}</div>{/if}
+{if isset($info) && $info}<div class="info">{$info}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng_mailchimp.api_key}</div>
+	<div class="right_form"><input type="text" size="40" name="api_key" value="{if isset($mcp_settings.api_key) && $mcp_settings.api_key}{$mcp_settings.api_key}{/if}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_mailchimp.list_id}</div>
+	<div class="right_form"><input type="text" name="list_id" size="40" value="{if isset($mcp_settings.list_id) && $mcp_settings.list_id}{$mcp_settings.list_id}{/if}" />&nbsp;<a href="https://kb.mailchimp.com/lists/manage-contacts/find-your-list-id?utm_source=mc-api&utm_medium=docs&utm_campaign=apidocs&_ga=2.89274971.1553580459.1515751700-1482995649.1513847850&_gac=1.162645454.1515751700.CjwKCAiA1uHSBRBUEiwAkBCtzZ6fjrzNyuQ2Yj3H9dJLkFJ43CC9SlGHIKVb1_1w-luRBYyuGUJsHxoCKY4QAvD_BwE" target="blank"><img src="{$template_path}images/info.png"  class="tooltip icon" title="Click to see more info" /></a></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_mailchimp.subscribe_on_register}</div>
+	<div class="right_form"><input type="checkbox" name="subscribe_on_register" {if isset($mcp_settings.subscribe_on_register) && $mcp_settings.subscribe_on_register}checked{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_mailchimp.subscribe_on_contact}</div>
+	<div class="right_form"><input type="checkbox" name="subscribe_on_contact" {if isset($mcp_settings.subscribe_on_contact) && $mcp_settings.subscribe_on_contact}checked{/if} /></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+{include file="footer.html"}

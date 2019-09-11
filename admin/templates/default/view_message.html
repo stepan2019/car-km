@@ -1,0 +1,25 @@
+{include file="header.html"}
+
+<div class="page_title">{$lng.panel.users} > <a href="messages.php">{$lng.useraccount.messages}</a> > {$lng.messages.message} #{$message.msg_id}</div>
+
+<div class="p30">
+
+	<span class="sc1">{$lng.messages.from}: <span class="underline">{if isset($message.from) && $message.from}{$message.username}{else}{$message.from_email}{/if}</span> {$lng.messages.to}: <span class="underline">{if isset($message.to) && $message.to}{$message.to_username}{else}{$message.to_email}{/if}</span> {$lng.messages.on}: {$message.date_nice}</span>
+
+	<p>{$message.message}</p>
+
+	{if isset($message.ad_id) && $message.ad_id}<div class="small">{$lng.messages.started_for_listing}: <a href="{if $seo_settings.enable_mod_rewrite}{seo->makeDetailsLink p1=$message.ad_id p2=$message.title}{else}{$live_site}/details.php?id={$message.ad_id}{/if}" class="sc1">{$message.title}</a></div>{/if}
+
+	{if isset($message.from_phone) && $message.from_phone}<div>{$lng.custom_fields.phone}: {$message.from_phone}</div>{/if}
+	
+	{if isset($message.starting) && $message.starting}<div class="rfloat ml10"><a href="message_history.php?id={$message.starting}">
+	<div class="buttonwrapper"><div class="rbutton1-left"><span class="rbutton1-right">{$lng.messages.view_thread}</span></div></div>
+	</a></div>{/if}
+
+	<div class="buttonwrapper rfloat"><div class="button1-left">
+	<a href="messages.php"><span class="button1-right">{$lng.general.back}</span></a>
+	</div></div>
+
+</div> {* end p30 *}
+
+{include file="footer.html"}

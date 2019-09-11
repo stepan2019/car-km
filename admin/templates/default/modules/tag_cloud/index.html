@@ -1,0 +1,73 @@
+{include file="header.html"}
+
+<div class="page_title">
+<div class="lfloat" width="200"><a href="{$live_site}/admin/modules.php">{$lng.panel.modules}</a> > {$lng_tag_cloud.tag_cloud}</div>
+<div class="rfloat mt5">
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab1-left">
+	<a href="{$live_site}/admin/modules/tag_cloud/index.php"><span class="tab1-right">{$lng_tag_cloud.tag_cloud}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="{$live_site}/admin/modules/tag_cloud/tags.php"><span class="tab2-right">{$lng_tag_cloud.tags}</span></a>
+	</div></div>
+
+</div>
+</div>
+
+<div class="p30">
+<form method="post" action="" enctype="multipart/form-data">
+
+<div class="form_container">
+
+{if isset($error) && $error}<div class="error">{$error}</div>{/if}
+{if isset($info) && $info}<div class="info">{$info}</div>{/if}
+
+{foreach from =$languages item=v}
+{capture name=some_content assign=field_name}title_{$v.id}{/capture}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng_tag_cloud.title}</div>
+	<div class="right_form"><input type="text" name="title_{$v.id}" value="{$tc_settings[$field_name]}" /></div>
+</div>
+{/foreach}
+
+<div class="clearfix">
+	<div class="left_form">{$lng_tag_cloud.split_tags}</div>
+	<div class="right_form"><input type="checkbox" name="split_tags" {if $tc_settings.split_tags}checked="checked"{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_tag_cloud.no_tags}</div>
+	<div class="right_form"><input type="text" name="no_tags" size="4" value="{$tc_settings.no_tags}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_tag_cloud.period}</div>
+	<div class="right_form"><input type="text" name="period" size="4" value="{$tc_settings.period}">{$lng.settings.days}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_tag_cloud.exclude}</div>
+	<div class="right_form">
+		<textarea name="exclude" rows="7" cols="30">{$tc_settings.exclude}</textarea>
+		<div class="information">{$lng_tag_cloud.exclude_info}</div>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_tag_cloud.min_letters}</div>
+	<div class="right_form"><input type="text" name="min_letters" size="4" value="{$tc_settings.min_letters}" />&nbsp;{$lng_tag_cloud.letters}</div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+{include file="footer.html"}

@@ -1,0 +1,84 @@
+{include file="header.html"}
+{include file="data/fancybox.html"}
+
+<div class="page_title"><a href="{$live_site}/admin/modules.php">{$lng.panel.modules}</a> > {$lng_mobile_hsi.mobile_hsi}</div>
+
+<div class="p30">
+
+<form method="post" action="" enctype="multipart/form-data">
+
+<div class="form_container nomargin">
+
+{if isset($error) && $error}<div class="error">{$error}</div>{/if}
+{if $successful}<div class="info">{$lng.settings.settings_saved}</div>{/if}
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng_mobile_hsi.ios_devices|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="information ml20 mb20 mr20">{$lng_mobile_hsi.png_ext}</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_mobile_hsi.icon_size|replace:"##SIZE##":"60"}</div>
+	<div class="right_form"><input type="file" name="icon60" id="icon60" />{if $icons.icon60!=""}&nbsp;<a href="{$live_site}/images/{$icons.icon60}" class="imgfield">
+		<img src="{$template_path}images/camera.png"/></a>&nbsp;<a href="index.php?delete=60"><img src="{$template_path}images/delete.png" class="tooltip" title="{$lng.general.delete}" alt="" /></a>{/if}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_mobile_hsi.icon_size|replace:"##SIZE##":"76"}</div>
+	<div class="right_form"><input type="file" name="icon76" id="icon76" />{if $icons.icon76!=""}&nbsp;<a href="{$live_site}/images/{$icons.icon76}" class="imgfield">
+		<img src="{$template_path}images/camera.png"/></a>&nbsp;<a href="index.php?delete=76"><img src="{$template_path}images/delete.png" class="tooltip" title="{$lng.general.delete}" alt="" /></a>{/if}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_mobile_hsi.icon_size|replace:"##SIZE##":"120"}</div>
+	<div class="right_form"><input type="file" name="icon120" id="icon120" />{if $icons.icon120!=""}&nbsp;<a href="{$live_site}/images/{$icons.icon120}" class="imgfield">
+		<img src="{$template_path}images/camera.png"/></a>&nbsp;<a href="index.php?delete=120"><img src="{$template_path}images/delete.png" class="tooltip" title="{$lng.general.delete}" alt="" /></a>{/if}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_mobile_hsi.icon_size|replace:"##SIZE##":"152"}</div>
+	<div class="right_form"><input type="file" name="icon152" id="icon152" />{if $icons.icon152!=""}&nbsp;<a href="{$live_site}/images/{$icons.icon152}" class="imgfield">
+		<img src="{$template_path}images/camera.png"/></a>&nbsp;<a href="index.php?delete=152"><img src="{$template_path}images/delete.png" class="tooltip" title="{$lng.general.delete}" alt="" /></a>{/if}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_mobile_hsi.icon_size|replace:"##SIZE##":"180"}</div>
+	<div class="right_form"><input type="file" name="icon180" id="icon180" />{if $icons.icon180!=""}&nbsp;<a href="{$live_site}/images/{$icons.icon180}" class="imgfield">
+		<img src="{$template_path}images/camera.png"/></a>&nbsp;<a href="index.php?delete=180"><img src="{$template_path}images/delete.png" class="tooltip" title="{$lng.general.delete}" alt="" /></a>{/if}</div>
+</div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng_mobile_hsi.android_devices|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_mobile_hsi.icon_size|replace:"##SIZE##":"128"}</div>
+	<div class="right_form"><input type="file" name="icon128" id="icon128" />{if $icons.icon128!=""}&nbsp;<a href="{$live_site}/images/{$icons.icon128}" class="imgfield">
+		<img src="{$template_path}images/camera.png"/></a>&nbsp;<a href="index.php?delete=128"><img src="{$template_path}images/delete.png" class="tooltip" title="{$lng.general.delete}" alt="" /></a>{/if}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_mobile_hsi.icon_size|replace:"##SIZE##":"192"}</div>
+	<div class="right_form"><input type="file" name="icon192" id="icon192" />{if $icons.icon192!=""}&nbsp;<a href="{$live_site}/images/{$icons.icon192}" class="imgfield">
+		<img src="{$template_path}images/camera.png"/></a>&nbsp;<a href="index.php?delete=192"><img src="{$template_path}images/delete.png" class="tooltip" title="{$lng.general.delete}" alt="" /></a>{/if}</div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+
+</div> {* p30 *}
+
+{literal}
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("a.imgfield").fancybox();
+	});
+
+</script>
+{/literal}
+
+{include file="footer.html"}

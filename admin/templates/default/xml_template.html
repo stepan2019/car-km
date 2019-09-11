@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="{$appearance.charset}"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >
+<head>
+<title>{$lng.general.admin_panel}</title>
+<meta http-equiv="Content-Type" content="text/html; charset={$appearance.charset}">
+<link rel="stylesheet" href="{$template_path}css/style.css">
+<link rel="stylesheet" href="{$template_path}css/style-sage.css">
+</head>
+<body>
+<script type="text/javascript" src="{$live_site}/libs/jQuery/jquery.js"></script>
+
+<div style="color: #b00000">{$lng.ie.xml_template} {$lng.general.for} {$template.name}</div>
+
+<div style="padding: 10px;">
+&lt;?xml version='1.0' ?&gt;<br>
+&lt;{$start_tag}&gt;<br>
+&nbsp;&nbsp;&lt;{$element_tag}&gt;<br>
+{foreach from=$fields item=v}
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;{if $v.alias}{$v.alias}{else}{$v.field}{/if}&gt;&lt;{if $v.alias}/{$v.alias}{else}{$v.field}{/if}&gt;<br>
+{/foreach}
+&nbsp;&nbsp;&lt;/{$element_tag}&gt;<br>
+&lt;/{$start_tag}&gt;<br>
+<br>
+</div>
+
+<div style="color: #b00000">{$lng.ie.csv_template} {$lng.general.for} {$template.name}</div>
+
+<div style="padding: 10px;">
+{foreach from=$fields item=v name=template}
+{if $smarty.foreach.template.index>0}{$settings.csv_column_separator}{/if}{$settings.csv_field_separator}{$v.field}{$settings.csv_field_separator}
+{/foreach}
+<br>
+</div>
+
+</body>
+</html>

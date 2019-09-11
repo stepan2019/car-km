@@ -1,0 +1,105 @@
+{include file="header.html"}
+
+<div class="page_title">
+<div class="lfloat" width="200">{$lng.panel.tools} > {$lng.panel.import_export} > {$lng.ie.settings}</div>
+<div class="rfloat mt5">
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="import-export.php"><span class="tab2-right">{$lng.ie.export}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="import.php"><span class="tab2-right">{$lng.ie.import}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="scheduled_imports.php"><span class="tab2-right">{$lng.ie.scheduled_imports}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="ie_templates.php"><span class="tab2-right">{$lng.ie.templates}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab1-left">
+	<a href="ie_settings.php"><span class="tab1-right">{$lng.ie.settings}</span></a>
+	</div></div>
+
+</div>
+</div>
+
+<div class="p30">
+<form name="ie" method="post" action="{$self}" enctype="multipart/form-data">
+
+<div class="form_container" style="padding-top: 0px !important;">
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.ie.bulk_uploads|replace:" ":"&nbsp;"}</strong></div></div>
+
+{if $error} <div class="error">{$error}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.general.type}</div>
+	<div class="right_form">
+		<input type="radio" name="bulk_type" value="xml" {if !$settings.bulk_type || $settings.bulk_type=='xml'}checked="checked"{/if} />&nbsp;{$lng.ie.xml}&nbsp;&nbsp;
+		<input type="radio" name="bulk_type" value="csv" {if $settings.bulk_type=='csv'}checked="checked"{/if}>&nbsp;{$lng.ie.csv}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.template}</div>
+	<div class="right_form">
+		<select name="bulk_template">
+			<option value=""></option>
+		{foreach from=$array_templates item=v}
+			<option value="{$v.id}" {if $settings.bulk_template==$v.id}selected{/if}>{$v.name}</option>
+		{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.plan}</div>
+	<div class="right_form">
+		<select name="bulk_plan">
+		{foreach from=$array_plans item=v}
+			<option value="{$v.id}" {if $settings.bulk_plan==$v.id}selected{/if}>{$v.name}</option>
+		{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat"  {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="SaveBulk" value="{$lng.general.save_changes}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+<div class="information">
+<p>{$lng.ie.info.bulk_uploads_note1}</p><p>{$lng.ie.info.bulk_uploads_note2}</p><p>{$lng.ie.info.bulk_uploads_note3}{$bulk_fields_list}</p>
+</div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.ie.csv_settings|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.column_separator}</div>
+	<div class="right_form"><input type="text" size="10" name="csv_column_separator" value="{$settings.csv_column_separator}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.field_separator}</div>
+	<div class="right_form"><input type="text" size="10" name="csv_field_separator" value={if $settings.csv_field_separator=='"'}'"'{elseif $settings.csv_field_separator=="'"}"'"{else}"{$settings.csv_field_separator}"{/if} /></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat"  {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="SaveCSV" value="{$lng.general.save_changes}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+{include file="footer.html"}

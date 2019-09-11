@@ -1,0 +1,528 @@
+{include file="header.html"}
+{include file="data/fancybox.html"}
+
+<link rel="stylesheet" media="screen" type="text/css" href="{$live_site}/libs/jQuery/plugins/css/colorpicker.css" />
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/colorpicker.js"></script>
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/eye.js"></script>
+
+<div class="page_title">{$lng.panel.settings} > {$lng.settings.extra_visibility_options}</div>
+
+<div class="p30">
+<form name="settings" method="post" action="extra_visibility_options.php" enctype="multipart/form-data">
+
+<div class="form_container">
+
+{if isset($error) && $error != ""}<div class="error">{$error}</div>{/if}
+{if isset($successful) && $successful}<div class="info">{$lng.settings.settings_saved}</div>{/if}
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.settings.listings_options|replace:" ":"&nbsp;"}</strong></div></div>
+
+<fieldset class="bordered">
+  <legend>{$lng.packages.featured}</legend>
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.enable_featured}" />&nbsp;{$lng.settings.enable_featured}</div>
+	<div class="right_form"><input type="checkbox" name="enable_featured" {if $ads_settings.enable_featured==1}checked="checked"{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.no_featured}" />&nbsp;{$lng.settings.no_featured}</div>
+	<div class="right_form"><input type="text" name="no_featured" maxlength="4" size="4" value="{$ads_settings.no_featured}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.no_featured_on_row}" />&nbsp;{$lng.settings.no_featured_on_row}</div>
+	<div class="right_form"><input type="text" name="no_featured_on_row" maxlength="4" size="4" value="{$ads_settings.no_featured_on_row}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.featured_autoscroll}" />&nbsp;{$lng.settings.featured_autoscroll}</div>
+	<div class="right_form"><input type="checkbox" name="featured_autoscroll" {if $ads_settings.featured_autoscroll==1}checked="checked"{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.prioritize_featured}" />&nbsp;{$lng.settings.prioritize_featured}</div>
+	<div class="right_form"><input type="checkbox" name="prioritize_featured" {if $ads_settings.prioritize_featured==1}checked="checked"{/if} /></div>
+</div>
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}<img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.option_description}" />&nbsp;{$lng.settings.description}</div>
+	<div class="right_form"><input type="text" name="featured_description_{$v.id}" size=70 value="{$ads_settings.featured_description[$v.id]}" /></div>
+</div>
+{/foreach}
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.option_example}" />&nbsp;{$lng.settings.example_image}</div>
+	<div class="right_form">
+		<input type="file" name="featured_example" />&nbsp;&nbsp;
+		{if $ads_settings.featured_example!=""}
+		<a href="{$live_site}/images/{$ads_settings.featured_example}" class="imgfield">
+		<img src="{$template_path}images/camera.png"></a>
+		{else}
+		<img src="{$template_path}images/camera_off.png">
+		{/if}
+		{if $ads_settings.featured_example!=""}&nbsp;&nbsp;<a href="extra_visibility_options.php?delete=featured"><img src="{$template_path}images/delete.png" class="tooltip" title="{$lng.general.delete}" alt="" /></a>{/if}
+	</div>
+</div>
+
+<br/>
+
+<div class="form_subtitle_bg"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.featured_plans_info}" />&nbsp;<div class="btn1"><strong>{$lng.settings.featured_plans|replace:" ":"&nbsp;"}</strong></div>&nbsp;<img id="add_fp" src="{$template_path}images/add.png" style="margin-bottom: -7px;" /></div>
+
+{if isset($featured_error) && $featured_error != ""}<div class="error">{$featured_error}</div>{/if}
+
+<div id="add_featured_plans" {if !isset($featured_error) && !$featured_error}style="display: none;"{/if}>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.priorities.price}<span class="mandatory"> *</span></div>
+	<div class="right_form"><input type="text" name="fp_amount" value="{if isset($tmp_fp.amount)}{$tmp_fp.amount}{/if}" maxlength="20" />&nbsp;{$appearance.default_currency}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.featured_expires}" />&nbsp;{$lng.settings.featured_expires}<span class="mandatory"> *</span></div>
+	<div class="right_form"><input type="text" name="fp_no_days" value="{if isset($tmp_fp.no_days)}{$tmp_fp.no_days}{/if}" maxlength="20" />&nbsp;{$lng.settings.days}</div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Add_fp" value="{$lng.general.add}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div>{* end add_featured_plans *}
+
+<table cellpadding="0" cellspacing="0" align="center" width="80%" class="datatable">
+<tr id="theading">
+	<th width="70" class="hleft">{$lng.general.position}</th>
+	<th>{$lng.packages.days}</th>
+	<th>{$lng.priorities.price}</th>
+	<th width="60">{$lng.general.order}</th>
+	<th width="60" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$array_featured_plans name=fp item=v}
+<tr>
+	<td>{$v.order_no}</td>
+	<td><span id="span_no_days{$v.id}">{$v.no_days}</span>
+	</td>
+	<td><span id="span_amount{$v.id}">{$v.amount}</span>{$appearance.default_currency}</td>
+	<td>
+		{if $smarty.foreach.fp.index!=0}
+		<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onMoveUp({$v.id}, 'fp'){/if}"><img src="{$template_path}images/up.png" class="tooltip icon" title="{$lng.general.move_up}" alt=""></a>
+		{else}
+		<img src="{$template_path}images/up-off.png">
+		{/if}
+
+		{if $v.order_no>1}
+		<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onMoveDown({$v.id}, 'fp'){/if}"><img src="{$template_path}images/down.png" class="tooltip icon" title="{$lng.general.move_down}" alt=""></a>
+		{else}
+		<img src="{$template_path}images/down-off.png">
+		{/if}
+	</td>
+	<td>
+		<a href="edit_featured_plan.php?id={$v.id}"><img src="{$template_path}images/edit.png" class="tooltip icon" title="{$lng.general.edit}" alt=""></a>
+
+		<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDelete('{$v.id}','{$lng.settings.confirm_delete|addslashes}','fp');{/if}"><img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt=""></a>
+	</td>
+</tr>
+{/foreach}
+
+{if $no_featured_plans==0}
+	<tr class="nicetablerow_even">
+	<td colspan=4>{$lng.no_items}</td></tr>
+{/if}
+</table>
+
+</fieldset>
+
+<fieldset class="bordered">
+  <legend>{$lng.packages.highlited}</legend>
+
+<div class="clearfix mt20">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.enable_highlited}" />&nbsp;{$lng.settings.enable_highlited}</div>
+	<div class="right_form"><input type="checkbox" name="enable_highlited" {if $ads_settings.enable_highlited==1}checked="checked"{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.highlited_color}" />&nbsp;{$lng.settings.highlited_color}</div>
+	<div class="right_form"><input type="text" id="highlited_color" name="highlited_color" maxlength="7" size="10" value="{$ads_settings.highlited_color}" />
+	<div id="colorSelector" style="display: inline;"><div style="background-color: {$ads_settings.highlited_color}"></div></div>
+	</div>
+</div>
+
+<script type="text/javascript">
+{literal}
+	(function($){
+
+	var initLayout = function() {
+
+		$('#colorSelector').ColorPicker({
+
+{/literal}
+			color: '#{$ads_settings.highlited_color}',
+
+{literal}
+			onShow: function (colpkr) {
+
+				$(colpkr).fadeIn(500);
+
+				return false;
+
+			},
+
+			onHide: function (colpkr) {
+
+				$(colpkr).fadeOut(500);
+
+				return false;
+
+			},
+
+			onChange: function (hsb, hex, rgb) {
+
+				$('#colorSelector > div').css('backgroundColor', '#' + hex);
+
+				$('#highlited_color').val("#"+hex);
+			}
+
+		});
+
+	};
+
+	EYE.register(initLayout, 'init');
+
+})(jQuery)
+
+
+$(document).ready(function() {
+
+	$("#add_pri").click(function() {
+		if($("#add_priorities").is(":visible")==false) $("#add_priorities").show();
+		else $("#add_priorities").hide();
+	});
+
+	$("#add_fp").click(function() {
+		if($("#add_featured_plans").is(":visible")==false) $("#add_featured_plans").show();
+		else $("#add_featured_plans").hide();
+	});
+
+	$("a.imgfield").fancybox();
+
+});
+
+
+{/literal}
+</script>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.highlited_expires}" />&nbsp;{$lng.settings.highlited_expires}</div>
+	<div class="right_form"><input type="text" name="highlited_expires" maxlength="4" size="4" value="{$ads_settings.highlited_expires}" />{$lng.settings.days}&nbsp;{$lng.settings.until_ad_expires}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.highlited_price}" />&nbsp;{$lng.settings.highlited_price}</div>
+	<div class="right_form"><input type="text" name="highlited_price" size="4" maxlength="20" value="{$ads_settings.highlited_price}" />&nbsp;{$appearance.default_currency}</div>
+</div>
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}<img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.option_description}" />&nbsp;{$lng.settings.description}</div>
+	<div class="right_form"><input type="text" name="highlited_description_{$v.id}" size=70 value="{$ads_settings.highlited_description[$v.id]}" /></div>
+</div>
+{/foreach}
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.option_example}" />&nbsp;{$lng.settings.example_image}</div>
+	<div class="right_form">
+		<input type="file" name="highlited_example" />&nbsp;&nbsp;
+		{if $ads_settings.highlited_example!=""}
+		<a href="{$live_site}/images/{$ads_settings.highlited_example}" class="imgfield">
+		<img src="{$template_path}images/camera.png"></a>
+		{else}
+		<img src="{$template_path}images/camera_off.png">
+		{/if}
+		{if $ads_settings.highlited_example!=""}&nbsp;&nbsp;<a href="extra_visibility_options.php?delete=highlited"><img src="{$template_path}images/delete.png" class="tooltip" title="{$lng.general.delete}" alt="" /></a>{/if}
+	</div>
+</div>
+
+</fieldset>
+
+<fieldset class="bordered">
+  <legend>{$lng.packages.priority}</legend>
+
+<div class="clearfix mt20">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.enable_priorities}" />&nbsp;{$lng.settings.enable_priorities}</div>
+	<div class="right_form"><input type="checkbox" class="noborder" name="enable_priorities" {if $ads_settings.enable_priorities==1}checked="checked"{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.random_priorities}" />&nbsp;{$lng.settings.random_priorities}</div>
+	<div class="right_form"><input type="checkbox" name="random_priorities" {if $ads_settings.random_priorities==1}checked="checked"{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.priorities_expires}" />&nbsp;{$lng.settings.priorities_expires}</div>
+	<div class="right_form"><input type="text" name="priorities_expires" maxlength="4" size="4" value="{$ads_settings.priorities_expires}" />{$lng.settings.days}&nbsp;{$lng.settings.until_ad_expires}</div>
+</div>
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}<img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.option_description}" />&nbsp;{$lng.settings.description}</div>
+	<div class="right_form"><input type="text" name="priorities_description_{$v.id}" size=70 value="{$ads_settings.priorities_description[$v.id]}" /></div>
+</div>
+{/foreach}
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.option_example}" />&nbsp;{$lng.settings.example_image}</div>
+	<div class="right_form">
+		<input type="file" name="priorities_example" />&nbsp;&nbsp;
+		{if $ads_settings.priorities_example!=""}
+		<a href="{$live_site}/images/{$ads_settings.priorities_example}" class="imgfield">
+		<img src="{$template_path}images/camera.png"></a>
+		{else}
+		<img src="{$template_path}images/camera_off.png">
+		{/if}
+		{if $ads_settings.priorities_example!=""}&nbsp;&nbsp;<a href="extra_visibility_options.php?delete=priorities"><img src="{$template_path}images/delete.png" class="tooltip" title="{$lng.general.delete}" alt="" /></a>{/if}
+	</div>
+</div>
+
+<br/>
+
+<div class="form_subtitle_bg"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.priorities_info}" />&nbsp;<div class="btn1"><strong>{$lng.settings.priorities_list|replace:" ":"&nbsp;"}</strong></div>&nbsp;<img id="add_pri" src="{$template_path}images/add.png" style="margin-bottom: -7px;" /></div>
+
+{if isset($priorities_error) && $priorities_error != ""}<div class="error">{$priorities_error}</div>{/if}
+
+<div id="add_priorities" {if isset($priorities_error) && !$priorities_error}style="display: none;"{/if}>
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.priorities.name}<span class="mandatory"> *</span></div>
+	<div class="right_form"><input type="text" name="name_{$v.id}" value="{if isset($tmp.name[$v.id])}{$tmp.name[$v.id]}{/if}" /></div>
+</div>
+{/foreach}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.priorities.price}<span class="mandatory"> *</span></div>
+	<div class="right_form"><input type="text" name="price" value="{if isset($tmp.price)}{$tmp.price}{/if}" maxlength="20" />&nbsp;{$appearance.default_currency}</div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Add" value="{$lng.general.add}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div>{* end add_priorities *}
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th width="70" class="hleft">{$lng.general.position}</th>
+	<th>{$lng.priorities.name}</th>
+	<th>{$lng.priorities.price}</th>
+	<th width="60">{$lng.general.order}</th>
+	<th width="60" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$array_priorities name=pri item=v}
+<tr>
+	<td>{$v.order_no}</td>
+	<td><span id="span_name{$v.id}">{$v.name}</span>
+	</td>
+	<td><span id="span_price{$v.id}">{$v.price}</span>{$appearance.default_currency}</td>
+	<td>
+		{if $smarty.foreach.pri.index!=0}
+		<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onMoveUp({$v.id}, 'pri'){/if}"><img src="{$template_path}images/up.png" class="tooltip icon" title="{$lng.general.move_up}" alt=""></a>
+		{else}
+		<img src="{$template_path}images/up-off.png">
+		{/if}
+
+		{if $v.order_no>1}
+		<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onMoveDown({$v.id}, 'pri'){/if}"><img src="{$template_path}images/down.png" class="tooltip icon" title="{$lng.general.move_down}" alt=""></a>
+		{else}
+		<img src="{$template_path}images/down-off.png">
+		{/if}
+	</td>
+	<td>
+		<a href="edit_priority.php?id={$v.id}"><img src="{$template_path}images/edit.png" class="tooltip icon" title="{$lng.general.edit}" alt=""></a>
+
+		<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDelete('{$v.id}','{$lng.priorities.confirm_delete|addslashes}','pri');{/if}"><img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt=""></a>
+	</td>
+</tr>
+{/foreach}
+
+{if $no_priorities==0}
+	<tr class="nicetablerow_even">
+	<td colspan=4>{$lng.priorities.no_priorities}</td></tr>
+{/if}
+</table>
+
+</fieldset>
+
+<fieldset class="bordered">
+  <legend>{$lng.packages.urgent}</legend>
+
+<div class="clearfix mt20">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.enable_urgent}" />&nbsp;{$lng.settings.enable_urgent}</div>
+	<div class="right_form"><input type="checkbox" name="enable_urgent" {if $ads_settings.enable_urgent==1}checked="checked"{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.urgent_expires}" />&nbsp;{$lng.settings.urgent_expires}</div>
+	<div class="right_form"><input type="text" name="urgent_expires" maxlength="4" size="4" value="{$ads_settings.urgent_expires}" />{$lng.settings.days}&nbsp;{$lng.settings.until_ad_expires}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.urgent_price}" />&nbsp;{$lng.settings.urgent_price}</div>
+	<div class="right_form"><input type="text" name="urgent_price" size="4" maxlength="20" value="{$ads_settings.urgent_price}" />&nbsp;{$appearance.default_currency}</div>
+</div>
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}<img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.option_description}" />&nbsp;{$lng.settings.description}</div>
+	<div class="right_form"><input type="text" name="urgent_description_{$v.id}" size=70 value="{$ads_settings.urgent_description[$v.id]}" /></div>
+</div>
+{/foreach}
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.option_example}" />&nbsp;{$lng.settings.example_image}</div>
+	<div class="right_form">
+		<input type="file" name="urgent_example" />&nbsp;&nbsp;
+		{if $ads_settings.urgent_example!=""}
+		<a href="{$live_site}/images/{$ads_settings.urgent_example}" class="imgfield">
+		<img src="{$template_path}images/camera.png"></a>
+		{else}
+		<img src="{$template_path}images/camera_off.png">
+		{/if}
+		{if $ads_settings.urgent_example!=""}&nbsp;&nbsp;<a href="extra_visibility_options.php?delete=urgent"><img src="{$template_path}images/delete.png" class="tooltip" title="{$lng.general.delete}" alt="" /></a>{/if}
+	</div>
+</div>
+
+</fieldset>
+
+
+<fieldset class="bordered">
+  <legend>{$lng.packages.video}</legend>
+
+<div class="clearfix mt20">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.enable_video}" />&nbsp;{$lng.settings.enable_video}</div>
+	<div class="right_form"><input type="checkbox" name="enable_video" {if $ads_settings.enable_video==1}checked="checked"{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.video_expires}" />&nbsp;{$lng.settings.video_expires}</div>
+	<div class="right_form"><input type="text" name="video_expires" maxlength="4" size="4" value="{$ads_settings.video_expires}" />{$lng.settings.days}&nbsp;{$lng.settings.until_ad_expires}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.video_price}" />&nbsp;{$lng.settings.video_price}</div>
+	<div class="right_form"><input type="text" name="video_price" size="4" maxlength="20" value="{$ads_settings.video_price}" />&nbsp;{$appearance.default_currency}</div>
+</div>
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}<img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.option_description}" />&nbsp;{$lng.settings.description}</div>
+	<div class="right_form"><input type="text" name="video_description_{$v.id}" size=70 value="{$ads_settings.video_description[$v.id]}" /></div>
+</div>
+{/foreach}
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.option_example}" />&nbsp;{$lng.settings.example_image}</div>
+	<div class="right_form">
+		<input type="file" name="video_example" />&nbsp;&nbsp;
+		{if $ads_settings.video_example!=""}
+		<a href="{$live_site}/images/{$ads_settings.video_example}" class="imgfield">
+		<img src="{$template_path}images/camera.png"></a>
+		{else}
+		<img src="{$template_path}images/camera_off.png">
+		{/if}
+		{if $ads_settings.video_example!=""}&nbsp;&nbsp;<a href="extra_visibility_options.php?delete=video"><img src="{$template_path}images/delete.png" class="tooltip" title="{$lng.general.delete}" alt="" /></a>{/if}
+	</div>
+</div>
+
+</fieldset>
+
+<fieldset class="bordered">
+  <legend>{$lng.packages.url}</legend>
+
+<div class="clearfix mt20">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.enable_url}" />&nbsp;{$lng.settings.enable_url}</div>
+	<div class="right_form"><input type="checkbox" name="enable_url" {if $ads_settings.enable_url==1}checked="checked"{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.url_expires}" />&nbsp;{$lng.settings.url_expires}</div>
+	<div class="right_form"><input type="text" name="url_expires" maxlength="4" size="4" value="{$ads_settings.url_expires}" />{$lng.settings.days}&nbsp;{$lng.settings.until_ad_expires}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.url_price}" />&nbsp;{$lng.settings.url_price}</div>
+	<div class="right_form"><input type="text" name="url_price" size="4" maxlength="20" value="{$ads_settings.url_price}" />&nbsp;{$appearance.default_currency}</div>
+</div>
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}<img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.option_description}" />&nbsp;{$lng.settings.description}</div>
+	<div class="right_form"><input type="text" name="url_description_{$v.id}" size=70 value="{$ads_settings.url_description[$v.id]}" /></div>
+</div>
+{/foreach}
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.option_example}" />&nbsp;{$lng.settings.example_image}</div>
+	<div class="right_form">
+		<input type="file" name="url_example" />&nbsp;&nbsp;
+		{if $ads_settings.url_example!=""}
+		<a href="{$live_site}/images/{$ads_settings.url_example}" class="imgfield">
+		<img src="{$template_path}images/camera.png"></a>
+		{else}
+		<img src="{$template_path}images/camera_off.png">
+		{/if}
+		{if $ads_settings.url_example!=""}&nbsp;&nbsp;<a href="extra_visibility_options.php?delete=url"><img src="{$template_path}images/delete.png" class="tooltip" title="{$lng.general.delete}" alt="" /></a>{/if}
+	</div>
+</div>
+
+</fieldset>
+
+<br/>
+<br/>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.settings.account_options|replace:" ":"&nbsp;"}</strong></div></div>
+
+
+<fieldset class="bordered">
+  <legend>{$lng.settings.store}</legend>
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.store_price}" />&nbsp;{$lng.settings.store_price}</div>
+	<div class="right_form"><input type="text" name="store_price" size="4" maxlength="20" value="{$ads_settings.store_price}" />&nbsp;{$appearance.default_currency}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.store_availability}" />&nbsp;{$lng.settings.store_availability}</div>
+	<div class="right_form"><input type="text" maxlength="50" name="store_availability" size=10 value="{$ads_settings.store_availability}" />{$lng.settings.days}&nbsp;{$lng.settings.info_days_unlimited}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.image_resizing}" />&nbsp;{$lng.settings.store_image_resizing}</div>
+	<div class="right_form">
+		<input type="checkbox" class="noborder" name="resize_store_image" {if $ads_settings.resize_store_image}checked{/if} />&nbsp;{$lng.settings.resize_store_image}&nbsp;&nbsp;
+		{$lng.settings.resize_width}&nbsp;<input type="text" name="resize_store_width" maxlength="4" size="4" value="{$ads_settings.resize_store_width}" />&nbsp;px&nbsp;&nbsp;
+		{$lng.settings.resize_height}&nbsp;<input type="text" name="resize_store_height" maxlength="4" size="4" value="{$ads_settings.resize_store_height}" />&nbsp;px
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.store_subdomain}" />&nbsp;{$lng.settings.store_subdomain}</div>
+	<div class="right_form"><input type="checkbox" name="dealer_subdomain" {if $ads_settings.dealer_subdomain}checked{/if} /></div>
+</div>
+</fieldset>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.save_changes}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+
+</form>
+</div> {* p30 *}
+
+{include file="footer.html"}

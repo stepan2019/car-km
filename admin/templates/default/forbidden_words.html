@@ -1,0 +1,46 @@
+{include file="header.html"}
+
+<div class="page_title">{$lng.panel.security} > {$lng.panel.badwords_lists}</div>
+
+<div class="p30">
+
+<form name="lists" method="post" action="forbidden_words.php">
+
+<div class="lfloat" style="width: 400px; margin-left: 200px;">
+{if !$is_mod || $mod_sections.security.edit==1}
+	<div>{$lng.lists.add_badwords}</div>
+	<div><textarea name="badwords" cols="40" style="height: 242px;"></textarea></div>
+	<div class="buttons"{if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<strong><input type="submit" name="add_badwords" value="{$lng.general.add}" /></strong>
+	</div>
+{/if}
+</div>
+
+<div class="lfloat">
+	<div>{$lng.lists.badwords_list}</div>
+	<div>
+	<select multiple="multiple" name="badwords_list[]" size="14" style="width: 300px" class="mselect">
+			{foreach from=$array_badwords item=v}
+			<option value="{$v}">{$v}</option>
+			{/foreach}
+			</select>
+	</div>
+	{if !$is_mod || $mod_sections.security.delete==1}
+	<div class="buttons"{if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<strong><input type="submit" name="delete_badwords" value="{$lng.general.delete}" /></strong>
+	</div>
+	{/if}
+</div>
+
+<div class="clearfix"></div>
+
+{if !$is_mod || $mod_sections.security.edit==1}
+	<div class="information">{$lng.lists.help_add_lists}</div>
+{/if}
+
+
+</form>
+
+</div> {* end p30 *}
+
+{include file="footer.html"}

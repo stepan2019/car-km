@@ -1,0 +1,212 @@
+{include file="header.html"}
+
+<script type="text/javascript" src="{$live_site}/libs/nicEdit/nicEdit.min.js"></script>
+<script type="text/javascript">
+{literal}	
+bkLib.onDomLoaded(function() { nicEditors.allTextAreas({iconsPath : '../libs/nicEdit/nicEditorIcons.gif', fullPanel : true}) });
+{/literal}
+</script>
+
+
+<div class="page_title">{$lng.panel.listings} > <a href="manage_packages.php">{$lng.panel.manage_packages}</a> > {if !isset($id) || !$id}{$lng.packages.create_package}{else}{$lng.packages.edit_package}{/if}</div>
+
+<div class="p30">
+<form name="add_pkg" method="post" action="{$self}{if isset($id) && $id}?id={$id}{/if}">
+
+<div class="form_container">
+
+{if isset($error) && $error}<div class="error">{$error}</div>{/if}
+
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.packages.package_name}<span class="mandatory"> *</span></div>
+	<div class="right_form"><input type="text" name="name_{$v.id}" size="30" value="{if isset($package.name[$v.id])}{$package.name[$v.id]}{/if}" /></div>
+</div>
+{/foreach}
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.packages.package_description}</div>
+	<div class="right_form"><textarea name="description_{$v.id}" rows="6" cols="60">{if isset($package.description[$v.id])}{$package.description[$v.id]}{/if}</textarea></div>
+</div>
+{/foreach}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.packages.package_type}</div>
+	<div class="right_form">
+		<input name="type" type="radio"  value="ad" {if !isset($package.type) || (isset($package.type) && $package.type=="ad")}checked="checked"{/if} />&nbsp;{$lng.packages.ad_based}&nbsp;({$lng.packages.info.ad_based})&nbsp;&nbsp;
+		<input name="type" type="radio" value="sub" {if isset($package.type) && $package.type=="sub"}checked="checked"{/if}  />&nbsp;{$lng.packages.subscription_based}&nbsp;({$lng.packages.info.subscription_based})
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.packages.info.amount}" />&nbsp;{$lng.packages.amount}<span class="mandatory"> *</span></div>
+	<div class="right_form"><input type="text" name="amount" size="10" value="{if isset($package.amount)}{$package.amount}{/if}"/>&nbsp;{$appearance.default_currency}</div>
+</div>
+
+<div id="div_sub" {if !isset($package.type) || (isset($package.type) && $package.type=="ad")}style="display: none"{/if}>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.packages.info.subscription_time}" />&nbsp;{$lng.packages.subscription_time}</div>
+	<div class="right_form">
+		<input type="text" name="subscription_time" id="subscription_time" size="10" value="{if isset($package.subscription_time) && $package.subscription_time}{$package.subscription_time}{else}0{/if}"/>&nbsp;{$lng.packages.days}&nbsp;{$lng.settings.info_days_unlimited}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.packages.info.no_ads}" />&nbsp;{$lng.packages.no_ads}</div>
+	<div class="right_form"><input type="text" name="no_ads" id="no_ads" size="10" value="{if isset($package.no_ads) && $package.no_ads}{$package.no_ads}{else}0{/if}" />&nbsp;{$lng.packages.ads}&nbsp;{$lng.settings.info_days_unlimited}
+		</td></div>
+</div>
+
+</div>{* end div_sub *}
+
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.packages.info.no_words}" />&nbsp;{$lng.packages.no_words}</div>
+	<div class="right_form"><input type="text" name="no_words" size="10" value="{if isset($package.no_words) && $package.no_words}{$package.no_words}{else}0{/if}"/>&nbsp;{$lng.packages.words}&nbsp;{$lng.settings.info_days_unlimited}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.packages.info.no_days}" />&nbsp;{$lng.packages.no_days}</div>
+	<div class="right_form"><input type="text" name="no_days" size="10" value="{if isset($package.no_days) && $package.no_days}{$package.no_days}{else}0{/if}" />&nbsp;{$lng.packages.days}&nbsp;{$lng.settings.info_days_unlimited}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.packages.no_pictures}</div>
+	<div class="right_form">
+		<input type="text" name="no_pictures" size="10" value="{if isset($package.no_pictures)}{$package.no_pictures}{/if}" />&nbsp;{$lng.packages.pictures}&nbsp;
+		<input name="photo_mandatory" type="checkbox" class="noborder" {if isset($package.photo_mandatory) && $package.photo_mandatory==1} checked="checked" {/if}/>&nbsp;{$lng.packages.photo_mandatory}
+		</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.packages.info.allow_usage}" />&nbsp;{$lng.coupons.allow_usage}</div>
+	<div class="right_form"><input type="text" size="4" name="allow" value="{if isset($package.allow) && $package.allow}{$package.allow}{else}0{/if}">&nbsp;{$lng.coupons.times}&nbsp;{$lng.settings.info_days_unlimited}</div>
+</div>
+
+{if $ads_settings.enable_featured}
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.packages.info.featured}" />&nbsp;{$lng.packages.featured}</div>
+	<div class="right_form"><input name="featured" type="checkbox" class="noborder" {if isset($package.featured) && $package.featured==1} checked="checked" {/if}/></div>
+</div>
+{/if}
+
+{if $ads_settings.enable_highlited}
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.packages.info.highlited}" />&nbsp;{$lng.packages.highlited}</div>
+	<div class="right_form"><input name="highlited" type="checkbox" class="noborder" {if isset($package.highlited) && $package.highlited==1} checked="checked" {/if}/></div>
+</div>
+{/if}
+
+{if $ads_settings.enable_priorities}
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.packages.info.priority}" />&nbsp;{$lng.packages.priority}</div>
+	<div class="right_form">
+		<select name="priority">
+			<option value="">{$lng.packages.no_priority}</option>
+			{foreach from=$array_priorities item=v}
+			<option value="{$v.id}" {if isset($package.priority) && $package.priority==$v.id}selected="selected"{/if}>{$v.name}</option>
+			{/foreach}
+		</select>
+	</div>
+</div>
+{/if}
+
+{if $ads_settings.enable_urgent}
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.packages.info.urgent}" />&nbsp;{$lng.packages.urgent}</div>
+	<div class="right_form"><input name="urgent" type="checkbox" class="noborder" {if isset($package.urgent) && $package.urgent==1} checked="checked" {/if}/>
+	</div>
+</div>
+{/if}
+
+{if $ads_settings.enable_video}
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.packages.info.video}" />&nbsp;{$lng.packages.video}</div>
+	<div class="right_form"><input name="video" type="checkbox" class="noborder" {if isset($package.video) && $package.video==1} checked="checked" {/if}/>
+	
+	{*&nbsp;{$lng.packages.no_videos}&nbsp;<input type="text" name="no_videos" size="4" value="{if isset($package.no_videos)}{$package.no_videos}{/if}" />*}
+	</div>
+</div>
+{/if}
+
+{if $ads_settings.enable_url}
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.packages.info.url}" />&nbsp;{$lng.packages.url}</div>
+	<div class="right_form"><input name="url" type="checkbox" class="noborder" {if isset($package.url) && $package.url==1} checked="checked" {/if}/>
+	</div>
+</div>
+{/if}
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.packages.info.groups}" />&nbsp;{$lng.packages.use_plan_for}</div>
+	<div class="right_form">
+		<input type="radio" name="choose_group" id="choose_group1" value="all" {if isset($package.choose_group) && $package.choose_group!="choose"}checked="checked"{/if} onchange="onChooseGroup(this.form)" onclick="onChooseGroup(this.form)" />&nbsp;{$lng.custom_fields.all_groups}
+		&nbsp;&nbsp;<input type="radio" name="choose_group" id="choose_group2" value="choose" {if isset($package.choose_group) && $package.choose_group=="choose"}checked="checked"{/if} onchange="onChooseGroup(this.form)" onclick="onChooseGroup(this.form)"/>&nbsp;{$lng.custom_fields.choose_groups}
+	</div>
+</div>
+
+<div class="clearfix" id="div_groups" style="display: none">
+	<div class="left_form">&nbsp;</div>
+	<div class="right_form">
+	<select multiple="multiple" size=8 name="groups[]" id="groups" class="mselect">
+		{foreach from=$groups_list item=v}
+			<option value="{$v.id}">{$v.name}</option>
+		{/foreach}
+		{if $settings.nologin_enabled}<option value="1000">{$lng.packages.not_logged_in}</option>{/if}
+	</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.packages.info.categories}" /></div>
+	<div class="right_form">
+		<input type="radio" name="choose_categ" id="choose_categ1" value="all" {if isset($package.choose_categ) && ($package.choose_categ!="choose" || $package.categories==0)}checked="checked"{/if} onchange="onChooseCateg(this.form)" onclick="onChooseCateg(this.form)" onclick="onChooseCateg(this.form)"/>&nbsp;{$lng.packages.all_categories}
+		&nbsp;&nbsp;<input type="radio" name="choose_categ" id="choose_categ2" value="choose" {if isset($package.choose_categ) && $package.choose_categ=="choose" && $package.categories!=0}checked="checked"{/if} onchange="onChooseCateg(this.form)" onclick="onChooseCateg(this.form)" onclick="onChooseCateg(this.form)"/>&nbsp;{$lng.packages.choose_categories}
+	</div>
+</div>
+
+<div class="clearfix" id="div_categories" style="display: none">
+	<div class="left_form">&nbsp;</div>
+	<div class="right_form">
+	<select multiple="multiple" size=20 name="categories[]" id="categories" class="mselect">
+		{foreach from=$categories item=v}
+			<option value="{$v.id}">{$v.str}{$v.name}</option>
+		{/foreach}
+	</select>
+	</div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+
+</form>
+</div>
+
+<script type="text/javascript">
+
+var old_group_val="{if isset($package.groups)}{$package.groups}{/if}";
+if(old_group_val!="0") chooseGroup(document.forms["add_pkg"], old_group_val);
+
+{literal}
+$('input[name=type]').change(function(){ 
+
+if($('input[name=type]:checked').val()=="sub") $("#div_sub").show(); else  $("#div_sub").hide();
+
+});
+{/literal}
+
+var old_categ_val="{if isset($package.categories)}{$package.categories}{/if}";
+if(old_categ_val!="0") chooseCateg(document.forms["add_pkg"], old_categ_val);
+
+</script>
+
+{include file="footer.html"}

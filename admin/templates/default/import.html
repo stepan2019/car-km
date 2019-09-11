@@ -1,0 +1,386 @@
+{include file="header.html"}
+{include file="data/ui.html"}
+<div class="wait"></div>
+<div class="page_title">
+<div class="lfloat" width="200">{$lng.panel.tools} > {$lng.panel.import_export} > {$lng.ie.import}</div>
+<div class="rfloat mt5">
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="import-export.php"><span class="tab2-right">{$lng.ie.export}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab1-left">
+	<a href="import.php"><span class="tab1-right">{$lng.ie.import}</span></a>
+	</div></div>
+
+	{if $is_admin}
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="scheduled_imports.php"><span class="tab2-right">{$lng.ie.scheduled_imports}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="ie_templates.php"><span class="tab2-right">{$lng.ie.templates}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="ie_settings.php"><span class="tab2-right">{$lng.ie.settings}</span></a>
+	</div></div>
+	{/if}
+
+</div>
+</div>
+
+<div class="p30">
+<form name="ie" method="post" action="{$self}" enctype="multipart/form-data">
+
+<div class="form_container" style="padding-top: 0px !important;">
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.ie.csv_import|replace:" ":"&nbsp;"}</strong></div></div>
+
+{if $error_csv != ""}<div class="error">{$error_csv}</div>{/if}
+<div class="info" style="display: none;"></div>
+<div id="ti" class="on_top_info" style="display: none;"></div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.general.type}<span class="mandatory">*</span></div>
+	<div class="right_form">
+		<input type="radio" name="csv_import_type" value="ad" checked="checked" onClick="changeTemplates('{$ad_templates}', '{$lng.ie.all_fields}', 'ad', 'csv')" />&nbsp;{$lng.ie.ad}&nbsp;&nbsp;
+	 	<input type="radio" name="csv_import_type" value="user" onClick="changeTemplates('{$user_templates}', '{$lng.ie.all_fields}', 'user', 'csv')">&nbsp;{$lng.ie.user}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.file}<span class="mandatory">*</span></div>
+	<div class="right_form"><input name="csv_import_file" id="csv_import_file" type="file" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.field_names_first_line}</div>
+	<div class="right_form"><input type="checkbox" name="show_field_names" id="show_field_names" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.template}</div>
+	<div class="right_form">
+		<select name="csv_template">
+		<option value="">{$lng.ie.all_fields}</option>
+		{foreach from = $templates item=v}
+			<option value="{$v.id}">{$v.name}</option>
+		{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="clearfix" id="csv_ad_additional">
+	<div class="left_form"><span class="mandatory">*</span></div>
+	<div class="right_form">
+		<select name="csv_plan">
+			<option value="">{$lng.packages.plan}</option>
+			{foreach from = $plans item = v}
+			<option value="{$v.id}">{$v.name}</option>
+			{/foreach}
+		</select>
+		&nbsp;
+		<select name="csv_category">
+			<option value="">{$lng.categories.category}</option>
+			{foreach from = $categories item = v}
+	        	{if $v.parent==1}
+        		<optgroup label="{$v.str}{$v.name}">
+        		{else}
+	        	<option value="{$v.id}">{$v.str}{$v.name}</option>
+        		{/if}
+			{/foreach}
+		</select>
+		&nbsp;
+		{if $no_users<=100}
+		<select name="csv_user" id="csv_user">
+			<option value="">{$lng.users.user}</option>
+			{foreach from = $users item = v}
+			<option value="{$v.username}">{$v.username}</option>
+			{/foreach}
+		</select>
+		{else}
+		{$lng.users.user}:&nbsp;<input type="text" name="csv_user" id="csv_user" />
+		{/if}
+	</div>
+</div>
+
+<div class="clearfix" id="csv_user_additional" style="display: none;">
+	<div class="left_form">&nbsp;</div>
+	<div class="right_form">
+		<select name="csv_group">
+			<option value="">{$lng.users.group}</option>
+			{foreach from = $groups item = v}
+			<option value="{$v.id}">{$v.name}</option>
+			{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.listings.date}</div>
+	<div class="right_form"><input name="csv_date_added" id="csv_date_added" size="15" type="text" value="" /></div>
+</div>
+
+{if $languages|@count>1}
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.language}</div>
+	<div class="right_form">
+		<select name="csv_language">
+			{foreach from=$languages item=l}
+			<option value="{$l.id}" {if $l.default==1}selected{/if}>{$l.name}</option>
+			{/foreach}
+		</select>
+	</div>
+</div>
+{/if}
+
+<div class="form_footer">
+	<div class="buttons rfloat"  {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="CSV_import" value="{$lng.ie.import}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.ie.xml_import|replace:" ":"&nbsp;"}</strong></div></div>
+
+{if $error_xml != ""}<div class="error">{$error_xml}</div>{/if}
+{if $info_xml != ""}<div class="info">{$info_xml}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.general.type}<span class="mandatory">*</span></div>
+	<div class="right_form">
+		<input type="radio" name="xml_import_type" value="ad" checked="checked" onClick="changeTemplates('{$ad_templates}', '{$lng.ie.all_fields}', 'ad', 'xml')" />&nbsp;{$lng.ie.ad}&nbsp;&nbsp;
+		<input type="radio" name="xml_import_type" value="user" onClick="changeTemplates('{$user_templates}', '{$lng.ie.all_fields}', 'user', 'xml')" />&nbsp;{$lng.ie.user}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.file}<span class="mandatory">*</span></div>
+	<div class="right_form"><input name="xml_import_file" id="xml_import_file" type="file" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.template}</div>
+	<div class="right_form">
+		<select name="xml_template">
+			<option value="">{$lng.ie.all_fields}</option>
+			{foreach from = $templates item=v}
+				<option value="{$v.id}">{$v.name}</option>
+			{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="clearfix" id="xml_ad_additional">
+	<div class="left_form"><span class="mandatory">*</span></div>
+	<div class="right_form">
+		<select name="xml_plan">
+			<option value="">{$lng.packages.plan}</option>
+			{foreach from = $plans item = v}
+			<option value="{$v.id}">{$v.name}</option>
+			{/foreach}
+		</select>
+		&nbsp;
+		<select name="xml_category">
+			<option value="">{$lng.categories.category}</option>
+			{foreach from = $categories item = v}
+	        	{if $v.parent==1}
+        		<optgroup label="{$v.str}{$v.name}">
+        		{else}
+	        	<option value="{$v.id}">{$v.str}{$v.name}</option>
+        		{/if}
+			{/foreach}
+		</select>
+		&nbsp;
+		{if $no_users<=100}
+		<select name="xml_user" id="xml_user">
+			<option value="">{$lng.users.user}</option>
+			{foreach from = $users item = v}
+			<option value="{$v.username}">{$v.username}</option>
+			{/foreach}
+		</select>
+		{else}
+		{$lng.users.user}:&nbsp;<input type="text" name="xml_user" id="xml_user" />
+		{/if}
+		
+	</div>
+</div>
+
+<div class="clearfix" id="xml_user_additional" style="display: none;">
+	<div class="left_form">&nbsp;</div>
+	<div class="right_form">
+		<select name="xml_group">
+			<option value="">{$lng.users.group}</option>
+			{foreach from = $groups item = v}
+			<option value="{$v.id}">{$v.name}</option>
+			{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.listings.date}</div>
+	<div class="right_form"><input name="xml_date_added" id="xml_date_added" size="15" type="text" value="" /></div>
+</div>
+
+{if $languages|@count>1}
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.language}</div>
+	<div class="right_form">
+		<select name="xml_language">
+			{foreach from=$languages item=l}
+			<option value="{$l.id}" {if $l.default==1}selected{/if}>{$l.name}</option>
+			{/foreach}
+		</select>
+	</div>
+</div>
+{/if}
+
+<div class="form_footer">
+	<div class="buttons rfloat"  {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="XML_import" value="{$lng.ie.import}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+
+<script type="text/javascript">
+{literal}
+
+        $(function() {
+
+                $("#csv_user").autocomplete({
+                        source: "{/literal}{$live_site}{literal}/admin/include/get_info.php?type=user_ac",
+                        minLength: 1
+                });
+                $("#xml_user").autocomplete({
+                        source: "{/literal}{$live_site}{literal}/admin/include/get_info.php?type=user_ac",
+                        minLength: 1
+                });
+
+
+		$('#csv_date_added').datepicker({
+			dateFormat: "yy-mm-dd",
+			changeMonth: true,
+			changeYear: true
+		});
+
+		$('#xml_date_added').datepicker({
+			dateFormat: "yy-mm-dd",
+			changeMonth: true,
+			changeYear: true
+		});
+
+});
+{/literal}
+
+	var added = "{$lng.ie.added}";
+	var listing="{$lng.messages.listing}";
+	var status = "{$lng.ie.bulk_upload_status}";
+	var success = "{$lng.ie.successfully}";
+	var failed = "{$lng.ie.failed}";
+
+{if $csv_import_id}
+	
+	$(document).ready(function() {
+
+		csv_import_id="{$csv_import_id}";
+		$("body").addClass("loading");
+		CSVImport(csv_import_id, 1);
+		
+	});
+	{literal}
+	function CSVImport(csv_import_id, line) {
+		$.ajax({
+			method: "get",
+			url: "include/import_element.php?type=csv&import_id="+csv_import_id+"&line="+line,
+			beforeSend: function() {  },
+			complete: function() { },
+			success: function(returnedData)
+			{
+				var split=returnedData.split("|");
+				if(split[0]!=0) { 
+					
+					if(split[1]) {
+
+						$(".on_top_info").html(listing+" #"+split[1]+" "+added);
+						
+						var el = document.getElementById('ti');
+						el.style.animation = 'none';
+						el.offsetHeight;
+						el.style.animation = null; 
+
+						if(!$(".on_top_info").is(":visible")) $(".on_top_info").show();
+					}
+
+					CSVImport(csv_import_id, split[0]); 
+				}
+				else { 
+				    $("body").removeClass("loading");
+				    
+				    $(".info").html(status+' '+split[1]+' '+success+', '+split[2]+' '+failed);
+				    $(".info").show();
+				}
+			}
+		});
+	}
+	{/literal}
+	
+{/if}
+
+{if $xml_import_id}
+	
+	$(document).ready(function() {
+
+		xml_import_id="{$xml_import_id}";
+		$("body").addClass("loading");
+		XMLImport(xml_import_id, -1);
+		
+	});
+	{literal}
+	function XMLImport(xml_import_id, line) {
+		$.ajax({
+			method: "get",
+			url: "include/import_element.php?type=xml&import_id="+xml_import_id+"&line="+line,
+			beforeSend: function() {  },
+			complete: function() { },
+			success: function(returnedData)
+			{
+				var split=returnedData.split("|");
+				if(split[0]!=0) { 
+					
+					if(split[1]) {
+
+						$(".on_top_info").html(listing+" #"+split[1]+" "+added);
+						
+						var el = document.getElementById('ti');
+						el.style.animation = 'none';
+						el.offsetHeight;
+						el.style.animation = null; 
+
+						if(!$(".on_top_info").is(":visible")) $(".on_top_info").show();
+					}
+
+					XMLImport(xml_import_id, split[0]); 
+				}
+				else { 
+				    $("body").removeClass("loading");
+				    
+				    $(".info").html(status+' '+split[1]+' '+success+', '+split[2]+' '+failed);
+				    $(".info").show();
+				}
+			}
+		});
+	}
+	{/literal}
+	
+{/if}
+
+</script>
+
+{include file="footer.html"}

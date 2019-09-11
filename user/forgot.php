@@ -38,8 +38,8 @@
             $output='<p>Dear user,</p>';
             $output.='<p>Please click on the following link to reset your password.</p>';
             $output.='<p>-------------------------------------------------------------</p>';
-            $output.='<p><a href="https://www.carpass.gr/user/reset-password.php?key='.$key.'&email='.$email.'&type='.$type.'&action=reset" target="_blank">
-               https://www.carpass.gr/user/reset-password.php?key='.$key.'&email='.$email.'&type='.$type.'&action=reset</a></p>';    
+            $output.='<p><a href="https://www.test.com.carpass.gr/user/reset-password.php?key='.$key.'&email='.$email.'&type='.$type.'&action=reset" target="_blank">
+               https://www.test.com.carpass.gr/user/reset-password.php?key='.$key.'&email='.$email.'&type='.$type.'&action=reset</a></p>';    
             $output.='<p>-------------------------------------------------------------</p>';
             $output.='<p>Please be sure to copy the entire link into your browser.
                The link will expire after 1 day for security reason.</p>';
@@ -92,8 +92,7 @@
    <link href="../css/nivo-lightbox.css" rel="stylesheet">
    <link href="../css/nivo_themes/default/default.css" rel="stylesheet">
 
-   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
-        integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+   <link rel="stylesheet" href="/css/all.css" crossorigin="anonymous">
 </head>
 <body>
 

@@ -1,0 +1,12 @@
+		
+		<span>
+		{if $v.showcase==0}
+			<a href="javascript:;" onclick="onEnableShowcase('{$v.id}');">
+			<img src="{$template_path}modules/showcase/images/showcase_off.png" class="tooltip icon" title="Enable showcase" alt="">
+			</a>
+		{else}
+			<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDisableShowcase('{$v.id}');{/if}">
+			<img src="{$template_path}modules/showcase/images/showcase_on.png" class="tooltip icon" title="Disable showcase" alt="">
+			</a>
+		{/if}
+		</span>	

@@ -1,0 +1,190 @@
+{include file="header.html"}
+{include file="data/ui.html"}
+
+<script type="text/javascript" src="{$live_site}/admin/modules/spam_prevention/js/spam_prevention.js"></script>
+
+<div class="page_title">
+<div class="lfloat" width="200"><a href="{$live_site}/admin/modules.php">{$lng.panel.modules}</a> > <a href="{$live_site}/admin/modules/spam_prevention/index.php">{$lng_sp.spam_prevention}</a> > {$lng.panel.settings}</div>
+<div class="rfloat mt5">
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab1-left">
+	<a href="{$live_site}/admin/modules/spam_prevention/index.php"><span class="tab1-right">{$lng_sp.spam_log}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="{$live_site}/admin/modules/spam_prevention/settings.php"><span class="tab2-right">{$lng.panel.settings}</span></a>
+	</div></div>
+
+</div>
+</div>
+
+<div class="p30">
+
+<form name="search" id="search" method="post" action="">
+
+<div class="lfloat">
+
+	<input type="image" value="unblock_selected" name="unblock_selected" src="{$template_path}images/activate_all.png" onclick="{if $demo}alert('{$lng.general.errors.demo}'); return false;{/if}" style="border: 0px;" class="tooltip icon" title="{$lng_sp.unblock_all}" alt="">
+
+	<input type="image" value="whitelist_selected" name="whitelist_selected" src="{$template_path}images/whitelist_all.png" onclick="{if $demo}alert('{$lng.general.errors.demo}'); return false;{/if}" style="border: 0px;" class="tooltip icon" title="{$lng_sp.whitelist_all}" alt="">
+
+	</div>
+
+<div class="buttonwrapper lfloat ml10"><div class="button3-left">
+
+	<a href="javascript:;" id="add_search"><span class="button3-right">{$lng.general.search}&nbsp;<img src="{$template_path}images/gray-down-arrow.png" /></span></a>
+
+	<a href="javascript:;" id="remove_search"><span class="button3-right">{$lng.general.search}&nbsp;<img src="{$template_path}images/gray-up-arrow.png" /></span></a>
+
+</div></div>
+
+<div class="rfloat">
+{include file="paginator.html"}
+</div>
+
+<div class="clearfix"></div>
+
+<div id="search_box" style="text-align: left; display: none;">
+
+<input type="hidden" name="page" value = "{$page}" />
+<input type="hidden" name="no_per_page" value = "{$no_per_page}" />
+
+<input type="text" name="ip" size="20" class="defaultText" title="{$lng.search.ip}" value="{if isset($post_array.ip)}{$post_array.ip}{/if}"/>
+&nbsp;
+<input type="text" name="email" size="30" class="defaultText" title="{$lng.users.email}" value="{if isset($post_array.email)}{$post_array.email}{/if}"/>
+&nbsp;
+<select name="type">
+	<option value="">{$lng.general.type}</option>
+	<option value="mailto">{$lng_sp.mailto}</option>
+	<option value="register">{$lng_sp.register}</option>
+	<option value="comments">{$lng_sp.comments}</option>
+	<option value="reviews">{$lng_sp.reviews}</option>
+</select>
+&nbsp;
+<input type="text" name="confidence_from" size="20" class="defaultText" title="{$lng_sp.confidence_from}" value="{if isset($post_array.confidence_from)}{$post_array.confidence_from}{/if}"/>
+<input type="text" name="confidence_to" size="20" class="defaultText" title="{$lng_sp.confidence_to}" value="{if isset($post_array.confidence_to)}{$post_array.confidence_to}{/if}"/>
+&nbsp;
+<input name="date_from_vis" id="date_from_vis" type="text" size="10" class="defaultText" title="{$lng.subscriptions.date_start}"/>
+<input name="date_from" id="date_from" type="hidden"/>
+
+<input name="date_to_vis" id="date_to_vis" type="text" size="10" class="defaultText" title="{$lng.subscriptions.date_end}" />
+<input name="date_to" id="date_to" type="hidden" />
+
+<div class="buttons">
+	<strong><input type="submit" name="Search" id="Search" value="{$lng.general.search}" /></strong>
+</div>
+
+</div>{* end search_box *}
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th class="hleft" width="20"><input type="checkbox" class="noborder" name="check_all" id="check_all" /></th>
+	<th>{$lng.general.id}</th>
+	<th>{$lng.search.ip}</th>
+	<th>{$lng.users.email}</th>
+	<th>{$lng.general.type}</th>
+	<th>{$lng_sp.confidence}</th>
+	<th>{$lng.custom_fields.date}</th>
+	<th class="hright" width="70">&nbsp;</th>
+</tr>
+
+{foreach from=$array_logs item=v}
+<tr>
+	<td><input type="checkbox" class="noborder" name="sl{$v.id}" id="sl{$v.id}"></td>
+	<td>{$v.id}</td>
+	<td>{$v.ip}</td>
+	<td>{$v.email}</td>
+	<td>{$lng_sp[$v.type]}</td>
+	<td>{if $sp_settings.use_sfs && $v.confidence_sfs>0}<img src="{$template_path}/modules/spam_prevention/images/stopforumspam.png" />&nbsp;{$v.confidence_sfs}{/if}{if $sp_settings.use_abip && $v.confidence_abip>0}&nbsp;<img src="{$template_path}/modules/spam_prevention/images/abuseipdb.png" />&nbsp;{$v.confidence_abip}{/if}</td>
+	<td>{$v.date_nice}</td>
+	<td>
+	<span><a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onSPUnblock('{$v.id}','{$lng_sp.confirm_unblock|addslashes}');{/if}"><img src="{$template_path}images/unblock.png" class="tooltip icon" title="{$lng.general.unblock}" alt=""></a></span>
+
+	<span><a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onSPAddWhitelist('{$v.id}','{$lng_sp.confirm_add_whitelist|addslashes}');{/if}"><img src="{$template_path}images/whitelist.png" class="tooltip icon" title="{$lng.security.add_to_whitelist}" alt=""></a></span>
+
+	</td>
+</tr>
+{/foreach}
+
+
+{if !$no_logs}<tr><td colspan="8">{$lng.no_items}</td></tr>{/if}
+
+</table>
+
+</form>
+
+{if $no_logs}<div class="rfloat mt20">{include file="paginator.html"}</div>{/if}
+
+<div class="mt20">
+	{$lng.general.show}
+	<select name="no_per_page_sel" onchange="doSel(this);">
+		{section name=pg loop=60 start=10 step=10}
+		<option value="location.href='{$crt_page_link}&no_per_page={$smarty.section.pg.index}'" {if $no_per_page==$smarty.section.pg.index} selected="selected" {/if}>{$smarty.section.pg.index}</option>
+		{/section}
+	</select>
+	{$lng.general.on_a_page}
+</div>
+
+</div> {* end p30 *}
+
+{literal}
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("input").keypress(function(e)
+		{
+        		// if the key pressed is the enter key
+        		if (e.which == 13)
+        		{
+				// delay action so the autocomplete list to fill
+				setTimeout(function() { $("#search").submit();}, 200);
+
+				return false;
+        		}
+		});
+		$("#remove_search").hide();
+		$("#search_box").hide();
+		$("#add_box").hide();
+		$("#add_search").click(function()
+		{
+			$("#remove_search").show();
+			$("#add_search").hide();
+			$("#search_box").slideDown('fast').show();
+		});
+
+		$("#remove_search").click(function()
+		{
+			$("#add_search").show();
+			$("#remove_search").hide();
+			$("#search_box").hide().slideUp('fast');
+		});
+
+
+		$("#check_all").click(function()
+		{
+
+			if ($('#check_all').is(':checked')) checkAll(document);
+			else uncheckAll(document);
+
+		});
+
+	});
+
+	$(function() {
+		$('#date_from_vis').datepicker({
+			dateFormat: "M dd yy",
+			changeMonth: true,
+			changeYear: true,
+			altField: '#date_from', altFormat: 'yy-mm-dd'
+		});
+
+		$('#date_to_vis').datepicker({
+			dateFormat: "M dd yy",
+			changeMonth: true,
+			changeYear: true,
+			altField: '#date_to', altFormat: 'yy-mm-dd'
+		});
+	});
+
+{/literal}
+</script>
+{include file="footer.html"}

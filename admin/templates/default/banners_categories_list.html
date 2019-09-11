@@ -1,0 +1,27 @@
+{include file="overlay_header.html"}
+
+<div class="overlay-top-bg">{$lng.banners.categories}</div>
+
+<table cellpadding="0" cellspacing="0" align="center" class="centered datatable" width="90%">
+{if $all_categories==1}
+<tr><td class="laligned">{$lng.banners.all_categories}</td></tr>
+{else}
+{foreach from=$categories_array item=v}
+	<tr><td class="laligned">{$v}</td></tr>
+{/foreach}
+{/if}
+</table>
+<br/><br/>
+<div class="overlay-top-bg">{$lng.banners.sections}</div>
+
+<table cellpadding="0" cellspacing="0" align="center" class="centered datatable" width="90%">
+{if $all_sections==1}
+<tr><td class="laligned">{$lng.banners.all_sections}</td></tr>
+{else}
+{foreach from=$sections_array item=v}
+	<tr><td class="laligned">{$v}</td></tr>
+{/foreach}
+{/if}
+</table>
+
+{include file="overlay_footer.html"}

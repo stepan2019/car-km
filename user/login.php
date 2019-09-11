@@ -1,20 +1,21 @@
-<?php 
-    include "../setting/config.php"; 
-    
-    session_start();
-    if(!empty($_GET['query'])) {
-        $go = $_GET['query'];
-    }
-   
-	if(@$_SESSION['user']) {
+<?php
+include "../setting/config.php";
+session_start();
+if (!empty($_GET['query'])) {
+    $go = $_GET['query'];
+}
+include "../include/include.php";
+
+global $lng;
+
+if (@$_SESSION['user']) {
     header("location:../vehicle/add.php");
-	exit(0);
-	
-	
-    }
-    
-    $result = $config->getInformationContent();
-    $information = $result->fetch_assoc();
+    exit(0);
+
+}
+
+$result = $config->getInformationContent();
+$information = $result->fetch_assoc();
 ?>
 
 <!DOCTYPE html>
@@ -32,51 +33,58 @@
     <link href="../css/custom.css" rel="stylesheet">
 
     <link href="../css/loaders.css" rel="stylesheet">
+    <link href="../css/all.css" rel="stylesheet">
     <link href="../css/swiper.min.css" rel="stylesheet">
     <link href="../css/animate.min.css" rel="stylesheet">
     <link href="../css/nivo-lightbox.css" rel="stylesheet">
     <link href="../css/nivo_themes/default/default.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
-        integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/all.css" crossorigin="anonymous">
+    <script>
+        exdate=new Date();
+        exdate.setDate(exdate.getDate() + 365);
+
+    </script>
 </head>
 <body>
 
-    <?php
-        include "../template/header.php";
-    ?>
+<?php
+include "../template/header.php";
+?>
 
-    <div class="swiper-container main-slider" id="myCarousel">
-        <div class="swiper-wrapper">
-            <?php 
-                if(isset($_GET['type'])) {
-                    $page = $_GET['type'];
-                    include $page.".php";
-                } else {
+<div class="swiper-container main-slider" id="myCarousel">
+    <div class="swiper-wrapper">
+        <?php
+        if (isset($_GET['type'])) {
+            $page = $_GET['type'];
+            include $page . ".php";
+        } else {
             ?>
-                <div class="type-title">
-                    <p>Please select user type to login.</p><br>
-                </div>
-                <div>
-                    <div class="type-user1">
-                    <a href="login.php?type=login_user<?php if(isset($go)) echo "&go=".$go; ?>" class="link-size typing-glow mr-5"><i class="far fa-user"></i>&nbsp;&nbsp;User</a>
-                    </div>
-                    <div class="type-user2">
-                    <a href="login.php?type=login_dealer<?php if(isset($go)) echo "&go=".$go; ?>" class="link-size typing-glow ml-5"><i class="fas fa-car"></i>&nbsp;&nbsp;Dealer</a>
-                    </div>
-                </div>
-            <?php } ?>
+            <div class="type-title">
+                <p><?php echo $lng['login']['Select_type_to_login']; ?></p><br>
             </div>
-        </div>
+            <div>
+                <div class="type-user1">
+                    <a href="login.php?type=login_user<?php if (isset($go)) echo "&go=" . $go; ?>"
+                       class="link-size typing-glow mr-5"><i class="far fa-user"></i>&nbsp;&nbsp;<?php echo $lng['login']['User']; ?></a>
+                </div>
+                <div class="type-user2">
+                    <a href="login.php?type=login_dealer<?php if (isset($go)) echo "&go=" . $go; ?>"
+                       class="link-size typing-glow ml-5"><i class="fas fa-car"></i>&nbsp;&nbsp;<?php echo $lng['login']['Delaer']; ?></a>
+                </div>
+            </div>
+        <?php } ?>
     </div>
+</div>
+</div>
 
-    <?php
-        include "../template/footer.php";
-    ?>
+<?php
+include "../template/footer.php";
+?>
 
-    <script src="../js/jquery.min.js" ></script> 
-    <script src="../js/bootstrap.min.js"></script> 
-    <script src="../js/scrollPosStyler.js"></script> 
+<script src="../js/jquery.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/scrollPosStyler.js"></script>
 </body>
 
 </html>

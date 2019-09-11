@@ -1208,8 +1208,10 @@ class PHPMailer
      */
     public function send()
     {
+        exit($this->preSend());
         try {
             if (!$this->preSend()) {
+                exit('sdfsdf');
                 return false;
             }
             return $this->postSend();
@@ -1242,7 +1244,6 @@ class PHPMailer
             if ((count($this->to) + count($this->cc) + count($this->bcc)) < 1) {
                 throw new phpmailerException($this->lang('provide_address'), self::STOP_CRITICAL);
             }
-
             // Validate From, Sender, and ConfirmReadingTo addresses
             foreach (array('From', 'Sender', 'ConfirmReadingTo') as $address_kind) {
                 $this->$address_kind = trim($this->$address_kind);
@@ -1261,6 +1262,7 @@ class PHPMailer
                 }
             }
 
+            print_r('sdfsdf');exit;
             // Set whether the message is multipart/alternative
             if ($this->alternativeExists()) {
                 $this->ContentType = 'multipart/alternative';

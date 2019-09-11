@@ -1,0 +1,72 @@
+<script>
+	function onSuspend(id, days) {
+
+		var url_str="modules/suspend_user/actions.php?action=suspend&id="+id+"&days="+days;
+
+		$.get( url_str, function( data ) {
+			location.reload(true);
+		});
+
+	}
+	function onUnsuspend(id) {
+
+		var url_str="modules/suspend_user/actions.php?action=unsuspend&id="+id;
+
+		$.get( url_str, function( data ) {
+			location.reload(true);
+		});
+
+	}
+	function onBan(id) {
+
+		var url_str="modules/suspend_user/actions.php?action=ban&id="+id;
+
+		$.get( url_str, function( data ) {
+			location.reload(true);
+		});
+
+	}
+	jQuery(document).ready(function() {
+
+	$(document).on("click", "a.suspend", function(){
+
+		var user_id = $(this).attr("id").substr(7);
+		$(".suspend_days_div").hide();
+		$("#suspend_days"+user_id).show();
+	
+	}); // end suspend click
+
+	$(document).on("click", "div.suspend_days", function(){
+
+		var live_site = '{$live_site}';
+		var user_id = $(this).attr("id").substr(12);
+		var days = $("#days"+user_id).val();
+
+		onSuspend(user_id, days);
+	
+	}); // end suspend_days click
+
+	$(document).on("click", "div.ban", function(){
+
+		var live_site = '{$live_site}';
+		var user_id = $(this).attr("id").substr(3);
+
+		onBan(user_id);
+	
+	}); // end ban click
+
+	$(document).on("click", ".remove_days", function(){
+
+		$(".suspend_days_div").hide();
+	
+	}); // end suspend click
+	
+	$(document).on("click", "a.suspend_all", function(){
+
+		$("#suspend_days_div").show();
+	
+	}); // end suspend click
+	
+	}); // end document ready
+	
+</script>

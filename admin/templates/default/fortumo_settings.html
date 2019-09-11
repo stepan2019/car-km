@@ -1,0 +1,104 @@
+<div class="form_container">
+
+{if isset($error) && $error != ""}<div class="error">{$error}</div>{/if}
+{if isset($info) && $info != ""}<div class="info">{$info}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.lists.currency}</div>
+	<div class="right_form"><input type="text" maxlength="200" size="40" name="currency" id="currency" value="{$processor_settings.currency}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.fortumo.test}</div>
+	<div class="right_form"><input type="checkbox" class="noborder" name="test" id="test" {if $processor_settings.test==1} checked="checked"{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.fortumo.address_to_receive_requests}</div>
+	<div class="right_form">{$live_site}/payment_return/fortumo.php?mode=success</div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit_fortumo" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.fortumo.fortumo_products|replace:" ":"&nbsp;"}</strong></div>&nbsp;<img id="add_prod" src="{$template_path}images/add.png" style="margin-bottom: -7px;" /></div>
+
+{if isset($product_error) && $product_error != ""}<div class="error">{$product_error}</div>{/if}
+
+<div id="add_product" {if !isset($product_error) || !$product_error}style="display: none;"{/if}>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.search.keyword}</div>
+	<div class="right_form"><input type="text" name="keyword" value="{if isset($tmp.keyword)}{$tmp.keyword}{/if}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.fortumo.short_code}</div>
+	<div class="right_form"><input type="text" name="short_code" value="{if isset($tmp.short_code)}{$tmp.short_code}{/if}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.fortumo.secret}</div>
+	<div class="right_form"><input type="text" name="secret" value="{if isset($tmp.secret)}{$tmp.secret}{/if}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.listings.price}</div>
+	<div class="right_form"><input type="text" name="price" value="{if isset($tmp.price)}{$tmp.price}{/if}" />&nbsp;{$processor_settings.currency}</div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Add" value="{$lng.general.add}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end add_product *}
+
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th width="20%" class="hleft">{$lng.search.keyword}</th>
+	<th width="20%">{$lng.fortumo.short_code}</th>
+	<th width="30%">{$lng.fortumo.secret}</th>
+	<th width="20%">{$lng.listings.price}</th>
+	<th width="10%" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$processor_settings.products item=v}
+<tr>
+	<td>{$v.keyword}</td>
+	<td>{$v.short_code}</td>
+	<td>{$v.secret}</td>
+	<td>{$v.price}</td>
+	<td><a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDelete('{$v.id}','{$lng.fortumo.confirm_delete|addslashes}','fortumo');{/if}"><img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt=""></a></td>
+</tr>
+{/foreach}
+
+{if $processor_settings.products|@count==0}
+<tr><td colspan="5">{$lng.no_items}</td></tr>
+{/if}
+
+</table>
+
+<script type="text/javascript">
+{literal}
+$(document).ready(function() {
+
+	$("#add_prod").click(function() {
+		if($("#add_product").is(":visible")==false) $("#add_product").show();
+		else $("#add_product").hide();
+	});
+
+});
+{/literal}
+</script>
+
+<br/><br/><br/>
+</td></tr>
+</table>

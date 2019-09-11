@@ -1,0 +1,90 @@
+{include file="data/fancybox.html"}
+
+<div class="p30">
+<form name="language" method="post" action="{if isset($id) && $id}edit_language.php?id={$id}{else}add_language.php{/if}" enctype="multipart/form-data">
+
+<div class="form_container">
+
+{if isset($error) && $error}<div class="error">{$error}</div>{/if}
+
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.languages.info.language_id}" />&nbsp;{$lng.languages.language_id}</div>
+	<div class="right_form">{if isset($id) && $id}{$language.id}{else}<input type="text" name="id" size="10" value="">{/if}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.languages.info.code}" />&nbsp;{$lng.languages.code}</div>
+	<div class="right_form"><input type="text" name="code" size="10" value="{if isset($language.code)}{$language.code}{/if}" />&nbsp;{$lng.languages.info.codes_link}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.languages.language_name}</div>
+	<div class="right_form"><input type="text" name="name" size="30" value="{if isset($language.name)}{$language.name}{/if}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.languages.info.language_image}" />&nbsp;{$lng.languages.language_image}</div>
+	<div class="right_form">
+	<input name="flag_image" type="file" />
+		{if isset($language.image) && $language.image!=""}
+		<a href="{$live_site}/images/languages/{$language.image}" class="imgfield">
+		<img src="{$template_path}images/camera.png" /></a>
+		{else}
+		<img src="{$template_path}images/camera_off.png" />
+		{/if}
+		{if isset($language.image) && $language.image!=""}&nbsp;&nbsp;<a href="edit_language.php?id={$id}&delete=image"><img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt=""></a>{/if}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.languages.info.characters_map}" />&nbsp;{$lng.languages.characters_map}</div>
+	<div class="right_form">
+		<select name="characters_map[]" id="characters_map" multiple="multiple" size="4" class="mselect">
+		{foreach from=$array_maps item=v}
+			<option value="{$v}" {if isset($language.characters_map) && $language.characters_map && in_array($v, $language.characters_map_array)}selected="selected"{/if}>{$v|capitalize}</option>
+		{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.languages.direction}</div>
+	<div class="right_form">
+		<select name="direction" >
+			<option value="ltr" {if isset($language.direction) && $language.direction=='ltr'}selected="selected"{/if}>{$lng.languages.ltr}</option>
+			<option value="rtl" {if isset($language.direction) && $language.direction=='rtl'}selected="selected"{/if}>{$lng.languages.rtl}</option>
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.languages.info.default}" />&nbsp;{$lng.general.default}</div>
+	<div class="right_form"><input name="default" type="checkbox" class="noborder" {if isset($language.default) && $language.default==1} checked="checked" {/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.general.enabled}</div>
+	<div class="right_form"><input name="enabled" type="checkbox" class="noborder" {if (!isset($id) || !$id) || (isset($language.enabled) && $language.enabled==1)}checked="checked"{/if} /></div>
+</div>
+
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+
+</form>
+</div>
+
+{literal}
+<script type="text/javascript">
+$(document).ready(function() {
+	$("a.imgfield").fancybox();
+});
+</script>
+{/literal}

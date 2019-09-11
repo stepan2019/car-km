@@ -1,0 +1,82 @@
+{include file="header.html"}
+
+<div class="page_title">{$lng.panel.settings} >{if $type=="cf"}<a href="manage_custom_fields.php">{$lng.panel.custom_fields}</a>{else}<a href="user_fields.php">{$lng.panel.user_fields}</a>{/if} > {$lng.custom_fields.translate_depending}: {$field_name}</div>
+
+<div class="p30">
+<div class="form_container">
+
+<div class="clearfix">
+	<div class="left_form">&nbsp;</div>
+	<div class="right_form">
+{if isset($multiple_fsets) && $multiple_fsets}
+	<select id="fieldset" name="fieldset" onchange="changeLoc(this, 'translate_depending.php', 'fieldset', 'id={$id}&type={$type}')">
+		<option value="0" {if $fieldset==0} selected="selected" {/if}>{$lng.custom_fields.all_fieldsets}</option>
+		{foreach from=$fieldsets item=v}
+		<option value="{$v.id}" {if $fieldset==$v.id} selected="selected" {/if}>{$v.name}</option>
+		{/foreach}
+	</select>
+{/if}
+&nbsp;&nbsp;
+
+{$dep.name1}
+	<select id="sel_{$dep.caption1}" name="sel_{$dep.caption1}"  onchange="changeLoc(this, 'translate_depending.php', 'current1', 'id={$id}&type={$type}{if $fieldset}&fieldset={$fieldset}{/if}')">
+		{if !$current1}<option value="">{$dep.name1}</option>{/if}
+		{foreach from=$array1 item=v}
+		<option value="{$v.id}" {if $current1==$v.id} selected="selected" {/if}>{$v.name}</option>
+		{/foreach}
+	</select>
+{if $dep.no>=3}
+&nbsp;&nbsp;
+{$dep.name2}
+	<select id="sel_{$dep.caption2}" name="sel_{$dep.caption2}" onchange="changeLoc(this, 'translate_depending.php', 'current2', 'id={$id}&type={$type}{if $fieldset}&fieldset={$fieldset}{/if}&current1={$current1}')">
+		{if !$current2}<option value="">{$dep.name2}</option>{/if}
+		{foreach from=$array2 item=v}
+		<option value="{$v.id}" {if $current2==$v.id} selected="selected" {/if}>{$v.name}</option>
+		{/foreach}
+	</select>
+{/if}
+{if $dep.no>=4}
+&nbsp;&nbsp;
+	{$dep.name3}
+	<select id="sel_{$dep.caption3}" name="sel_{$dep.caption3}" onchange="changeLoc(this, 'translate_depending.php', 'current3', 'id={$id}&type={$type}{if $fieldset}&fieldset={$fieldset}{/if}&current1={$current1}&current2={$current2}')">
+		{if !$current3}<option value="">{$dep.name3}</option>{/if}
+		{foreach from=$array3 item=v}
+		<option value="{$v.id}" {if $current3==$v.id} selected="selected" {/if}>{$v.name}</option>
+		{/foreach}
+	</select>
+{/if}
+{if $dep.no>=5}
+&nbsp;&nbsp;
+	{$dep.name4}
+	<select id="sel_{$dep.caption4}" name="sel_{$dep.caption4}" onchange="changeLoc(this, 'translate_depending.php', 'current4', 'id={$id}&type={$type}{if $fieldset}&fieldset={$fieldset}{/if}&current1={$current1}&current2={$current2}&current3={$current3}')">
+		{if !$current4}<option value="">{$dep.name4}</option>{/if}
+		{foreach from=$array4 item=v}
+		<option value="{$v.id}" {if $current4==$v.id} selected="selected" {/if}>{$v.name}</option>
+		{/foreach}
+	</select>
+{/if}
+	</div> {* end right_form *}
+</div>
+
+<form name="translate" method="post" action="{$self}?id={$id}{if $type}&type={$type}{/if}{if $fieldset}&fieldset={$fieldset}{/if}{if $current1}&current1={$current1}{/if}{if $current2}&current2={$current2}{/if}{if $current3}&current3={$current3}{/if}{if $current4}&current4={$current4}{/if}">
+
+{foreach from=$dep_array item=dep}
+<div class="clearfix">
+	<div class="left_form">{$dep.default_val}</div>
+	<div class="right_form"><input type="text" name="{$dep.id}_{$dep.lang_id}" size="40" value="{$dep.name}" />&nbsp;{if $dep.image}<img src="{$live_site}/images/languages/{$dep.image}" />{else}{$dep.language_name}{/if}</div>
+</div>
+{/foreach}
+
+<div class="form_footer">
+	<div class="buttons rfloat"  onClick='{if $demo}alert("{$lng.general.errors.demo}");return false;{else}return checkSettings();{/if}'>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</form>
+
+</div> {* end form_container *}
+</div> {* end p30 *}
+
+{include file="footer.html"}

@@ -1,0 +1,138 @@
+{include file="header.html"}
+{include file="data/fancybox.html"}
+
+<div class="page_title">{$lng.panel.banners} > {$lng.panel.manage_banners}</div>
+
+<div class="p30">
+
+<div>
+	{if !$is_mod || $mod_sections.banners.add==1}
+	<a href="add_banner.php"><img src="{$template_path}images/add.png" class="tooltip icon" title="{$lng.general.add}" alt=""></a>
+	{/if}
+
+	{if !$is_mod || $mod_sections.banners.delete==1}
+	<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDeleteAll('{$lng.banners.confirm_delete_all|addslashes}','banners'){/if}"><img src="{$template_path}images/delete_all.png" class="tooltip icon" title="{$lng.general.delete_all}" alt=""></a>
+	{/if}
+</div>
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th width="40" class="hleft"><input type="checkbox" class="noborder" name="check_all" id="check_all" /></th>
+	<th>{$lng.general.id}</th>
+	<th>{$lng.listings.title}</th>
+	<th>{$lng.banners.type}</th>
+	<th>{$lng.banners.position}</th>
+	{if in_array("banners_location", $modules_array)}
+	<th>{$field_name}</th>
+	{/if}
+	<th>{$lng.banners.link}</th>
+	<th>{$lng.banners.hits}</th>
+	<th>{$lng.banners.impressions}</th>
+	<th></th>
+	<th>{$lng.banners.date}</th>
+	<th width="80" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$array_banners item=v}
+<tr>
+	<td><input type="checkbox" class="noborder" name="chk{$v.id}" id="chk{$v.id}"></td>
+	<td>{$v.id}</td>
+	<td>{$v.title}</td>
+	<td>{$v.type}</td>
+	<td>{$v.position}</td>
+	{if in_array("banners_location", $modules_array)}
+	<td>{if !$v.location} <span class="light">{$lng_banners_location.any}</span> {/if}{$v.location}</td>
+	{/if}
+	<td>{if $v.link}<a href="{$v.link}">{$v.link}</a>{/if}</td>
+	<td>{$v.clicks}{if $v.max_clicks}&nbsp;{$lng.general.of}&nbsp;{$v.max_clicks}{/if}</td>	
+	<td>{$v.impressions}{if $v.max_impressions}&nbsp;{$lng.general.of}&nbsp;{$v.max_impressions}{/if}</td>	
+	<td>
+		{if $v.filename && $v.extension!='swf'}<a href='../images/baners/{$v.filename}' class="imgfield tooltip icon" title="{$lng.general.view}"><img src="{$template_path}images/camera.png" /></a>
+		{else}
+		<a href="javascript:;" class="vbanner tooltip icon" id="vb{$v.id}" title="{$lng.general.view}">
+		<img src="{$template_path}images/camera.png" />
+		</a>
+		{/if}
+	</td>
+	<td>
+		{$lng.listings.added_on}: {$v.date_nice}
+		{if $v.date_start!="0000-00-00 00:00:00" && $v.date_start}<br/>{$lng.banners.date_start}: {$v.date_start_nice}{/if}
+		{if $v.date_end!="0000-00-00 00:00:00" && $v.date_end}<br/>{$lng.banners.date_end}: {$v.date_end_nice}{/if}
+	</td>
+	<td>
+		<a href="javascript:;" class="cbanner" id="bc{$v.id}"><img src="{$template_path}images/info.png" class="tooltip icon" title="{$lng.banners.categories_list}" alt=""></a>
+
+		{if !$is_mod || $mod_sections.banners.edit==1}
+		<a href="edit_banner.php?id={$v.id}"><img src="{$template_path}images/edit.png" class="tooltip icon" title="{$lng.general.edit}" alt=""></a>
+		{/if}
+
+		{if !$is_mod || $mod_sections.banners.delete==1}
+		<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDelete('{$v.id}','{$lng.banners.confirm_delete|addslashes}','banners');{/if}"><img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt=""></a>
+		{/if}
+
+		{if !$is_mod || $mod_sections.banners.edit==1}
+		<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onClearHits('{$v.id}','{$lng.banners.confirm_clear_hits|addslashes}','banners');{/if}">
+		<img src="{$template_path}images/clear-hits.png" class="tooltip icon" title="{$lng.banners.clear_hits}" alt=""></a>
+		{/if}
+	</td>
+</tr>
+{/foreach}
+
+{if $no_banners==0}
+	<tr class="nicetablerow_even">
+	<td colspan={if in_array("banners_location", $modules_array)}12{else}11{/if}>{$lng.banners.no_banners}</td></tr>
+{/if}
+
+</table>
+
+</div> {* p30 *}
+
+{literal}
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		$("a.imgfield").fancybox();
+	});
+
+	$("a.vbanner").click(function(event){
+		var banner_id = jQuery(this).attr("id").substr(2);
+		$.fancybox({
+			'width'         		: 730,
+			'height'        		: 700,
+			'transitionIn'		: 'none',
+			'transitionOut'		: 'none',
+			'margin'		: '0',
+			'padding'		: '0',
+			'titleShow'		: false,
+			'type'			: 'iframe',
+			'href'			: '{/literal}{$live_site}{literal}/admin/include/view_banner.php?id='+banner_id
+		});
+	});
+
+	$("a.cbanner").click(function(event){
+		var banner_id = jQuery(this).attr("id").substr(2);
+		$.fancybox({
+			'width'         		: 500,
+			'height'        		: 500,
+			'transitionIn'		: 'none',
+			'transitionOut'		: 'none',
+			'margin'		: '0',
+			'padding'		: '0',
+			'titleShow'		: false,
+			'type'			: 'iframe',
+			'href'			: '{/literal}{$live_site}{literal}/admin/include/banners_categories_list.php?id='+banner_id
+		});
+	});
+
+	$("#check_all").click(function()
+	{
+
+		if ($('#check_all').is(':checked')) checkAll(document);
+		else uncheckAll(document);
+
+	});
+
+</script>
+{/literal}
+
+{include file="footer.html"}

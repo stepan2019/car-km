@@ -1,0 +1,84 @@
+<div class="form_container">
+
+{if $error != ""}<div class="error">{$error}</div>{/if}
+{if $info != ""}<div class="info">{$info}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">Login</div>
+	<div class="right_form"><input type="text" maxlength="100" size="40" name="login" id="login" value="{$processor_settings.login}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Password1</div>
+	<div class="right_form"><input type="text" maxlength="200" size="40" name="password1" id="password1" value="{$processor_settings.password1}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Password2</div>
+	<div class="right_form"><input type="text" maxlength="200" size="40" name="password2" id="password2" value="{$processor_settings.password2}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Currency</div>
+	<div class="right_form">
+		<select name="currency" id="currency">
+		<option value="{$c}" {if $processor_settings.currency==$c} selected="selected" {/if}>{$c}</option>
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Language</div>
+	<div class="right_form">
+		<select name="language" id="language">
+			<option value="ru" {if $processor_settings.language=="ru"}selected="selected"{/if}>Russian</ru>
+			<option value="en" {if $processor_settings.language=="en"}selected="selected"{/if}>English</ru>
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Encoding</div>
+	<div class="right_form">
+		<select name="encoding" id="encoding">
+		{foreach from=$array_charsets item=c}
+		<option value="{$c.id}" {if $processor_settings.encoding==$c.id} selected="selected" {/if}>{$c.name}</option>
+		{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Payment description</div>
+	<div class="right_form"><input type="text" maxlength="200" size="40" name="payment_desc" id="payment_desc" value="{$processor_settings.payment_desc}"></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Test mode</div>
+	<div class="right_form"><input type="checkbox" name="test" id="test" {if $processor_settings.test==1} checked="checked"{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Result URL</div>
+	<div class="right_form">{$live_site}/payment_return/robokassa.php?mode=process</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Success URL</div>
+	<div class="right_form">{$live_site}/payment_return/robokassa.php?mode=success</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Fail URL</div>
+	<div class="right_form">{$live_site}/payment_return/robokassa.php?mode=cancel</div>
+</div>
+
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit_robokassa" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}

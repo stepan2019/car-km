@@ -1,0 +1,84 @@
+{include file="header.html"}
+
+<div class="page_title">
+<div class="lfloat" width="200">{$lng.panel.settings} > {if $processor}<a href="payment_settings.php">{/if}{$lng.settings.payment_settings}{if $processor}</a> > {$processor_name} {$lng.panel.settings}{/if}</div>
+<div class="rfloat mt5">
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab1-left">
+	<a href="payment_settings.php"><span class="tab1-right">{$lng.settings.payment_processors}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="invoice_settings.php"><span class="tab2-right">{$lng.settings.invoice_settings}</span></a>
+	</div></div>
+
+</div>
+</div>
+
+<div class="p30">
+<form name="settings" method="post" action="payment_settings.php{if $processor}?processor={$processor}{/if}" enctype="multipart/form-data">
+
+{if !$processor}
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th class="hleft">{$lng.settings.payment_processor}</th>
+	<th>{$lng.settings.payment_processor_title}</th>
+	<th>{$lng.settings.payment_processor_recurring}</th>
+	<th>{$lng.settings.tax}</th>
+	<th width="20"></th>
+	<th colspan="3" width="300" class="hright"></th>
+</tr>
+
+{foreach from=$array_processors item=v}
+<tr>
+	<td>{$v.processor_name}</td>
+	<td>{$v.processor_title}</td>
+	<td>{if $v.recurring==-1}-{elseif $v.recurring==0}{$lng.general.disabled}{elseif $v.recurring==1}{$lng.settings.recur_all_subscriptions}{elseif $v.recurring==2}{$lng.settings.choose_recur_subscriptions}{/if}</td>
+	<td>{if $v.tax_str}{$v.tax_str}{else}-{/if}</td>
+
+	<td><a href="edit_processor.php?processor={$v.processor_code}"><img src="{$template_path}images/edit.png" class="tooltip icon" title="{$lng.general.edit}" alt=""></a></td>
+	<td>
+	{if $v.enabled}
+	{if !$v.free || $v.processor_code=="credits"}
+	<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDisable('{$v.processor_code}', 'payment', '{$lng.settings.confirm_disable_processor}'){/if}">
+	{/if}
+	<div class="small-btn activebutton icon">{$lng.general.enabled}</div>
+	{if !$v.free || $v.processor_code=="credits"}</a>{/if}
+	{else}
+	<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onEnablePayment('{$v.processor_code}', 'payment'){/if}"><div class="small-btn inactivebutton icon">{$lng.general.disabled}</div></a>
+	{/if}
+	</td>
+
+	<td>
+	{if $v.pending}
+	<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onPaymentNotPending('{$v.processor_code}');{/if}">
+	<div class="small-btn pendingbutton icon">{$lng.general.pending|replace:" ":"&nbsp;"}</div>
+	</a>
+	{else}
+{*	{if $v.processor_code!="credits"}*}
+	<a  href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onPaymentPending('{$v.processor_code}');{/if}">
+	<div class="small-btn optionsbutton icon">{$lng.general.not_pending|replace:" ":"&nbsp;"}</div>
+	</a>
+{*	{/if}*}
+	{/if}
+	</td>
+	<td>
+	{if (!$v.free && !$v.manual) || $v.processor_code=="credits"}
+	<a href="payment_settings.php?processor={$v.processor_code}"><div class="small-btn inactivebutton icon">{$lng.settings.edit_settings|replace:" ":"&nbsp;"}</div></a>
+	{/if}
+	</td>
+</tr>
+
+{/foreach}
+</table>
+
+{else} {* if processor *}
+
+{include file="`$processor`_settings.html"}
+
+{/if}
+</form>
+</div> {* p30 *}
+
+
+{include file="footer.html"}

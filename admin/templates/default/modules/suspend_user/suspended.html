@@ -1,0 +1,9 @@
+<tr class="spam">
+<td colspan="10" class="laligned nop">
+{if $v.banned}
+<b>{$lng_su.banned}</b>
+{else}
+<b>{$lng_su.suspended_until}</b>:&nbsp;{$v.date_unsuspend_nice}
+{/if}
+</td>
+</tr>

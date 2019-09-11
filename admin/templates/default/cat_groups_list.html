@@ -1,0 +1,16 @@
+{include file="overlay_header.html"}
+
+<div class="overlay-top-bg">{$lng.categories.allowed_groups_list_for}: {$categ_name}</div>
+
+
+<table cellpadding="0" cellspacing="0" align="center" class="centered datatable" width="90%">
+{if $all_groups==1}
+<tr><td class="laligned">{$lng.categories.all_groups}</td></tr>
+{else}
+{foreach from=$groups_array item=v}
+	<tr><td class="laligned">{$v}</td></tr>
+{/foreach}
+{/if}
+</table>
+
+{include file="overlay_footer.html"}

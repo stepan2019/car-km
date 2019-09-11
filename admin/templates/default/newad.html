@@ -1,0 +1,790 @@
+{if $step<=1}
+{include file="header.html"}
+{include file="fancybox.html"}
+
+<div class="wait"></div>
+
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/fileuploader.js"></script>
+<script type="text/javascript" src="{$live_site}/libs/nicEdit/nicEdit.min.js"></script>
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/jquery.form.js"></script>
+
+<table cellpadding=0 cellspacing=0 width=100%>
+{include file="submenus/listings.html"}
+<tr><td>
+<div class="t"><div class="b"><div class="l"><div class="r"><div class="bl"><div class="br"><div class="tl"><div class="tr">
+
+<div class="title">{$lng.listings.newad}</div>
+
+<div id="newad_form">
+<div id="form_container">
+<form name="newad" id="newad" method="post" action="newad.php?step=3" enctype="multipart/form-data">
+
+<table align="center" cellpadding=0 cellspacing=0 width="100%">
+
+<tr>
+	<td class="left_form">{$lng.listings.category}</td>
+	<td class="mandatory">*</td>
+	<td class="right_form">
+
+	<select id="category" name="category">
+	<option value="">{$lng.listings.category}</option>
+	{foreach from=$short_categories item=v name=cat}
+		{if $v.parent==1}
+		<optgroup label="{$v.str}{$v.name}">
+		{else}
+		<option value="{$v.id}">{$v.str}{$v.name}</option>
+		{if ( $smarty.foreach.cat.index!=$short_categories|@count-1 && $v.parent_id!=$short_categories[$smarty.foreach.cat.iteration].parent_id) || ($smarty.foreach.cat.index==$short_categories|@count && $v.parent_id!=0)}
+		</optgroup>
+		{/if}
+
+		{/if}
+	{/foreach}
+	</select>
+
+	</td>
+</tr>
+
+<tr>
+	<td class="left_form">{$lng.listings.package}</td>
+	<td class="mandatory">*</td>
+	<td class="right_form">
+
+	<select id="package" name="package">
+	<option value="">{$lng.listings.package}</option>
+	{foreach from=$plans_array item=v}
+        	<option value="{$v.id}">{$v.name}</option>
+	{/foreach}
+	</select>
+
+	</td>
+</tr>
+
+<tr>
+	<td class="left_form">{$lng.listings.user}</td>
+	<td class="mandatory">*</td>
+	<td class="right_form">
+
+	{if $no_users<=100}
+
+	<select id="user_id" name="user_id">
+	<option value="">{$lng.listings.user}</option>
+	{foreach from=$users_array item=v}
+        	<option value="{$v.id}" {if $tmp.user_id==$v.id}selected{/if}>{if $settings.enable_username}{$v.username}{else}{$v.email}{/if}</option>
+	{/foreach}
+	</select>
+
+	{else}
+
+	{include file="ui.html"}
+
+	<input type="hidden" name="user_id" id="user_id" />
+
+	{if $settings.enable_username}
+	<input type="text" name="username" id="username" onblur="userChecker();" />
+	{else}
+	<input type="text" name="email" id="email" onblur="userChecker();" />
+	{/if}
+
+	&nbsp;<span class="ok_msg" style="display: none;"></span>
+	<span class="nok_msg" style="display: none;"></span>
+
+	{/if}
+	</td>
+</tr>
+
+<tr><td colspan=3 align="center">
+
+<div class="form_button" id="next_div">
+	<strong><a id="next" class="gray" href="javascript:;">{$lng.general.next}</a></strong>
+</div>
+
+</td></tr>
+
+</table>
+
+<div id="newad_details"></div>
+</form>
+</div> {* end form_container *}
+</div> {* end newad_form *}
+
+<div id="listing"></div>
+
+</div></div></div></div></div></div></div></div>
+</td></tr>
+</table>
+
+<script type="text/javascript">
+{literal}
+
+function userChecker() {
+
+	$.post("{/literal}{$live_site}{literal}/admin/include/user_checker.php", $( "#newad" ).serialize() , function(data){ 
+
+		data_split = data.split("|");
+		var error = data_split[0];
+		var info = data_split[1];
+		var user_id = data_split[2];
+
+		if(info) {
+			$(".ok_msg").html(info);
+			$(".ok_msg").show();
+			$(".nok_msg").hide();
+			$("#user_id").val(user_id);
+
+		}
+		else if(error) {
+			$(".nok_msg").html(error);
+			$(".nok_msg").show();
+			$(".ok_msg").hide();
+		}
+
+	});
+
+}
+
+{/literal}
+{if $no_users>100}
+{literal}
+        $(function() {
+                $( "#username" ).autocomplete({
+                        source: "{/literal}{$live_site}{literal}/admin/include/get_info.php?type=user_ac",
+                        minLength: 1
+                });
+
+                $( "#email" ).autocomplete({
+                        source: "{/literal}{$live_site}{literal}/admin/include/get_info.php?type=user_ac",
+                        minLength: 1
+                });
+        });
+{/literal}
+{/if}
+{literal}
+
+
+$(document).ready(function() {
+
+
+var options = { 
+       // target:        '#output1',   // target element(s) to be updated with server response 
+	beforeSerialize: beforeSerialize,
+        beforeSubmit:  beforeSubmit,  // pre-submit callback 
+        success:       successResponse  // post-submit callback 
+ 
+        // other available options: 
+        //url:       url         // override for form's 'action' attribute 
+        //type:      type        // 'get' or 'post', override for form's 'method' attribute 
+        //dataType:  null        // 'xml', 'script', or 'json' (expected server response type) 
+        //clearForm: true        // clear all form fields after successful submit 
+        //resetForm: true        // reset the form after successful submit 
+ 
+        // $.ajax options can be used here too, for example: 
+        //timeout:   3000 
+    }; 
+
+function beforeSerialize(jqForm, options) {
+
+	$("body").addClass("loading"); 
+
+	{/literal}{if $ads_settings.description_editor}{literal}
+
+	// capturing nicEditor content
+	for(var i=0;i<myNicEditor.nicInstances.length;i++){myNicEditor.nicInstances[i].saveContent();}
+
+	{/literal}
+	{/if}
+	{literal}
+
+	if (typeof data_htmlarea !== 'undefined')
+	for(var i=0;i<data_htmlarea.nicInstances.length;i++){ data_htmlarea.nicInstances[i].saveContent(); }
+
+	// return false to cancel submit
+
+}
+
+// pre-submit callback 
+function beforeSubmit(formData, jqForm, options) { 
+
+    // formData is an array; here we use $.param to convert it to a string to display it 
+    // but the form plugin does this for you automatically when it submits the data 
+    var queryString = $.param(formData); 
+ 
+    // jqForm is a jQuery object encapsulating the form element.  To access the 
+    // DOM element for the form do this: 
+    // var formElement = jqForm[0]; 
+ 
+    //alert('About to submit: \n\n' + queryString); 
+ 
+    // here we could return false to prevent the form from being submitted; 
+    // returning anything other than false will allow the form submit to continue 
+    return true; 
+} 
+
+// post-submit callback 
+function successResponse(responseText, statusText, xhr, $form)  { 
+
+    // for normal html responses, the first argument to the success callback 
+    // is the XMLHttpRequest object's responseText property 
+ 
+    // if the ajaxForm method was passed an Options Object with the dataType 
+    // property set to 'xml' then the first argument to the success callback 
+    // is the XMLHttpRequest object's responseXML property 
+ 
+    // if the ajaxForm method was passed an Options Object with the dataType 
+    // property set to 'json' then the first argument to the success callback 
+    // is the json data object returned by the server 
+ 
+    //alert('status: ' + statusText + '\n\nresponseText: \n' + responseText + 
+    //    '\n\nThe output div should have already been updated with the responseText.'); 
+
+//alert(responseText);
+			var ret = JSON.parse(responseText);
+
+			$("body").removeClass("loading"); 
+
+			if(ret.response==1) {
+
+				// show ad details
+				$.ajax({
+					type		: "GET",
+					cache		: false,
+					url		: "{/literal}{$live_site}{literal}/admin/newad.php?step=4&ad_id="+ret.ad_id,
+					data		: $(this).serializeArray(),
+					success: function(data) {
+
+						$("#newad_form").hide();
+						$("#listing").html(data);
+			
+					}// end data
+				}); // end ajax
+
+				return;
+			}
+
+			// response = 0 -> there are errors in submit ad process 
+			var no_err = ret.error.length;
+			var err_field, err_string;
+
+			// clean all fields possible err class
+			$(".err").removeClass("err");
+			// remove all err_labels
+			$(".err_label").remove();
+
+			// mark each field with error 
+			for (var idx=0;idx<no_err;idx++) { 
+
+				err_field = ret.error[idx].field;
+				err_string = ret.error[idx].error;
+				$("#"+err_field).addClass("err");
+
+				// nicEditor fix
+				if(err_field.match("description[a-z0-9_]*")) $("#"+err_field+"_elm").addClass("err");
+				$("#"+err_field).before('<label class="err_label">'+err_string+'</label>');
+
+			}
+			
+			// move the page to the first err_label element
+			$('html,body').animate({scrollTop:$(".err_label:first").offset().top}, 'slow');
+
+} 
+
+$(document).on("click", "#next", function(){ 
+
+	loadAdDetailsForm();
+
+}); // end #next click
+
+
+$(document).on("change", "#category", function(){ 
+
+	loadAdDetailsForm();
+
+}); // end #next click
+
+$(document).on("change", "#package", function(){ 
+
+	loadAdDetailsForm();
+
+}); // end #next click
+
+//initialize the AJAX form for submit ad
+ $('#newad').ajaxForm(options);
+
+}); // end document ready
+
+function onVideo() {
+
+	if($('#video').is(':checked')) $("#video_div").slideDown(); 
+	else $("#video_div").slideUp();
+}
+
+function loadAdDetailsForm() {
+
+	// clean all fields possible err class
+	$(".err").removeClass("err");
+
+	var err = 0;
+	if(!$("#category").val()) { $("#category").addClass("err"); err = 1; }
+	if(!$("#package").val()) { $("#package").addClass("err"); err = 1; }
+	if(!$("#user_id").val()) $("#user_id").addClass("err");
+	if(!$("#username").val()) $("#username").addClass("err");
+	if(!$("#email").val()) $("#email").addClass("err");
+	if(!$("#user_id").val() && !$("#username").val() && !$("#email").val()) err = 1;
+
+	if(!err) {
+
+	// get custom fields, images and extra options boxes
+	$.ajax({
+		type		: "GET",
+		cache		: false,
+		url		: "{/literal}{$live_site}{literal}/admin/newad.php?step=2&category="+$("#category").val()+"&plan="+$("#package").val(),
+		data		: $(this).serializeArray(),
+		success: function(data) {
+
+			$("#newad_details").html(data);
+			createUploader();
+			$("#next_div").hide();
+			
+		}// end data
+	}); // end ajax
+	} // end if not err
+
+}
+
+{/literal}
+</script>
+
+{include file="footer.html"}
+{/if} {* end if step 1 *}
+
+
+
+{if $step==2}
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%">
+
+<tr><td class="subsection">{$lng.listings.ad_description}</td></tr>
+<tr><td>
+<table cellpadding="0" cellspacing="0" width="100%">
+
+
+{if $languages|@count>1 && $ads_settings.translate_title_description==1}
+
+{foreach from=$languages item=v}
+
+    {capture name=some_content assign=title_field}title_{$v.id}{/capture}
+    {capture name=some_content assign=desc_field}description_{$v.id}{/capture}
+	
+<!-- TITLE -->
+<tr>
+	<td class="left_form">{$lng.listings.title}</td>
+	<td class="mandatory">*</td>
+	<td class="right_form">
+	<input type="text" name="title_{$v.id}" id="title_{$v.id}" size="70" value="{$tmp.$title_field}"
+	 onKeyDown="CountTitleLeft(document.newad.title_{$v.id},150);" onKeyUp="CountTitleLeft(document.newad.title_{$v.id},150);" 
+	onPaste="CountTitleLeft(document.newad.title_{$v.id}, 150);">
+	&nbsp;{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}{$v.name}{/if}
+	</td>
+</tr>
+
+<!-- DESCRIPTION -->
+
+<tr>
+	<td class="left_form">{$lng.listings.description}</td>
+	<td class="mandatory">*</td>
+	<td class="right_form"><textarea name="description_{$v.id}" cols="75" rows="10" id="description_{$v.id}">{$tmp.$desc_field}</textarea>
+	&nbsp;{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}{$v.name}{/if}
+	</td>
+</tr>
+
+{/foreach}
+
+{else}
+
+<tr>
+	<td class="left_form">{$lng.listings.title}</td>
+	<td class="mandatory">*</td>
+	<td class="right_form">
+	<input type="text" name="title" id="title" size="70" value="{$tmp.title}"
+	 onKeyDown="CountTitleLeft(document.newad.title,150);" onKeyUp="CountTitleLeft(document.newad.title,150);" 
+	onPaste="CountTitleLeft(document.newad.title, 150);" >
+	</td>
+</tr>
+
+<!-- DESCRIPTION -->
+
+<tr>
+	<td class="left_form">{$lng.listings.description}</td>
+	<td class="mandatory">*</td>
+	<td class="right_form"><textarea name="description" cols="75" rows="10" id="description" >{$tmp.description}</textarea>
+	</td>
+</tr>
+
+{/if}
+</table>
+</td></tr>
+
+<tr><td class="subsection">{$lng.listings.ad_information}</td></tr>
+<tr><td>
+<table cellpadding="0" cellspacing="0" width="100%">
+
+{include file="data/description_editor.html"}
+{include file="data/form_includes.html" fields_array=$fields}
+{include file="custom_fields_form.html" fields_array=$fields type="listing"}
+
+</table>
+</td></tr>
+
+{*
+{if $ads_settings.enable_video && $tmp.enable_video}
+<tr><td class="subsection">{$lng.listings.video}</td></tr>
+<tr><td>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+	<td class="left_form">{$lng.listings.video_code}</td>
+	<td class="mandatory"></td>
+	<td class="right_form"><textarea name="video" cols="55" rows="10" id="video"></textarea></td>
+</tr>
+</table>
+</td></tr>
+{/if}
+*}
+
+{if $ads_settings.add_meta_with_listings}
+<tr><td class="subsection">{$lng.listings.meta_info}</td></tr>
+<tr><td>
+<table cellpadding="0" cellspacing="0" width="100%">
+
+<!-- META_KEYWORDS -->
+<tr>
+	<td class="left_form">{$lng.listings.meta_keywords}</td>
+	<td class="mandatory"></td>
+	<td class="right_form"><textarea name="meta_keywords" cols="50" rows="3">{$tmp.meta_keywords}</textarea></td>
+</tr>
+
+<!-- META_DESCRIPTION -->
+<tr>
+	<td class="left_form">{$lng.listings.meta_description}</td>
+	<td class="mandatory"></td>
+	<td class="right_form"><textarea name="meta_description" cols="50" rows="3">{$tmp.meta_description}</textarea></td>
+</tr>
+
+</table>
+</td></tr>
+{/if}
+
+<!-- PHOTOS -->
+
+<link href="{$template_path}style-uploader.css" rel="stylesheet" type="text/css"/>
+
+<tr><td class="subsection">{$lng.listings.enter_photos}</td></tr>
+<tr><td style="text-align: center;">
+
+	<div id="file-uploader">
+		<noscript>			
+		<p>Please enable JavaScript to use file uploader.</p>
+		</noscript>
+	</div>
+	
+	{literal}
+	<script>
+	function createUploader(){
+		var uploader = new qq.FileUploader({
+			element: document.getElementById('file-uploader'),
+			action: '../include/upload.php',{/literal}
+			max_photos: '{$no_photos}',
+			crt_photos: '{$crt_photos}',
+			order_up: '{$lng.listings.order_up|addslashes}',
+			order_down: '{$lng.listings.order_down|addslashes}',
+			delete_file: '{$lng.general.delete|addslashes}',
+			template_path: '{$template_path}',
+			files_uploaded: "{$lng.listings.files_uploaded|addslashes}",
+			allowed: "{$lng.listings.allowed|addslashes}",
+			limit_reached: "{$lng.listings.limit_reached|addslashes}",
+			click_to_upload: "{$lng.listings.click_to_upload|addslashes}",
+			{literal}
+			messages: { 
+			failed_message: "{/literal}{$lng.login_history.failed|addslashes}{literal}",
+			typeError: "{/literal}{$lng.images.errors.file_type_not_accepted|addslashes}{literal}" 
+			},
+			params: {
+        			max_photos: '{/literal}{$no_photos}{literal}'
+    			},
+			allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+			debug: false
+ 	});
+        }
+	</script>
+	{/literal}
+
+	<div id="maincol"></div>
+
+	<div class="clearfix"></div>
+
+</td></tr>
+
+<!-- EXTRA OPTIONS -->
+<tr><td class="subsection">{$lng.listings.extra_options}</td></tr>
+
+<tr><td align="center">
+<table cellpadding="2" cellspacing="2" width="50%" align="center" id="table_options">
+
+<tr>
+	<td width="50%">{$lng.listings.package}</td>
+	<td width="50%">{$plan_name}</td>
+</tr>
+
+{if $ads_settings.enable_featured}
+	<tr>
+		<td>{$lng.listings.featured}</td>
+		<td><input type="checkbox" class="noborder" name="featured" id="featured" {if $featured} checked{/if} /></td>
+	</tr>
+{/if}
+{if $ads_settings.enable_highlited}
+	<tr>
+		<td>{$lng.listings.highlited}</td>
+		<td><input type="checkbox" class="noborder" name="highlited" id="highlited" {if $highlited} checked{/if}/></td>
+	</tr>
+{/if}
+
+{if $ads_settings.enable_priorities}
+	<tr>
+		<td>{$lng.listings.priority}</td>
+		<td>
+			<input type="radio" class="noborder" name="priority" value="" {if !$priority}checked="checked"{/if} />&nbsp;&nbsp;{$lng.general.none} <br>
+		{foreach from=$priorities item=v}
+			<input type="radio" class="noborder" name="priority" value="{$v.order_no}" {if $priority==$v.order_no || $options.priority==$v.order_no}checked="checked"{/if}/>&nbsp;&nbsp;{$v.name}<br>
+		{/foreach}
+		</td>
+	</tr>
+{/if}
+{if $ads_settings.enable_video}
+	<tr>
+		<td>{$lng.listings.video}</td>
+		<td>
+		<input type="checkbox" class="noborder" name="video" id="video" {if $video || $options.video.value}checked="checked"{/if} onclick="onVideo();" />
+
+		<div id="video_div" style="display: none;">
+		<label>{$lng.listings.video_code}</label>
+		<textarea name="video_code" id="video_code" cols="30" rows="5">{$tmp.video_code}</textarea>
+		</div>
+
+
+		</td>
+	</tr>
+{/if}
+
+</table>
+</td></tr>
+
+<tr><td>
+<br/>
+	<div class="dcenter">
+	<div class="buttons">
+	<span class="positive"><input type="submit" name="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	</div>
+	<div class="clearfix"></div>
+
+</td></tr>
+
+</table>
+
+
+{literal}
+<script type="text/javascript">
+$(document).ready(function() {
+{/literal}
+var gmaps_on = {if $gmaps}1{else}0{/if};
+// initialize google maps
+if (gmaps_on) load_gmaps();
+{literal}
+});
+</script>
+{/literal}
+
+
+{/if} {* end if step=2 *}
+
+
+{if $step==4}
+{include file="fancybox.html"}
+
+<div style="text-align: center"><div class="form_button"><strong><a  href="manage_listings.php">{$lng.panel.manage_listings}</a></strong></div>&nbsp;&nbsp;<div class="form_button"><strong><a href="{if $seo_settings.enable_mod_rewrite}{seo->makeDetailsLink p1=`$id`}{else}{$live_site}/details.php?id={$id}{/if}">{$lng.listings.ad_details}</a></strong></div></div>
+<br />
+
+<div class="title">{$lng.listings.ad_details}</div>
+
+<script type="text/javascript">
+//<![CDATA[
+
+{assign var="gmap_on" value="0"}
+
+{foreach from=$fields_array item=v}
+	{if $v.type=='google_maps'}
+		{include file="data/gmap-ro.html"}
+		{assign var="gmap_on" value="1"}
+	{/if}
+{/foreach}
+
+{if $gmap_on}
+{literal}
+$(document).ready(function() {
+init_gmap();
+});
+{/literal}
+{/if}
+//]]>
+</script>
+
+
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr><td class="left_form">{$lng.listings.category}:</td> <td class="right_form">&nbsp;{$tmp.category}</td></tr>
+<tr><td class="left_form">{$lng.listings.title}:</td> <td class="right_form">&nbsp;{$tmp.title}</td></tr>
+<tr><td class="left_form">{$lng.listings.description}:</td> <td class="right_form">&nbsp;{$tmp.description_formatted}</td></tr>
+
+{foreach from=$fields_array item=v}
+
+{if $v.type!="depending" && $v.type!="checkbox_group" && $v.type!="radio_group" && $v.type!="google_maps" && $v.type!="multiselect" && $v.type!="file" && $v.type!="image" && $v.caption!="price" && in_array($v.type, $default_fields_types)  && $v.type!="password" }
+<tr><td class="left_form">{$v.name}:</td> <td class="right_form">&nbsp;{$tmp[$v.caption]}</td></tr>
+{/if}
+
+{if $v.type=="price" && $ads_settings.enable_price}
+<tr><td class="left_form">{$v.name}:</td> <td class="right_form">&nbsp;{if $tmp.price>=0}{$tmp.price_curr}{/if}</td></tr>
+{elseif $v.type=="image"}
+<tr><td class="left_form">{$v.name}:</td> <td class="right_form">&nbsp;{if $tmp[$v.caption]}
+<span id="gallery"><a href="{$live_site}/uploads/{$v.caption}/{$tmp[$v.caption]}"><img src="{$template_path}images/camera.gif"></a></span>
+{/if}</td></tr>
+{elseif $v.type=="file"}
+<tr><td class="left_form">{$v.name}:</td> <td class="right_form">&nbsp;{if $tmp[$v.caption]}
+<a href="{$live_site}/uploads/{$v.caption}/{$tmp[$v.caption]}"><img src="{$template_path}/images/download.png" class="tooltip" alt="" title="{$lng.general.download}"/></a>
+{/if}</td></tr>
+{elseif $v.type=="multiselect"}
+<tr><td class="left_form">{$v.name}:</td> <td class="right_form">&nbsp;
+{$tmp[$v.caption]|@implode:', '}
+</td></tr>
+{elseif $v.type=="google_maps"}
+<tr><td class="left_form">{$v.name}:</td> <td class="right_form"> {if $tmp[$v.caption]}
+<input type="hidden" name="{$v.caption}" id="{$v.caption}" value="{$tmp[$v.caption]}">
+<div id="gm_ro_{$v.caption}" style="width: 450px; height: 400px"></div>
+{/if}</td></tr>
+
+{elseif $v.type=='checkbox_group'}
+<tr>
+<td class="left_form">{$v.name}</td>
+<td class="right_form">
+<table cellpaccing=0 cellspacing=0 width=100%>
+	<tr>
+	{foreach from=$v.extra_elements_array item=t name=check}
+		<td width="30%" height=25>
+		{if in_array($t.name, $tmp[$v.caption])}<img src="{$template_path}images/checkbox_on.png">{else}<img src="{$template_path}images/checkbox_off.png">{/if}&nbsp;
+		{if $v.prefix!=""} {$v.prefix} {/if}
+		{$t.name}
+		{if $v.postfix!=""} {$v.postfix} {/if}
+		</td>
+		{if $smarty.foreach.check.index!=0 && $smarty.foreach.check.index%3==2}</tr><tr>{/if}
+	{/foreach}
+</tr>
+</table>
+</td></tr>
+{elseif $v.type=="depending"}
+<tr><td class="left_form">{$v.depending.name1}:</td> <td class="right_form">&nbsp;{$tmp[$v.depending.caption1]}</td></tr>
+<tr><td class="left_form">{$v.depending.name2}:</td> <td class="right_form">&nbsp;{$tmp[$v.depending.caption2]}</td></tr>
+{if $v.depending.no>=3}<tr><td class="left_form">{$v.depending.name3}:</td> <td class="right_form">&nbsp;{$tmp[$v.depending.caption3]}</td></tr>{/if}
+{if $v.depending.no>=4}<tr><td class="left_form">{$v.depending.name4}:</td> <td class="right_form">&nbsp;{$tmp[$v.depending.caption4]}</td></tr>{/if}
+{elseif in_array($v.type, $default_fields_types) && in_array($v.type, $modules_array)}
+<tr><td class="left_form">{$v.name}:</td> <td class="right_form">&nbsp;{$tmp[$v.caption]}</td></tr>
+{elseif $v.type=="checkbox"}
+<tr><td class="left_form">{$v.name}:</td> <td class="right_form">&nbsp;{if $tmp[$v.caption]==1}{$lng.general.Yes}{else}{$lng.general.No}{/if}</td></tr>
+{/if}
+{/foreach}
+</table>
+
+{if $tmp.enable_video && $tmp.video}
+<br />
+<div class="title">{$lng.listings.video}</div>
+<center>{$tmp.video}</center>
+{/if}
+
+
+{if $ads_settings.add_meta_with_listings}
+	<br />
+	<div class="title">{$lng.listings.meta_info}</div>
+	<table cellpadding="0" cellspacing="0" width="100%">
+	<tr><td class="left_form">{$lng.listings.meta_keywords}:</td> <td class="right_form">&nbsp;{$tmp.meta_keywords}</td></tr>
+	<tr><td class="left_form">{$lng.listings.meta_description}:</td> <td class="right_form">&nbsp;{$tmp.meta_description}</td></tr>
+	</table>
+	<br/>
+{/if}
+
+<br />
+<center><div class="form_button"><strong><a  href="{$live_site}/admin/editad.php?id={$id}">{$lng.listings.edit_listing}</a></strong></div></center>
+<br />
+
+{if $ads_settings.enable_featured || $ads_settings.enable_highlited || $ads_settings.enable_priorities || $ads_settings.enable_video}
+
+<div class="title">{$lng.listings.extra_options}</div>
+<table cellpadding="0" cellspacing="0" width="100%">
+
+{if $ads_settings.enable_featured}
+<tr><td class="left_form">{$lng.listings.featured}:</td><td class="right_form">{if $tmp.featured || $options.featured}{$lng.general.yes}{else}{$lng.general.no}{/if}</td></tr>
+{/if}
+
+{if $ads_settings.enable_highlited}
+<tr><td class="left_form">{$lng.listings.highlited}:</td><td class="right_form">{if $tmp.highlited || $options.highlited}{$lng.general.yes}{else}{$lng.general.no}{/if}</td></tr>
+{/if}
+
+{if $ads_settings.enable_priorities}
+<tr><td class="left_form">{$lng.listings.priority}:</td><td class="right_form">
+{if $tmp.priority>0}{$tmp.priority_name}{else}{$lng.general.no}{/if}</td></tr>
+{/if}
+
+{if $ads_settings.enable_video}
+<tr><td class="left_form">{$lng.listings.video}:</td><td class="right_form">{if $tmp.video || $options.video}{$lng.general.yes}{else}{$lng.general.no}{/if}</td></tr>
+{/if}
+
+</table>
+<br />
+<center><div class="form_button"><strong><a id="sett{$id}" class="adsettings" href="javascript:;">{$lng.listings.edit_options}</a></strong></a></center>
+<br />
+<br>
+
+<script type="text/javascript">
+{literal}
+
+$(document).ready(function() {
+
+$("a.adsettings").click(function(event){
+
+	var listing_id = jQuery(this).attr("id").substr(4);
+
+	$.fancybox({
+		'width'         		: 630,
+		'height'        		: 600,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'margin'		: '0',
+		'padding'		: '10',
+		'titleShow'		: false,
+		'type'			: 'iframe',
+		'href'			: '{/literal}{$live_site}{literal}/admin/edit_ad_settings.php?id='+listing_id,
+		'onClosed': function(){ location.reload(true); }
+	});
+
+});
+
+});
+{/literal}
+</script>
+
+<div class="title">{$lng.listings.ad_photos}</div>
+<ul id="ul_files">
+{foreach from=$tmp.images item=v}
+<li><img src="{$live_site}/images/listings{if $v.folder}/{$v.folder}{/if}/thmb/{$v.picture}"></li>
+{/foreach}
+</ul>
+<br>
+<center><div class="form_button"><strong><a  href="{$live_site}/admin/edit_photos.php?id={$id}">{$lng.listings.edit_photos}</a></strong></div></center>
+<br />
+{/if}
+
+{/if} {* end if step=4 *}

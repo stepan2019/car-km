@@ -1,0 +1,51 @@
+{include file="header.html"}
+
+<div class="page_title">{$lng.panel.users} > <a href="messages.php">{$lng.useraccount.messages}</a> > {$lng.messages.edit_message} #{$id}</div>
+
+
+<div class="p30">
+<form name="settings" method="post" action="edit_message.php?id={$id}">
+
+<div class="form_container">
+
+{if isset($error) && $error != ""}<div class="error">{$error}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.messages.from}</div>
+	<div class="right_form">{if $message.from && $settings.enable_username}{$message.username}{else}{$message.from_email}{/if}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.messages.to}</div>
+	<div class="right_form">{if $message.to && $settings.enable_username}{$message.to_username}{else}{$message.to_email}{/if}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.custom_fields.phone}</div>
+	<div class="right_form">{$message.from_phone}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.messages.message}</div>
+	<div class="right_form"><textarea rows="6" cols="90" name="message">{$message.message}</textarea></div>
+</div>
+
+{if $message.msg_pending}
+<div class="clearfix">
+	<div class="left_form">{$lng.messages.approve_and_send}</div>
+	<div class="right_form"><input type="checkbox" name="approve" id="approve" /></div>
+</div>
+{/if}
+
+<div class="form_footer">
+	<div class="buttons rfloat">
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+{include file="footer.html"}

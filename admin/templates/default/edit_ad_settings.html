@@ -1,0 +1,218 @@
+{include file="overlay_header.html"}
+
+<script type="text/javascript" src="{$live_site}/libs/jQuery/jquery.js"></script>
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/jquery.form.js"></script>
+
+{include file="data/ui.html"}
+
+<div class="wait"></div>
+
+<div class="overlay-top-bg">{$lng.listings.modify_ad_settings}<a href="{if $seo_settings.enable_mod_rewrite}{seo->makeDetailsLink p1=$id}{else}{$live_site}/details.php?id={$id}{/if}" target="_blank"> #{$id}</a></div>
+
+<form name="ad_settings" id="ad_settings" method="post" action="edit_ad_settings.php?post=1&id={$id}">
+
+<div class="info" style="display: none"></div>
+
+<div class="form2 lpdiv100" style="min-height: 520px;">
+
+<ul>
+
+<li>
+	<label>{$lng.listings.category}</label>
+	<select id="category" name="category">
+		{foreach from=$categories item=v name=cat}
+		{if $v.parent==1}
+		<optgroup label="{$v.str}{$v.name}">
+		{else}
+		<option value="{$v.id}" {if $options.category_id==$v.id}selected{/if}>{$v.str}{$v.name}</option>
+		{if ( $smarty.foreach.cat.index!=$categories|@count-1 && $v.parent_id!=$categories[$smarty.foreach.cat.iteration].parent_id) || ($smarty.foreach.cat.index==$categories|@count && $v.parent_id!=0)}
+		</optgroup>
+		{/if}
+		{/if}
+		{/foreach}
+	</select>
+</li>
+
+<li>
+	<label>{$lng.listings.package}</label>
+	<select name="package" id="package">
+		<option value=""> -- </option>
+		{foreach from=$packages item=v}
+		<option value="{$v.id}" {if $options.package_id==$v.id}selected="selected"{/if}>{$v.name}</option>
+		{/foreach}
+	</select>
+</li>
+
+{if $ads_settings.enable_featured}
+<li>
+	<label>{$lng.listings.featured}</label>
+	<select name="featured" id="featured">
+		<option value="0"> -- </option>
+		<option value="100" {if $options.featured==100}selected="selected"{/if}>{$lng.listings.until_expires}</option>
+		{foreach from=$featured_plans item=v}
+		<option value="{$v.id}" {if $options.featured==$v.id}selected="selected"{/if}>{$v.no_days}&nbsp;{$lng.days}</option>
+		{/foreach}
+	</select>
+
+</li>
+{/if}
+
+{if $ads_settings.enable_highlited}
+<li>
+	<label>{$lng.listings.highlited}</label>
+	<input name="highlited" type="checkbox" class="noborder" {if $options.highlited==1}checked{/if} />
+</li>
+{/if}
+
+{if $ads_settings.enable_priorities}
+<li>
+	<label>{$lng.listings.priority}</label>
+	<select name="priority" id="priority">
+		<option value="0"> -- </option>
+		{foreach from=$priorities item=v}
+		<option value="{$v.order_no}" {if $options.priority==$v.order_no}selected="selected"{/if}>{$v.name}</option>
+		{/foreach}
+	</select>
+</li>
+{/if}
+
+{if $ads_settings.enable_urgent}
+<li>
+	<label>{$lng.packages.urgent}</label>
+	<input type="checkbox" class="noborder" name="urgent" {if $options.urgent==1}checked{/if}>
+</li>
+{/if}
+
+{if $ads_settings.enable_video}
+<li>
+	<label>{$lng.listings.video}</label>
+	<input type="checkbox" class="noborder" name="video" {if $options.video==1}checked{/if}>
+</li>
+{/if}
+
+{if $ads_settings.enable_url}
+<li>
+	<label>{$lng.packages.url}</label>
+	<input type="checkbox" class="noborder" name="url" {if $options.url==1}checked{/if}>
+</li>
+{/if}
+
+<li>
+	<label>{$lng.listings.expires_on}:</label>
+	<input type="radio" name="expires"  value="0" {if !$expires.date_expires || $expires.date_expires=="0000-00-00 00:00:00"}checked{/if} />&nbsp;{$lng.general.never}&nbsp;&nbsp;&nbsp;&nbsp;
+	<input type="radio" name="expires" value="1"{if $expires.date_expires && $expires.date_expires!="0000-00-00 00:00:00"}checked{/if} />&nbsp;{$lng.listings.on_date}
+	<input type="text" name="expires_day" value="{$expires.day}" style="width: 50px !important;" />
+	&nbsp;
+	<select name="expires_month">
+		{foreach from=$months_list item=v key=k}
+		<option value="{$k}" {if $expires.month==$k}selected{/if}>{$v}</option>
+		{/foreach}
+	</select>
+	&nbsp;
+	<select name="expires_year">
+		{foreach from=$years_list item=v}
+		<option value="{$v}" {if $expires.year==$v}selected{/if}>{$v}</option>
+		{/foreach}
+	</select>
+	{if $expires.expired}
+	&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ff0000">{$lng.listings.expired_on}</font>
+	{/if}
+</li>
+
+<li>
+	<label>
+		{if !$user_id}
+			<input type="radio" name="owner" value="1" />
+		{/if}
+		{$lng.users.user}:
+	</label>
+
+	{if $no_users<=100}
+	<select name="user_id">
+		<option value="">{$lng.users.user}</option>
+		{foreach from = $users item = v}
+		<option value="{$v.id}" {if $v.id==$user_id}selected="selected"{/if}>{$v.username}</option>
+		{/foreach}
+	</select>
+	{else}
+	<input type="text" name="user" id="user" value="{if isset($user_ac)}{$user_ac}{/if}" />
+	{/if}
+</li>
+
+{if !$user_id}
+<li><label>or</label><li/>
+<li>
+	<label><input type="radio" name="owner" value="2" {if !$user_id}checked="checked"{/if} />&nbsp;Posted as guest with data:</label>
+	
+	
+	{*<input type="text" name="mgm_email" id="mgm_email" value="{$mgm_email}" />*}
+	{foreach from=$not_logged_in_fields item=v name=field}
+	{$v.name}: <input type="text" name="{$v.caption}" id="{$v.caption}" value="{$owner_info[$v.caption]}" /><br/>
+	{/foreach}
+	
+	
+</li>
+{/if}
+
+</ul>
+
+</div> {* end form2 *}
+
+<div class="overlay-bottom-bg">
+<div class="buttons">
+	<strong><input type="submit" name="Submit" value="{$lng.general.save_changes}" /></strong>
+</div>
+
+</div>
+
+</form>
+
+<script type="text/javascript">
+{literal}
+        $(function() {
+                $( "#user" ).autocomplete({
+                        source: "{/literal}{$live_site}{literal}/admin/include/get_info.php?type=user_ac",
+                        minLength: 1
+                });
+        });
+
+
+jQuery(document).ready(function() {
+
+	$(".info").hide();
+
+var options = { 
+
+	beforeSerialize: function(jqForm, options){ $("body").addClass("loading") },
+        beforeSubmit:  function(formData, jqForm, options) {var queryString = $.param(formData);  return true;  }, 
+        success:       successResponse 
+ 
+   }; 
+
+function successResponse(responseText, statusText, xhr, $form)  { 
+
+//alert(responseText);
+			var ret = JSON.parse(responseText);
+
+			$("body").removeClass("loading");
+
+			if(ret.response==1) {
+
+				$(".info").html("<p>"+ret.info+"</p>");
+				$(".info").show();
+				$(".form2").slideUp();
+				$(".overlay-bottom-bg").hide();
+				return;
+
+			}
+
+} 
+
+ $('#ad_settings').ajaxForm(options);
+
+});
+
+{/literal}
+</script>
+
+{include file="overlay_footer.html"}

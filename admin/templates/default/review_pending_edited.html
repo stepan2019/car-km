@@ -1,0 +1,292 @@
+{include file="header.html"}
+{include file="data/fancybox.html"}
+
+<div class="page_title">{$lng.panel.listings} > <a href="manage_listings.php">{$lng.panel.manage_listings}</a> > {$lng.listings.review_pending_edited}</div>
+
+<div class="p30">
+
+<div class="mb50">
+
+	<div class="buttons rfloat">
+		<span class="positive"><a href="javascript:;" class="deny">{$lng.listings.deny_changes}</a></span>
+	</div>
+
+	<div class="buttons rfloat">
+		<span class="positive"><a href="javascript:;" class="accept">{$lng.listings.accept_changes}</a></span>
+	</div>
+
+
+</div>
+
+<table cellpadding="0" cellspacing="0" width="100%" class="datatable">
+
+<tr id="theading">
+	<th width="20%" class="hleft"></th>
+	<th width="40%">{$lng.listings.crt_value}</th>
+	<th width="40%" class="hright">{$lng.listings.new_value}</th>
+</tr>
+
+{if $pending_edited_array}
+{* -------- title ----------- *}
+<tr{if $listing_array.title != $pending_edited_array.title} class="visible"{/if}>
+	<td class="left-heading">{$lng.listings.title}</td>
+	<td>{$listing_array.title}</td>
+	<td>{$pending_edited_array.title}</td>
+</tr>
+
+{* -------- description---------- *}
+<tr{if $listing_array.description!= $pending_edited_array.description} class="visible"{/if}>
+	<td class="left-heading">{$lng.listings.description}</td>
+	<td>{$listing_array.description}</td>
+	<td>{$pending_edited_array.description}</td>
+</tr>
+
+{* -------- for each custom field --------- *}
+
+{foreach name=fields from=$fields item=v}
+
+<tr {if (isset($listing_array[$v.caption]) && !isset($pending_edited_array[$v.caption])) || $listing_array[$v.caption] != $pending_edited_array[$v.caption]}class="visible"{/if}>
+	<td class="left-heading">{$v.name}</td>
+
+	{* current value *}
+	<td>
+		{if $v.prefix && isset($listing_array[$v.caption]) && $listing_array[$v.caption]}{$v.prefix}{/if}
+
+		{if $v.type=="price"}
+
+			{if in_array("price_extra", $modules_array) && isset($pe_settings[$fieldset])}
+
+			{include file="modules/price_extra/price_tag.html" values_array=$listing_array}
+
+			{elseif isset($listing_array.price_curr) && $listing_array.price>0}
+			{$listing_array.price_curr}
+			{/if}
+
+		{elseif $v.type=="checkbox_group" || $v.type=="multiselect"}
+
+		{if isset($listing_array[$v.caption])}
+		{foreach name=multi from = $listing_array[$v.caption] item=x}
+		{if $smarty.foreach.multi.index!=0},&nbsp;{/if}{$x}
+		{/foreach}
+		{/if}
+
+		{elseif $v.type=="youtube" && isset($listing_array[$v.caption]) && $listing_array[$v.caption]}
+
+		{$listing_array[$v.caption]|regex_replace:'/ width="[0-9]+"/':" width='200'"|regex_replace:'/ height="[0-9]+"/':" height='180'"}
+
+		{elseif $v.type=="url" && isset($listing_array[$v.caption]) && $listing_array[$v.caption]}
+		<a href="{$listing_array[$v.caption]}">{$listing_array[$v.caption]}</a>
+
+		{elseif $v.type=="file" && isset($listing_array[$v.caption]) && $listing_array[$v.caption]}
+		<a href="{$live_site}/uploads/{$v.caption}/{$listing_array[$v.caption]}"><img src="{$template_path}/images/download.png" class="tooltip" alt="" title="{$lng.general.download}"/></a>
+
+		{elseif $v.type=="image" && isset($listing_array[$v.caption]) && $listing_array[$v.caption]}
+		<a href="{$live_site}/uploads/{$v.caption}/{$listing_array[$v.caption]}" class="imgfield"><img src="{$template_path}images/camera.png" class="mbm7" alt="" /></a>
+
+		{elseif $v.type=="date"}
+		{if isset($listing_array.vis[$v.caption])}{$listing_array.vis[$v.caption]}{/if}
+
+		{elseif $v.validation_type=="numeric"}
+		{if isset($listing_array.formatted[$v.caption])}{$listing_array.formatted[$v.caption]}{/if}
+
+		{elseif $v.type=="textarea"}
+		{if isset($listing_array.formatted[$v.caption])}{$listing_array.formatted[$v.caption]}{/if}
+
+		{elseif $v.type=="checkbox"}
+		{if isset($listing_array[$v.caption])}
+		{if $listing_array[$v.caption]==1}{$lng.general.Yes}{else}{$lng.general.No}{/if}
+		{/if}
+
+		{elseif $v.type=="google_maps" && isset($listing_array[$v.caption]) && $listing_array[$v.caption]}
+		<div id="gm_ro_{$v.caption}" class="map"></div>
+
+		<script type="text/javascript">
+		{include file="data/gmap-ro.html" tmp=$listing_array gmf_prefix="_`$v.caption`"}
+		</script>
+
+		{else}
+		{if isset($listing_array[$v.caption]) && $listing_array[$v.caption]}{$listing_array[$v.caption]}{else}-{/if}
+		{/if}
+
+		{if $v.postfix && isset($listing_array[$v.caption]) && $listing_array[$v.caption]}{$v.postfix}{/if}
+	</td>
+
+	{* new value *}
+	<td>
+		{if $v.prefix && isset($pending_edited_array[$v.caption]) && $pending_edited_array[$v.caption]}{$v.prefix}{/if}
+
+		{if $v.type=="price"}
+
+			{if in_array("price_extra", $modules_array) && isset($pe_settings[$fieldset])}
+
+			{include file="modules/price_extra/price_tag.html" values_array=$pending_edited_array}
+
+			{elseif isset($pending_edited_array.price_curr) && $pending_edited_array.price>0}
+			{$pending_edited_array.price_curr}
+			{/if}
+
+		{elseif $v.type=="checkbox_group" || $v.type=="multiselect"}
+
+		{if isset($pending_edited_array[$v.caption])}
+		{foreach name=multi from = $pending_edited_array[$v.caption] item=x}
+		{if $smarty.foreach.multi.index!=0},&nbsp;{/if}{$x}
+		{/foreach}
+		{/if}
+
+		{elseif $v.type=="youtube" && isset($pending_edited_array[$v.caption]) && $pending_edited_array[$v.caption]}
+
+		{$pending_edited_array[$v.caption]|regex_replace:'/ width="[0-9]+"/':" width='200'"|regex_replace:'/ height="[0-9]+"/':" height='180'"}
+
+		{elseif $v.type=="url" && isset($pending_edited_array[$v.caption]) && $pending_edited_array[$v.caption]}
+		<a href="{$pending_edited_array[$v.caption]}">{$pending_edited_array[$v.caption]}</a>
+
+		{elseif $v.type=="file" && isset($pending_edited_array[$v.caption]) && $pending_edited_array[$v.caption]}
+		<a href="{$live_site}/uploads/{$v.caption}/{$pending_edited_array[$v.caption]}"><img src="{$template_path}/images/download.png" class="tooltip" alt="" title="{$lng.general.download}"/></a>
+
+		{elseif $v.type=="image" && isset($pending_edited_array[$v.caption]) && $pending_edited_array[$v.caption]}
+		<a href="{$live_site}/uploads/{$v.caption}/{$pending_edited_array[$v.caption]}" class="imgfield"><img src="{$template_path}images/camera.png" class="mbm7" alt="" /></a>
+
+		{elseif $v.type=="date"}
+		{if isset($pending_edited_array.vis[$v.caption])}{$pending_edited_array.vis[$v.caption]}{/if}
+
+		{elseif $v.validation_type=="numeric"}
+		{if isset($pending_edited_array.formatted[$v.caption])}{$pending_edited_array.formatted[$v.caption]}{/if}
+
+		{elseif $v.type=="textarea"}
+		{if isset($pending_edited_array.formatted[$v.caption])}{$pending_edited_array.formatted[$v.caption]}{/if}
+
+		{elseif $v.type=="checkbox"}
+		{if isset($pending_edited_array[$v.caption])}
+		{if $pending_edited_array[$v.caption]==1}{$lng.general.Yes}{else}{$lng.general.No}{/if}
+		{/if}
+
+		{elseif $v.type=="google_maps" && isset($pending_edited_array[$v.caption]) && $pending_edited_array[$v.caption]}
+		<div id="gm_ro_{$v.caption}_pe" class="map"></div>
+
+		<script type="text/javascript">
+		{include file="data/gmap-ro.html" tmp=$pending_edited_array gm_prefix="_pe" gmf_prefix="_`$v.caption`_pe"}
+		</script>
+
+		{else}
+		{if isset($pending_edited_array[$v.caption]) && $pending_edited_array[$v.caption]}{$pending_edited_array[$v.caption]}{else}-{/if}
+		{/if}
+
+		{if $v.postfix && isset($pending_edited_array[$v.caption]) && $pending_edited_array[$v.caption]}{$v.postfix}{/if}
+	</td>
+
+</tr>
+
+{/foreach}
+
+
+{* -------- meta keywords --------- *}
+<tr{if $listing_array.meta_keywords!= $pending_edited_array.meta_keywords} class="visible"{/if}>
+	<td class="left-heading">{$lng.listings.meta_keywords}</td>
+	<td>{if isset($listing_array.meta_keywords)}{$listing_array.meta_keywords}{/if}</td>
+	<td>{if isset($pending_edited.meta_keywords)}{$pending_edited_array.meta_keywords}{/if}</td>
+</tr>
+
+{* -------- meta description --------- *}
+<tr{if $listing_array.meta_description!= $pending_edited_array.meta_description} class="visible"{/if}>
+	<td class="left-heading">{$lng.listings.meta_description}</td>
+	<td>{if isset($listing_array.meta_description)}{$listing_array.meta_description}{/if}</td>
+	<td>{if isset($pending_edited.meta_description)}{$pending_edited_array.meta_description}{/if}</td>
+</tr>
+{/if}
+
+
+{* -------- pictures --------- *}
+{if isset($pending_edited_pictures_array) && $pending_edited_pictures_array}
+<tr class="visible">
+	<td class="left-heading" valign="top">{$lng.packages.pictures}</td>
+	<td valign="top">
+		{foreach from=$pictures_array item=v}
+			<img src="{$live_site}/images/listings/{if $v.folder}{$v.folder}/{/if}bigThmb/{$v.picture}" width="400" />
+		{/foreach}
+	</td>
+	<td valign="top">
+		{foreach from=$pending_edited_pictures_array item=v}
+			<img src="{$live_site}/images/listings/{if $v.folder}{$v.folder}/{/if}bigThmb/{$v.picture}" width="400" />
+		{/foreach}
+	</td>
+</tr>
+{/if}
+
+</table>
+
+<div class="mt20 mb50">
+
+	<div class="buttons rfloat">
+		<span class="positive"><a href="javascript:;" class="deny">{$lng.listings.deny_changes}</a></span>
+	</div>
+
+	<div class="buttons rfloat">
+		<span class="positive"><a href="javascript:;" class="accept">{$lng.listings.accept_changes}</a></span>
+	</div>
+
+
+</div>
+
+</div> {* end p30 *}
+
+<script type="text/javascript">
+{literal}
+jQuery(document).ready(function() {
+
+	// initialize google maps
+	load_gmaps();
+
+	$("a.imgfield").fancybox();
+
+	$("a.accept").click(function(){
+
+		$.ajax({
+				type		: "GET",
+				cache		: false,
+				url		: "{/literal}{$live_site}/admin/include/actions.php?action=accept&object=pe&id={$id}{literal}",
+				success: function(data) {
+					window.location="manage_listings.php";
+				} // end data
+		});// end ajax
+
+
+	});
+
+	$("a.deny").click(function(){
+
+		$.ajax({
+				type		: "GET",
+				cache		: false,
+				url		: "{/literal}{$live_site}/admin/include/actions.php?action=deny&object=pe&id={$id}{literal}",
+				success: function(data) {
+					window.location="manage_listings.php";
+				} // end data
+		});// end ajax
+		
+	
+	});
+
+});
+
+function init_gmap() {
+
+{/literal}
+{foreach name=fields from=$fields item=v}
+	{if $v.type=="google_maps"} 
+		{if $listing_array[$v.caption]}
+		init_gmap_{$v.caption}();
+		{/if}
+
+		{if $pending_edited_array[$v.caption]}
+		init_gmap_{$v.caption}_pe();
+		{/if}
+	{/if}
+
+{/foreach}
+{literal}
+	}
+
+{/literal}
+</script>
+
+{include file="footer.html"}

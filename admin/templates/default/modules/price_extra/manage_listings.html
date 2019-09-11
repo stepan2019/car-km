@@ -1,0 +1,4 @@
+{if $v.price>0 || ($v.price==0 && $pe_settings[$v.fieldset].use_free==0)}<div>{$lng.listings.price}: {$v.price_curr}{if $v.price>0 && $pe_settings[$v.fieldset].use_negotiable==1 && $v.negotiable==1}&nbsp;{$pe_settings[$v.fieldset].lang[$crt_lang].negotiable}{/if}{if $pe_settings[$v.fieldset].use_extra_option1==1 && $v.extra_option1==1}&nbsp;{$pe_settings[$v.fieldset].lang[$crt_lang].extra_option1}{/if}{if $pe_settings[$v.fieldset].use_extra_option2==1 && $v.extra_option2==1}&nbsp;{$pe_settings[$v.fieldset].lang[$crt_lang].extra_option2}{/if}</div>
+{elseif $v.price==0 && $pe_settings[$v.fieldset].use_free==1}<div>{$lng.listings.price}: {$pe_settings[$v.fieldset].lang[$crt_lang].free|replace:" ":"&nbsp;"}</div>
+{elseif $v.price==-1 && $pe_settings[$v.fieldset].use_tags==1 && $v.price_tag}<div>{$lng.listings.price}: {$v.price_tag|replace:" ":"&nbsp;"}</div>
+{/if}

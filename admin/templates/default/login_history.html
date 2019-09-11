@@ -1,0 +1,42 @@
+{include file="header.html"}
+
+<div class="page_title">{$lng.panel.security} > {$lng.panel.login_history}</div>
+
+<div class="p30">
+<form name="search" method="post" action="login_history.php">
+
+<div class="lfloat" style="width: 600px;">
+
+	<input type="text" name="search" size=15 />
+	<div class="buttons">
+		<strong><input type="submit" name="Submit" value="{$lng.general.search}" /></strong>
+	</div>
+</div>
+<div class="rfloat">
+{include file="paginator.html"}
+</div>
+
+<div class="clearfix"></div>
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th class="hleft">{if $settings.enable_username}{$lng.users.username}{else}{$lng.users.email}{/if}</th>
+	<th>{$lng.login_history.last_login_date}</th>
+	<th class="hright">{$lng.login_history.last_login_ip}</th>
+</tr>
+
+{foreach from=$array_users item=v}
+<tr>
+	<td>{if $settings.enable_username}<a href="login_history_user.php?user={$v.username}" class="sc1">{$v.username}</a>{else}<a href="login_history_user.php?user={$v.email}" class="sc1">{$v.email}</a>{/if}</td>
+	<td>{$v.login_info.date_login_nice}</td>
+	<td>{$v.login_info.ip}</td>
+</tr>
+{/foreach}
+</table>
+</form>
+
+{if $array_users|@count}<div class="rfloat mt20">{include file="paginator.html"}</div>{/if}
+<div class="clearfix"></div>
+</div> {* p30 *}
+
+{include file="footer.html"}

@@ -1,14 +1,18 @@
 <?php
-    include "../setting/config.php"; 
-    
-    $result = $config->getInformationContent();
-    $information = $result->fetch_assoc();
+include "../setting/config.php";
+
+$result = $config->getInformationContent();
+$information = $result->fetch_assoc();
+include "../include/include.php";
+
+global $lng;
+global $crt_lang_code;
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="<?php echo $crt_lang_code; ?>">
 <head>
-	<meta charset="utf-8">
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
@@ -25,48 +29,54 @@
     <link href="../css/nivo-lightbox.css" rel="stylesheet">
     <link href="../css/nivo_themes/default/default.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
-        integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/all.css" crossorigin="anonymous">
+    <script>
+        exdate=new Date();
+        exdate.setDate(exdate.getDate() + 365);
+
+    </script>
 </head>
 <body>
 
-    <?php
-        include "../template/header.php";
-    ?>
+<?php
+include "../template/header.php";
+?>
 
-    <div class="swiper-container main-slider" id="myCarousel">
-        <div class="swiper-wrapper">
-            <?php 
-                if(isset($_GET['type'])) {
-                    $page = $_GET['type'];
-                    include $page.".php";
-                } else {
+<div class="swiper-container main-slider" id="myCarousel">
+    <div class="swiper-wrapper">
+        <?php
+        if (isset($_GET['type'])) {
+            $page = $_GET['type'];
+            include $page . ".php";
+        } else {
             ?>
-                <p class="type-title">Please select user type to register.</p><br>
-                <div class="type-user">
-                    <div class="type-user1">
-                    <a href="register.php?type=register_user" class="link-size typing-glow mr-5"><i class="far fa-user"></i>&nbsp;&nbsp;User</a>
-                    </div>
-                    <div class="type-user2">
-                    <a href="register.php?type=register_dealer" class="link-size typing-glow ml-5"><i class="fas fa-car"></i>&nbsp;&nbsp;Dealer</a>
-                    </div>
+            <p class="type-title"><?php echo $lng['users']['Select_type_to_register'];?></p><br>
+            <div class="type-user">
+                <div class="type-user1">
+                    <a href="register.php?type=register_user" class="link-size typing-glow mr-5"><i
+                                class="far fa-user"></i>&nbsp;&nbsp;<?php echo $lng['users']['User'];?></a>
                 </div>
-            <?php } ?>
+                <div class="type-user2">
+                    <a href="register.php?type=register_dealer" class="link-size typing-glow ml-5"><i
+                                class="fas fa-car"></i>&nbsp;&nbsp;<?php echo $lng['users']['Delaer'];?></a>
+                </div>
             </div>
-        </div>
+        <?php } ?>
     </div>
-    
-    <?php
-        include "../template/information.php";
-    ?>
+</div>
+</div>
 
-    <?php
-        include "../template/footer.php";
-    ?>
+<?php
+include "../template/information.php";
+?>
 
-    <script src="../js/jquery.min.js" ></script> 
-    <script src="../js/bootstrap.min.js"></script> 
-    <script src="../js/scrollPosStyler.js"></script> 
+<?php
+include "../template/footer.php";
+?>
+
+<script src="../js/jquery.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/scrollPosStyler.js"></script>
 </body>
 
 </html>

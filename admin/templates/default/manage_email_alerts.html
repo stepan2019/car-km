@@ -1,0 +1,196 @@
+{include file="header.html"}
+{include file="data/ui.html"}
+
+<div class="page_title">{$lng.panel.users} > {$lng.panel.email_alerts}</div>
+
+<div class="p30">
+<form name="search" id="search" method="post" action="manage_email_alerts.php">
+
+<div class="lfloat" style="width: 600px;">
+
+<div class="lfloat mr10">
+	{if !$is_mod || $mod_sections.alerts.delete==1}
+	<input type="image" value="delete_selected" name="delete_selected" src="{$template_path}images/delete_all.png" title="{$lng.general.delete_all}" class="tooltip icon" onclick="{if $demo}alert('{$lng.general.errors.demo}'); return false;{else}return myConfirm('{$lng.alerts.confirm_delete_all|addslashes}'){/if}" style="border: 0px;">
+	{/if}
+	{if !$is_mod || $mod_sections.alerts.edit==1}
+	<input type="image" value="activate_selected" name="activate_selected" src="{$template_path}images/activate_all.png" title="{$lng.general.activate_all}" class="tooltip icon" onclick="return myConfirm('{$lng.alerts.confirm_activate_all|addslashes}')" style="border: 0px;">
+	<input type="image" value="deactivate_selected" name="deactivate_selected" src="{$template_path}images/deactivate_all.png" title="{$lng.general.deactivate_all}" class="tooltip icon" onclick="{if $demo}alert('{$lng.general.errors.demo}'); return false;{else}return myConfirm('{$lng.alerts.confirm_deactivate_all|addslashes}'){/if}" style="border: 0px;">
+	{/if}
+</div>
+<div class="lfloat">
+	<select name="show" onChange="doSel(this);">
+		<option value="location.href='{$pages_link|replace:'##page##':1}&show=all'" {if $show=="all"} selected="selected" {/if}>{$lng.alerts.all}</option>
+		<option value="location.href='{$pages_link|replace:'##page##':1}&show=active'" {if $show=="active"} selected="selected" {/if}>{$lng.alerts.active}</option>
+		<option value="location.href='{$pages_link|replace:'##page##':1}&show=inactive'" {if $show=="inactive"} selected="selected" {/if}>{$lng.alerts.inactive}</option>
+	</select>
+</div>
+
+<div class="buttonwrapper lfloat ml10"><div class="button3-left">
+
+	<a href="javascript:;" id="add_search"><span class="button3-right">{$lng.general.search}&nbsp;<img src="{$template_path}images/gray-down-arrow.png" /></span></a>
+
+	<a href="javascript:;" id="remove_search"><span class="button3-right">{$lng.general.search}&nbsp;<img src="{$template_path}images/gray-up-arrow.png" /></span></a>
+
+</div></div>
+
+</div> {* lfloat *}
+
+<div class="rfloat">
+{include file="paginator.html"}
+</div>
+
+<div class="clearfix"></div>
+
+<div id="search_box" style="display: none;">
+
+<input type="hidden" name="page" value = "{$page}" />
+<input type="hidden" name="show" value = "{$show}" />
+<input type="hidden" name="no_per_page" value = "{$no_per_page}" />
+
+<input type="text" name="id" size="6" class="defaultText" title="{$lng.listings.id}" value="{if isset($post_array.id)}{$post_array.id}{/if}"/>
+{if $settings.enable_username}
+<input type="text" name="username" size="20" class="defaultText" title="{$lng.users.username}" value="{if isset($post_array.username)}{$post_array.username}{/if}" />
+{/if}
+<input type="text" name="email" size="20" class="defaultText" title="{$lng.users.email}" value="{if isset($post_array.email)}{$post_array.email}{/if}" />
+
+<select name="frequency">
+	<option value="">{$lng.alerts.frequency}</option>
+	<option value="0" {if isset($post_array.frequency) && $post_array.frequency==0}selected="selected"{/if}>{$lng.alerts.immediately}</option>
+	<option value="1" {if isset($post_array.frequency) && $post_array.frequency==1}selected="selected"{/if}>{$lng.alerts.daily}</option>
+	<option value="7" {if isset($post_array.frequency) && $post_array.frequency==7}selected="selected"{/if}>{$lng.alerts.weekly}</option>
+</select>
+
+<input type="text" name="ip" size="20" class="defaultText" title="{$lng.search.ip}" value="{if isset($post_array.ip)}{$post_array.ip}{/if}" />
+
+<input name="date_from_vis" id="date_from_vis" type="text" size="15" class="defaultText" title="{$lng.search.date_from}"/>
+<input name="date_from" id="date_from" type="hidden"/>
+
+<input name="date_to_vis" id="date_to_vis" type="text" size="15" class="defaultText" title="{$lng.search.date_to}" />
+<input name="date_to" id="date_to" type="hidden" />
+
+<div class="buttons">
+	<strong><input type="submit" name="Search" value="{$lng.general.search}" /></strong>
+</div>
+
+</div>
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th width="30" class="hleft"><input type="checkbox" class="noborder" name="check_all" id="check_all" /></th>
+	<th width="30">{$lng.listings.id}</th>
+	<th>{$lng.users.email}</th>
+	{if $settings.enable_username}<th>{$lng.users.username}</th>{/if}
+	<th>{$lng.alerts.frequency}</th>
+	<th>{$lng.search.search_for}</th>
+	<th width="200">{$lng.listings.date}</th>
+	<th width="80" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$alerts_array item=v}
+<tr>
+	<td><input type="checkbox" class="noborder" name="sr{$v.id}" id="sr{$v.id}"></td>
+	<td>#{$v.id}</td>
+	<td>{$v.email}</td>
+	{if $settings.enable_username}<td>{$v.username}</td>{/if}
+	<td>{if $v.frequency==0}{$lng.alerts.immediately}{elseif $v.frequency==1}{$lng.alerts.daily}{else}{$lng.alerts.weekly}{/if}</td>
+	<td>{$v.search_str}</td>
+	<td>{$lng.listings.added_on}:<br /> {$v.date_nice}</td>
+	<td>
+		{if !$is_mod || $mod_sections.alerts.delete==1}
+		<a href="javascript:;" onclick="onDelete('{$v.id}','{$lng.searches.confirm_delete|addslashes}', 'alert');"><img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}"></a>
+		{/if}
+
+		{if !$is_mod || $mod_sections.alerts.edit==1}
+		<span id="div_active{$v.id}">
+			{if $v.active==0}
+			<a href="javascript:;" onclick="onEnable('{$v.id}','alert', '');"><img id="active{$v.id}" src="{$template_path}images/enable.png" class="tooltip icon" title="{$lng.general.enable}"></a>
+			{else}
+			<a href="javascript:;" onclick="onDisable('{$v.id}','alert','');"><img id="active{$v.id}" src="{$template_path}images/disable.png" class="tooltip icon" title="{$lng.general.disable}"></a>
+			{/if}
+		{/if}
+	</td>
+</tr>
+{/foreach}
+
+{if !$alerts_array|@count}
+	<tr><td colspan="{if $settings.enable_username}9{else}8{/if}">{$lng.no_items}</td></tr>
+{/if}
+</table>
+
+</form>
+
+{if $alerts_array|@count}<div class="rfloat mt20">{include file="paginator.html"}</div>{/if}
+
+<div class="mt20">
+	{$lng.general.show}
+	<select name="no_per_page_sel" onchange="doSel(this);">
+		{section name=pg loop=60 start=10 step=10}
+		<option value="location.href='{$crt_page_link}&no_per_page={$smarty.section.pg.index}'" {if $no_per_page==$smarty.section.pg.index} selected="selected" {/if}>{$smarty.section.pg.index}</option>
+		{/section}
+	</select>
+	{$lng.general.on_a_page}
+</div>
+
+
+</div> {* p30 *}
+
+{literal}
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("input").keypress(function(e)
+		{
+        		// if the key pressed is the enter key
+        		if (e.which == 13)
+        		{
+
+				// delay action so the autocomplete list to fill
+				setTimeout(function() { $("#search").submit();}, 200);
+
+				return false;
+        		}
+		});
+		$("#remove_search").hide();
+		$("#search_box").hide();
+		$("#add_search").click(function()
+		{
+			$("#remove_search").show();
+			$("#add_search").hide();
+			$("#search_box").slideDown('fast').show();
+		});
+
+		$("#remove_search").click(function()
+		{
+			$("#add_search").show();
+			$("#remove_search").hide();
+			$("#search_box").hide().slideUp('fast');
+		});
+
+		$("#check_all").click(function()
+		{
+
+			if ($('#check_all').is(':checked')) checkAll(document);
+			else uncheckAll(document);
+
+		});
+
+	});
+
+	$(function() {
+		$('#date_from_vis').datepicker({
+			dateFormat: "M dd yy",
+			changeMonth: true,
+			changeYear: true,
+			altField: '#date_from', altFormat: 'yy-mm-dd'
+		});
+
+		$('#date_to_vis').datepicker({
+			dateFormat: "M dd yy",
+			changeMonth: true,
+			changeYear: true,
+			altField: '#date_to', altFormat: 'yy-mm-dd'
+		});
+	});
+{/literal}
+</script>
+
+{include file="footer.html"}

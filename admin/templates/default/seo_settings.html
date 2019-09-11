@@ -1,0 +1,313 @@
+{include file="header.html"}
+
+<div class="page_title">{$lng.panel.settings} > {$lng.settings.seo_settings}</div>
+
+<div class="p30">
+
+{if isset($error) && $error != ""} <div class="error">{$error}</div>{/if}
+{if isset($successful) && $successful}<div class="info">{$lng.settings.settings_saved}</div>{/if}
+<div class="wait"></div>
+
+<form name="settings" method="post" action="">
+<div class="form_container">
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.enable_mod_rewrite}</div>
+	<div class="right_form">
+		<div class="lfloat"><input type="checkbox" name="enable_mod_rewrite" id="enable_mod_rewrite" {if $seo_settings.enable_mod_rewrite}checked="checked"{/if} /></div>
+		<div class="ml10 lfloat information">{$lng.settings.info.mod_rewrite}</div>	
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">&nbsp;</div>
+	<div class="right_form">
+	<fieldset>
+		<legend><a href="javascript:;" id="edit_structure">{$lng.seo_settings.edit_links_structure} [<span class="plus">+</span><span class="minus hidden">-</span>]</a></legend>
+		<div id="links_structure" class="hidden">
+		
+		<div><span>Search page:</span> /&nbsp;<input name="listings" type="text" size="10" value="{$seo_settings.sef_links.listings}" />&nbsp;/category_slug/</div>
+		<div><span>User listings page:</span> /&nbsp;<input name="user_listings" type="text" size="10" value="{$seo_settings.sef_links.user_listings}" />&nbsp;/user_slug/</div>
+		<div><span>Dealers page:</span> /&nbsp;<input name="store" type="text" size="10" value="{$seo_settings.sef_links.store}" />&nbsp;/store_slug/</div>
+		<div><span>Content page:</span> /&nbsp;<input name="content" type="text" size="10" value="{$seo_settings.sef_links.content}" />&nbsp;/content_slug/</div>
+		<div><span>Affiliate page:</span> /&nbsp;<input name="affiliate" type="text" size="10" value="{$seo_settings.sef_links.affiliate}" />&nbsp;/affiliate_slug/</div>
+		<div><span>Recent ads page:</span> /&nbsp;<input name="recent_ads" type="text" size="10" value="{$seo_settings.sef_links.recent_ads}" /></div>
+		<div><span>Featured ads page:</span> /&nbsp;<input name="featured_ads" type="text" size="10" value="{$seo_settings.sef_links.featured_ads}" /></div>
+		<div><span>Auctions page:</span> /&nbsp;<input name="auctions" type="text" size="10" value="{$seo_settings.sef_links.auctions}" /></div>
+		<div><span>Login page:</span> /&nbsp;<input name="login" type="text" size="10" value="{$seo_settings.sef_links.login}" />&nbsp;</div>
+		<div><span>Register page:</span> /&nbsp;<input name="register" type="text" size="10" value="{$seo_settings.sef_links.register}" /></div>
+		<div><span>Logout page:</span> /&nbsp;<input name="logout" type="text" size="10" value="{$seo_settings.sef_links.logout}" /></div>
+		<div><span>Favorites page:</span> /&nbsp;<input name="favorites" type="text" size="10" value="{$seo_settings.sef_links.favorites}" /></div>
+		<div><span>Contact page:</span> /&nbsp;<input name="contact" type="text" size="10" value="{$seo_settings.sef_links.contact}" /></div>
+		<div><span>Pre-submit page:</span> /&nbsp;<input name="pre_submit" type="text" size="10" value="{$seo_settings.sef_links.pre_submit}" /></div>
+		<div><span>Refine page:</span> /&nbsp;<input name="refine" type="text" size="10" value="{$seo_settings.sef_links.refine}" /></div>
+		<div><span>Contact user page:</span> /&nbsp;<input name="contact_details" type="text" size="10" value="{$seo_settings.sef_links.contact_details}" /></div>
+		</div>
+		
+		<div><em>{$lng.seo_settings.info.links_structure}</em></div>
+		
+		
+		<div id="current_links_structure" class="hidden mt20">
+<textarea rows="20" cols="70" id="tcls">RewriteRule ^{$seo_settings.sef_links.recent_ads} recent_ads.php [nc,qsa]
+RewriteRule ^{$seo_settings.sef_links.featured_ads} featured_ads.php [nc,qsa]
+RewriteRule ^{$seo_settings.sef_links.auctions} auctions.php [nc,qsa]
+RewriteRule ^{$seo_settings.sef_links.register} register.php [nc,qsa]
+RewriteRule ^{$seo_settings.sef_links.login} login.php [nc,qsa]
+RewriteRule ^{$seo_settings.sef_links.logout} logout.php [nc,qsa]
+RewriteRule ^{$seo_settings.sef_links.favorites} favorites.php [nc,qsa]
+RewriteRule ^{$seo_settings.sef_links.contact} contact.php [nc,qsa]
+RewriteRule ^{$seo_settings.sef_links.pre_submit} pre-submit.php [nc,qsa]
+RewriteRule ^{$seo_settings.sef_links.refine} refine.php [nc,qsa]
+RewriteRule ^{$seo_settings.sef_links.listings}/?$ listings.php [nc,qsa]
+RewriteRule ^{$seo_settings.sef_links.listings}/([^./]+) listings.php?category_slug=$1 [nc,qsa]
+RewriteRule ^{$seo_settings.sef_links.user_listings}/([^./]+) user_listings.php?user_slug=$1 [nc,qsa]
+RewriteRule ^{$seo_settings.sef_links.store}/([^./]+) store.php?user_slug=$1 [nc,qsa]
+RewriteRule ^{$seo_settings.sef_links.contact_details}/([^./]+) contact_details.php?user_slug=$1 [nc,qsa]
+RewriteRule ^{$seo_settings.sef_links.content}/([^./]+) content.php?cp_slug=$1 [nc,qsa]
+RewriteRule ^([^./]+)$ index.php?category_slug=$1 [nc,qsa]
+RewriteRule ^([^./]+)/([^./]+)/?$ details.php?category_slug=$1&listing_slug=$2 [nc,qsa]
+RewriteRule ^{$seo_settings.sef_links.affiliate}/([^./]+)$ index.php?aff=$1 [nc,qsa]
+</textarea>
+		</div>
+		
+	</fieldset>
+	</div>
+</div>
+
+<div class="clearfix hidden" id="div_sef">
+	<div class="left_form">{$lng.seo_settings.sef_legacy_mode}</div>
+	<div class="right_form">
+		<div class="lfloat"><input type="checkbox" name="sef_legacy_mode" {if $seo_settings.sef_legacy_mode}checked="checked"{/if} /></div>
+		<div class="ml10 lfloat information">{$lng.seo_settings.info.sef_legacy_mode}</div>	
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.seo_settings.info.maximum_slug_width}" />&nbsp;{$lng.seo_settings.maximum_slug_width}</div>
+	<div class="right_form"><input type="text" size="6" name="maximum_slug_width" id="maximum_slug_width" value="{$seo_settings.maximum_slug_width}" />&nbsp;{$lng.settings.info_days_unlimited}
+	
+	&nbsp;&nbsp;<div class="buttons">
+		<span class="positive"><a href="javascript:;" {if !$demo}id="Regenerate_ls"{else} onClick="alert('{$lng.general.errors.demo}');"{/if}>{$lng.seo_settings.regenerate_listing_slugs}</a></span>&nbsp;&nbsp;
+		
+		<span class="positive"><a href="javascript:;" {if !$demo}id="Regenerate_us"{else} onClick="alert('{$lng.general.errors.demo}');"{/if}>{$lng.seo_settings.regenerate_user_slugs}</a></span>
+	</div>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.analytics_code}</div>
+	<div class="right_form"><textarea name="analytics_code" rows="4" cols="50">{$seo_settings.analytics_code}</textarea></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.save_changes}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+
+
+{foreach from = $seo_pages item=v}
+<tr>
+	<td style="text-align: left" class="row" id="row{$v.page}">
+		<span class="bold">{$v.page_description} </span>[{$v.page}.php]<br/>
+		<div id="sp_{$v.page}" style="display: none;">
+		{foreach from =$languages item=l}<i>{$lng.settings.page_title}{if $languages|@count > 1}&nbsp;{if $l.image}<img src="{$live_site}/images/languages/{$l.image}">{else}{$l.name}{/if}&nbsp;&nbsp;{/if}</i>: <span id="span_title_{$v.page}_{$l.id}">{$v.title[$l.id]}</span><br/>{/foreach}
+
+		{foreach from =$languages item=l}<i>{$lng.settings.meta_keywords}{if $languages|@count > 1}&nbsp;{if $l.image}<img src="{$live_site}/images/languages/{$l.image}">{else}{$l.name}{/if}&nbsp;&nbsp;{/if}</i>: <span id="span_meta_keywords_{$v.page}_{$l.id}">{$v.meta_keywords[$l.id]}</span><br/>{/foreach}
+
+		{foreach from =$languages item=l}<i>{$lng.settings.meta_description}{if $languages|@count > 1}&nbsp;{if $l.image}<img src="{$live_site}/images/languages/{$l.image}">{else}{$l.name}{/if}&nbsp;&nbsp;{/if}</i>: <span id="span_meta_description_{$v.page}_{$l.id}">{$v.meta_description[$l.id]}</span><br/>{/foreach}
+		</div>
+
+		<div id="sp_edit_{$v.page}" class="edit_page" style="display: none; background: #f9f9f9; padding: 10px;">
+		<form name="settings_{$v.page}" id="settings_{$v.page}" class="save" method="post" action="">
+		<input type="hidden" name="page" id="page" value="{$v.page}">
+		<br/>
+		{if $v.tags}<div class="clearfix" style="padding-bottom: 10px;"><b>{$lng.seo_settings.tags}:</b> {foreach from=$v.tags item=t name=tags_loop}{if $smarty.foreach.tags_loop.index>0}, {/if}{$t}{/foreach}</div>{/if}
+		{foreach from =$languages item=l}<div class="left_div">{$lng.settings.page_title}{if $languages|@count > 1}&nbsp;{if $l.image}<img src="{$live_site}/images/languages/{$l.image}">{else}{$l.name}{/if}&nbsp;&nbsp;{/if}</div><div class="right_div"><textarea name="title_{$l.id}" id="title_{$v.page}_{$l.id}" cols="120" rows="2" />{$v.title[$l.id]}</textarea></div><div class="clearfix"></div>{/foreach}
+
+		{foreach from =$languages item=l}<div class="left_div">{$lng.settings.meta_keywords}{if $languages|@count > 1}&nbsp;{if $l.image}<img src="{$live_site}/images/languages/{$l.image}">{else}{$l.name}{/if}&nbsp;&nbsp;{/if}</div><div class="right_div"><textarea name="meta_keywords_{$l.id}" id="meta_keywords_{$v.page}_{$l.id}" rows="2" cols="120">{$v.meta_keywords[$l.id]}</textarea></div><div class="clearfix"></div>{/foreach}
+
+		{foreach from =$languages item=l}<div class="left_div">{$lng.settings.meta_description}{if $languages|@count > 1}&nbsp;{if $l.image}<img src="{$live_site}/images/languages/{$l.image}">{else}{$l.name}{/if}&nbsp;&nbsp;{/if}</div><div class="right_div"><textarea name="meta_description_{$l.id}" id="meta_description_{$v.page}_{$l.id}" rows="3" cols="120">{$v.meta_description[$l.id]}</textarea></div><div class="clearfix"></div>{/foreach}
+		
+
+		<div class="left_div">{$lng.settings.noindex}</div><div class="right_div">
+		{if $v.page=="listings"}
+		<input type="radio" name="noindex" value="0" {if $v.noindex==0} checked="checked" {/if}/>&nbsp;{$lng.general.no}&nbsp;&nbsp;
+		<input type="radio" name="noindex" value="1" {if $v.noindex==1} checked="checked" {/if}/>&nbsp;{$lng.general.yes}&nbsp;&nbsp;
+		<input type="radio" name="noindex" value="2" {if $v.noindex==2} checked="checked" {/if}/>&nbsp;{$lng.seo_settings.when_no_listings}&nbsp;&nbsp;
+		{else}
+		<input type="checkbox" name="noindex" id="noindex" {if $v.noindex}checked="checked"{/if} />&nbsp;&nbsp;<span class="information1">{$lng.settings.info.noindex}</span>
+		{/if}
+		</div><div class="clearfix"></div>
+
+		<div class="buttons dcenter"{if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Save" value="{$lng.general.save_changes}" /></spam>
+		</div>
+		</form>
+		</div>
+
+	</td>
+	<td>
+		<span><a href="javascript:;" class="edit" id="edit_{$v.page}"><img src="{$template_path}images/edit.png" class="tooltip icon" title="{$lng.general.edit}"></a></span>
+	</td>
+</tr>
+{/foreach}
+</table>
+
+
+</div> {* p30 *}
+
+{literal}
+<script type="text/javascript">
+//<![CDATA[
+
+jQuery(document).ready(function() {
+
+jQuery(document).on("submit", ".save", function(event){ 
+
+	var page = jQuery(this).attr("id").substr(9);
+{/literal}
+	{foreach from=$languages item=l}
+	var title_{$l.id} = jQuery("#title_"+page+"_{$l.id}").val();
+	var meta_keywords_{$l.id} = jQuery("#meta_keywords_"+page+"_{$l.id}").val();
+	var meta_description_{$l.id} = jQuery("#meta_description_"+page+"_{$l.id}").val();
+	{/foreach}
+{literal}
+	event.preventDefault();
+	jQuery.post("seo_settings.php", jQuery(this).serialize(), function(data) {
+
+		try
+		{
+			{/literal}
+			{foreach from=$languages item=l}
+			jQuery("#span_title_"+page+"_{$l.id}").html(title_{$l.id});
+			jQuery("#span_meta_keywords_"+page+"_{$l.id}").html(meta_keywords_{$l.id});
+			jQuery("#span_meta_description_"+page+"_{$l.id}").html(meta_description_{$l.id});
+			{/foreach}
+			{literal}
+
+			//jQuery("#sp_"+page).slideDown();
+			jQuery("#sp_edit_"+page).slideUp();
+
+		}
+		catch(e)
+		{
+		}
+
+		
+	});
+	
+}); 
+
+jQuery(".edit").click(function(){ 
+
+	var page = jQuery(this).attr("id").substr(5);
+	if($("#sp_edit_"+page).is(":visible") ) {
+//		jQuery("#sp_"+page).slideDown();
+		jQuery("#sp_edit_"+page).slideUp();
+		$('html,body').animate({scrollTop:$("#sp_edit_"+page).offset().top-60}, 'slow');
+
+	}
+	else {
+		jQuery(".edit_page").slideUp();
+//		jQuery("#sp_"+page).slideUp();
+		jQuery("#sp_edit_"+page).slideDown();
+	}
+
+ });
+
+
+jQuery(".row").mouseover(function() {
+    var page = jQuery(this).attr("id").substr(3);
+    jQuery(this).data('powertiptarget', 'sp_'+page);
+});
+
+// hook PowerTip to the anchors
+jQuery('.row').powerTip();
+
+
+if ($('#enable_mod_rewrite').attr('checked')) $("#div_sef").show();
+else $("#div_sef").hide();
+
+jQuery("#enable_mod_rewrite").change(function(){ 
+	if ($('#enable_mod_rewrite').is(':checked')) $("#div_sef").show();
+	else $("#div_sef").hide();
+});
+
+$("#edit_structure").click(function(){
+	$("#links_structure").toggle();
+	if ($('#links_structure').is(':visible')) { 
+		$(".plus").hide();
+		$(".minus").show();
+	} else {
+		$(".plus").show();
+		$(".minus").hide();
+	}
+});
+
+$("#show_current_links_structure").click(function(){
+	$("#current_links_structure").toggle();
+});
+
+$("#tcls").click(function(){
+	$("#tcls").select();
+    document.execCommand('copy');
+});
+
+
+
+
+
+	$("#Regenerate_ls").click(function(){
+
+		$("body").addClass("loading");
+		genSlugs('listing', '');
+
+	});
+
+	$("#Regenerate_us").click(function(){
+
+		$("body").addClass("loading");
+		genSlugs('user', '');
+
+	});
+
+	function genSlugs(type, crt) {
+
+		var d="type="+type;
+		if(crt) d+="&crt="+crt;
+		$.ajax({method: "get",
+		url: "include/generate_slug.php",
+		data: d,
+		beforeSend: function() {  },
+		complete: function() { },
+		success: function(returnedData)
+		{
+			//alert("success"+returnedData);
+			if(returnedData>0) { genSlugs(type, returnedData); }
+			else $("body").removeClass("loading"); 
+		}
+		});
+	}
+
+
+
+
+});
+</script>
+{/literal}
+
+<style>
+
+#links_structure div { height: 40px; }
+fieldset div span { display: block; float: left; width: 120px; font-weight: bold; }
+
+</style>
+{include file="footer.html"}

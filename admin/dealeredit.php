@@ -5,13 +5,14 @@
     
     if(isset($_POST['update'])) {
         $name = $_POST['name'];
+        $password = md5($_POST['password']);
         $address = $_POST['address'];
         $email = $_POST['email'];
         $phone = $_POST['phone'];
         $company = $_POST['company'];
         $website = $_POST['website'];
 
-        $update_done = $config->updateDealer($id, $name, $address, $email, $phone, $company, $website);
+        $update_done = $config->updateDealer($id, $name, $address, $email, $phone, $company, $website, $password);
         if($update_done == true) {
             echo "<script>window.location='home.php?query=dealerlist';</script>";
         } else {
@@ -35,6 +36,15 @@
                                 <i class="fas fa-signature"></i>
                                 <input type="text" id="inputEmail3" name="name"
                                     value="<?php echo $user['name']; ?>" required="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group"> <label for="inputEmail3" class="col-sm-4 control-label">Password</label>
+                        <div class="col-sm-8">
+                            <div class="agileits-main">
+                                <i class="fas fa-signature"></i>
+                                <input type="password" id="inputEmail3" name="password"
+                                       value="<?php echo $user['password']; ?>" required="">
                             </div>
                         </div>
                     </div>

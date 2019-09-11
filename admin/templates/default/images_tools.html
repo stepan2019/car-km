@@ -1,0 +1,102 @@
+{include file="header.html"}
+
+<div class="page_title">{$lng.panel.tools} > {$lng.imgtools.images_tools}</div>
+
+<div class="p30">
+<form name="db" method="post" action="{$self}">
+<div class="form_container" style="padding-top: 0 !important;">
+
+{if $error != ""} <div class="error">{$error}</div>{/if}
+{if $info != ""} <div class="info">{$info}</div>{/if}
+<div class="wait"></div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.imgtools.regenerate_thumbnails|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="p30">
+{$lng.imgtools.regen_details}:<br/>
+&nbsp;&nbsp;&nbsp;<b>{$lng.tools.full_size_images}</b><br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$lng.imgtools.for_small_thumbnails} : <b>{$ads_settings.thmb_width}px</b> {$lng.settings.width} , <b>{$ads_settings.thmb_height}px</b> {$lng.settings.height}<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$lng.imgtools.for_med_thumbnails} : <b>{$ads_settings.med_thmb_width}px</b> {$lng.settings.width} , <b>{$ads_settings.med_thmb_height}px</b> {$lng.settings.height}<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$lng.imgtools.for_big_thumbnails} : <b>{$ads_settings.big_thmb_width}px</b> {$lng.settings.width} , <b>{$ads_settings.big_thmb_height}px</b> {$lng.settings.height}<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;<b>{$lng.tools.mobile_images}</b><br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$lng.imgtools.for_small_thumbnails} : <b>{$mobile_settings.mobile_thmb_width}px</b> {$lng.settings.width} , <b>{$mobile_settings.mobile_thmb_height}px</b> {$lng.settings.height}<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$lng.imgtools.for_big_thumbnails} : <b>{$mobile_settings.mobile_big_thmb_width}px</b> {$lng.settings.width} , <b>{$mobile_settings.mobile_big_thmb_height}px</b> {$lng.settings.height}<br/>
+
+</div>
+
+{if $ads_settings.watermark}
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.watermark}</div>
+	<div class="right_form"><input type="checkbox" name="watermark" id="watermark" checked="checked" /></div>
+</div>
+{/if}
+
+<div class=" information">{$lng.imgtools.info.regenerate_thumbnails}</div>
+
+<div class="form_footer2">
+	<div class="buttons rfloat">
+		<span class="positive"><a href="javascript:;" {if !$demo}id="Regenerate"{else} onClick="alert('{$lng.general.errors.demo}');"{/if}>{$lng.imgtools.regenerate_now}</a></span>
+	</div>
+	<div class="clearfix"></div>
+</div>{* end form_footer *}
+
+
+<div class="form_subtitle_bg mt20"><div class="btn1"><strong>{$lng.imgtools.remove_unused|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="p30">{$lng.imgtools.info.remove_unused}</div>
+
+<div class="form_footer center">
+	<div class="buttons" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Remove" value="{$lng.imgtools.remove}" /></span>
+	</div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+
+<script type="text/javascript">
+{literal}
+$(document).ready(function() {
+
+	$("#Regenerate").click(function(){
+
+		$("body").addClass("loading");
+		var watermark=0;
+		{/literal}{if $ads_settings.watermark}{literal}
+		if($("#watermark").attr("checked")) watermark=1;
+		{/literal}{/if}{literal}
+		genThumbs('', watermark);
+
+	});
+
+	function genThumbs(im, watermark) {
+
+		d="watermark="+watermark;
+		if(im) d+="&image="+im;
+		$.ajax({method: "get",
+		url: "include/resize_image.php",
+		data: d,
+		beforeSend: function() {  },
+		complete: function() { },
+		success: function(returnedData)
+		{
+			//alert("success"+returnedData);
+			if(returnedData>0) { genThumbs(returnedData, watermark); }
+			else $("body").removeClass("loading"); 
+		}
+		});
+	}
+
+});
+
+{/literal}
+</script>
+{include file="footer.html"}

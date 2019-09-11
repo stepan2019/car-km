@@ -1,0 +1,53 @@
+{literal}
+function init_gmap{/literal}{if isset($gmf_prefix) && $gmf_prefix}{$gmf_prefix}{/if}{literal}() {
+{/literal}
+
+	old=new Array();
+	{if $tmp[$v.caption]}old = splitMapsCoord('{$tmp[$v.caption]}');{/if}
+	{literal}
+	if (old.length>0) {
+	{/literal}
+		var lat = parseFloat(old[0]);
+		var long = parseFloat(old[1]);
+		var h = parseInt(old[2]);
+	{literal}
+	} else {
+	{/literal}
+		var lat = {$settings.google_maps_default_lat};
+		var long = {$settings.google_maps_default_long};
+		var h = {$settings.google_maps_default_height};
+	{literal}
+	}
+	var p = new google.maps.LatLng( lat,long );
+	var myOptions = {
+		zoom: h,
+		center: p,
+		panControl: true,
+		zoomControl: true,
+		scaleControl: true,
+		mapTypeControl: true,
+		mapTypeId: google.maps.MapTypeId.ROADMAP
+	};
+	{/literal}
+
+	map_{$v.caption}{if isset($gm_prefix) && $gm_prefix}{$gm_prefix}{/if} = new google.maps.Map(document.getElementById("gm_ro_{$v.caption}{if isset($gm_prefix) && $gm_prefix}{$gm_prefix}{/if}"), myOptions);
+
+	{literal}
+	var marker = new google.maps.Marker({
+		position: p,
+		map:	{/literal}map_{$v.caption}{if isset($gm_prefix) && $gm_prefix}{$gm_prefix}{/if}{literal}
+	});
+	{/literal}
+	{if isset($v.address) && $v.address}
+	{literal}
+	var infowindow = new google.maps.InfoWindow({
+		{/literal}
+		content: "{$v.address}"
+		{literal}
+	});
+	{/literal}
+	infowindow.open(map_{$v.caption}{if isset($gm_prefix) && $gm_prefix}{$gm_prefix}{/if}, marker);
+	{/if}
+{literal}
+} // end init_gmap
+{/literal}

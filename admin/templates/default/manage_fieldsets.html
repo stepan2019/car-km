@@ -1,0 +1,103 @@
+{include file="header.html"}
+{include file="data/fancybox.html"}
+
+<div class="page_title">{$lng.panel.settings} > {$lng.panel.fieldsets}</div>
+
+<div class="p30">
+
+<div>
+<a href="add_fieldset.php"><img src="{$template_path}images/add.png" class="tooltip icon" title="{$lng.general.add}" alt=""/></a>
+<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDeleteAll('{$lng.fieldsets.confirm_delete_all|addslashes}','fieldset'){/if}"><img src="{$template_path}images/delete_all.png" class="tooltip icon" title="{$lng.general.delete_all}" alt=""></a>
+</div>
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th width="40" class="hleft"><input type="checkbox" class="noborder" name="check_all" id="check_all" /></th>
+	<th width="40">{$lng.general.id}</th>
+	<th width="200">{$lng.general.name}</th>
+	<th>{$lng.general.description}</th>
+	<th width="80" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$array_fieldsets item=v}
+<tr>
+	<td id="checkbox{$v.order_no}"><input type="checkbox" class="noborder" name="chk{$v.id}" id="chk{$v.id}"></td>
+	<td>#{$v.id}</td>
+	<td><a href="manage_custom_fields.php?fset={$v.id}">{$v.name}</a></td>
+	<td>{$v.description}</td>
+	<td>
+		<a href="javascript:;" class="cats" id="cats{$v.id}"><img src="{$template_path}images/info.png" class="tooltip icon" title="{$lng.fieldsets.categories_list}"></a>
+
+		<a href="edit_fieldset.php?id={$v.id}"><img src="{$template_path}images/edit.png" class="tooltip icon" title="{$lng.general.edit}" alt=""></a>
+
+		{if $array_fieldsets|@count==1}
+		<img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt="" onClick="alert('{$lng.fieldsets.cannot_delete_last_fieldset}')">
+		{else}
+		{if $v.categories>0 && !$demo}
+		<a href="javascript:;" class="delfset" id="del{$v.id}">
+		{else}	
+		<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDelete('{$v.id}','{$lng.fieldsets.confirm_delete|addslashes}','fieldset');{/if}">
+		{/if}
+			<img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt=""></a>
+		{/if}
+	</td>
+</tr>
+{/foreach}
+
+{if $array_fieldsets|@count==0}
+	<tr><td colspan="4">{$lng.fieldsets.no_fieldset}</td></tr>
+{/if}
+</table>
+
+</div> {* p30 *}
+
+<script type="text/javascript">
+{literal}
+
+$(document).ready(function() {
+
+	$("#check_all").click(function()
+	{
+
+		if ($('#check_all').is(':checked')) checkAll(document);
+		else uncheckAll(document);
+
+	});
+
+
+$("a.delfset").click(function(event){
+	var fset_id = jQuery(this).attr("id").substr(3);
+	$.fancybox({
+		'width'         		: 630,
+		'height'        		: 500,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'margin'		: '0',
+		'padding'		: '0',
+		'titleShow'		: false,
+		'type'			: 'iframe',
+		'href'			: '{/literal}{$live_site}{literal}/admin/delete_fieldset.php?id='+fset_id,
+		'onClosed': function(){ location.reload(true); }
+	});
+});
+
+$("a.cats").click(function(event){
+	var fset_id = jQuery(this).attr("id").substr(4);
+	$.fancybox({
+		'width'         		: 630,
+		'height'        		: 500,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'margin'		: '0',
+		'padding'		: '0',
+		'titleShow'		: false,
+		'type'			: 'iframe',
+		'href'			: '{/literal}{$live_site}{literal}/admin/include/fset_categories_list.php?id='+fset_id,
+	});
+});
+
+});
+{/literal}
+</script>
+
+{include file="footer.html"}

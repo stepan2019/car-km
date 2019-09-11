@@ -1,0 +1,219 @@
+{include file="header.html"}
+{include file="data/fancybox.html"}
+
+<div class="page_title">{$lng.panel.settings} > {$lng.settings.site_appearance}</div>
+
+<div class="p30">
+<form name="settings" method="post" action="appearance.php" enctype="multipart/form-data">
+
+<div class="form_container">
+
+{if $error != ""}<div class="error">{$error}</div>{/if}
+{if $successful}<div class="info">{$lng.settings.settings_saved}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.template}</div>
+	<div class="right_form">
+		<div class="lfloat">
+		<select name="template" id="template">
+		{foreach from=$templates item=v}
+		<option value="{$v}" {if $appearance_array.template==$v} selected="selected" {/if}>{$v}</option>
+		{/foreach}
+		</select>
+		</div>
+		<div style="display: none;" class="lfloat" id="div_colorschemes">&nbsp;&nbsp;{$lng.settings.colorscheme}:&nbsp;<select name="template_colorscheme" id="template_colorscheme"></select>
+		</div>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.admin_template}</div>
+	<div class="right_form">
+		<select name="admin_template">
+		{foreach from=$admin_templates item=v}
+			<option value="{$v}" {if $appearance_array.admin_template==$v} selected="selected" {/if}>{$v}</option>
+		{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.admin_language}</div>
+	<div class="right_form">
+		<select name="admin_language">
+			{foreach from=$admin_languages item=v}
+				<option value="{$v}" {if $appearance_array.admin_language==$v} selected="selected" {/if}>{$v}</option>
+			{/foreach}
+			</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.show_header}" />&nbsp;{$lng.settings.show_header}</div>
+	<div class="right_form"><input type="checkbox" name="show_header" {if $appearance_array.show_header==1} checked="checked" {/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.img_header}</div>
+	<div class="right_form">
+		<input type="file" name="header_pic" />&nbsp;&nbsp;
+		{if $appearance_array.header_pic!=""}
+		<a href="{$live_site}/images/{$appearance_array.header_pic}" class="imgfield">
+		<img src="{$template_path}images/camera.png" /></a>
+		{else}
+		<img src="{$template_path}images/camera_off.png">
+		{/if}
+		{if $appearance_array.header_pic!=""}&nbsp;&nbsp;<a href="appearance.php?delete=header_pic"><img src="{$template_path}images/delete.png" class="tooltip" title="{$lng.general.delete}" alt=""></a>{/if}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.small_img_header}" />&nbsp{$lng.settings.small_img_header}</div>
+	<div class="right_form">
+		<input type="file" name="small_header_pic" />&nbsp;&nbsp;
+		{if $appearance_array.small_header_pic!=""}
+		<a href="{$live_site}/images/{$appearance_array.small_header_pic}" class="imgfield">
+		<img src="{$template_path}images/camera.png" /></a>
+		{else}
+		<img src="{$template_path}images/camera_off.png">
+		{/if}
+		{if $appearance_array.small_header_pic!=""}&nbsp;&nbsp;<a href="appearance.php?delete=small_header_pic"><img src="{$template_path}images/delete.png" class="tooltip" title="{$lng.general.delete}" alt=""></a>{/if}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.header_link}</div>
+	<div class="right_form"><input type="text" maxlength="200" name="header_pic_link" size=50 value="{$appearance_array.header_pic_link}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.show_footer}" />&nbsp;{$lng.settings.show_footer}</div>
+	<div class="right_form"><input type="checkbox" name="show_footer" {if $appearance_array.show_footer==1} checked="checked" {/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.img_footer}</div>
+	<div class="right_form">
+		<input type="file" name="footer_pic"/>&nbsp;&nbsp;
+		{if $appearance_array.footer_pic!=""}
+		<a href="{$live_site}/images/{$appearance_array.footer_pic}" class="imgfield">
+		<img src="{$template_path}images/camera.png" /></a>
+		{else}
+		<img src="{$template_path}images/camera_off.png">
+		{/if}
+		{if $appearance_array.footer_pic!=""}&nbsp;&nbsp;<a href="appearance.php?delete=footer_pic"><img src="{$template_path}images/delete.png" class="tooltip" title="{$lng.general.delete}" alt=""></a>{/if}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.footer_link}</div>
+	<div class="right_form"><input type="text" maxlength="200" name="footer_pic_link" size=50 value="{$appearance_array.footer_pic_link}"></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.show_footer_categories}</div>
+	<div class="right_form"><input type="checkbox" name="show_footer_categ" {if $appearance_array.show_footer_categ==1} checked="checked" {/if}/></div>
+</div>
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.settings.footer_text}</div>
+	<div class="right_form">
+		<input type="text" maxlength="255" name="footer_text_{$v.id}" size=60 value="{$appearance_array.footer_text[$v.id]}" />
+	</div>
+</div>
+{/foreach}
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.site_width}" />&nbsp;{$lng.settings.site_width}</div>
+	<div class="right_form"><input type="text" maxlength="4" name="outer_table" size=10 value="{$appearance_array.outer_table}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.first_page_type}" />&nbsp;{$lng.settings.first_page_type}</div>
+	<div class="right_form">
+		<input type="radio" name="first_page_type" value="1" {if $appearance_array.first_page_type==1} checked="checked" {/if} />&nbsp;{$lng.settings.browse_categories}&nbsp;&nbsp;
+		<input type="radio" name="first_page_type" value="2" {if $appearance_array.first_page_type==2} checked="checked" {/if} />&nbsp;{$lng.settings.tree_categories}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.categs_per_row}" />&nbsp;{$lng.settings.categs_per_row}</div>
+	<div class="right_form"><input type="text" maxlength="4" name="max_cat_per_row" size="10" value="{$appearance_array.max_cat_per_row}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.categ_count_ads}" />&nbsp;{$lng.settings.categ_count_ads}</div>
+	<div class="right_form"><input type="checkbox" name="categ_count_ads" {if $appearance_array.categ_count_ads}checked="checked"{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.ads_per_page}</div>
+	<div class="right_form"><input type="text" maxlength="4" name="ads_per_page" size="10" value="{$appearance_array.ads_per_page}" /></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.save_changes}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+
+{literal}
+<script type="text/javascript">
+$(document).ready(function() {
+	$("a.imgfield").fancybox();
+	getTemplates();
+
+	$("#template").on('change',function(){
+
+		getTemplates();
+
+	});
+
+
+});
+
+function getTemplates() {
+
+		var current = '{/literal}{if $appearance_array.template_colorscheme}{$appearance_array.template_colorscheme}{/if}{literal}';
+
+		$.ajax({
+		type		: "GET",
+		cache		: false,
+		url		: "{/literal}{$live_site}{literal}/admin/include/get_info.php?type=tpl&tpl="+$("#template").val(),
+		data		: $(this).serializeArray(),
+		success: function(data) {
+
+			if(data==0) { $("#div_colorschemes").hide(); return; }
+
+			$("#template_colorscheme").empty();
+			// colorschemes exist
+			var split_cs=data.split("|");
+			var no = split_cs.length;
+
+			for (var j=0;j<no;j++) {
+
+				if(current==split_cs[j])
+					option = $('<option></option>').attr("value", split_cs[j]).text(split_cs[j]).attr('selected', 'selected');
+				else 
+					option = $('<option></option>').attr("value", split_cs[j]).text(split_cs[j]);
+				$("#template_colorscheme").append(option);
+				$("#div_colorschemes").show();
+
+			}
+
+			} // end data
+ 		});// end ajax
+
+}
+
+</script>
+{/literal}
+
+{include file="footer.html"}

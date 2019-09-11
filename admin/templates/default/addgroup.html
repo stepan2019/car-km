@@ -1,0 +1,179 @@
+{include file="header.html"}
+
+<script type="text/javascript" src="{$live_site}/libs/nicEdit/nicEdit.min.js"></script>
+
+<script type="text/javascript">
+{literal}	
+bkLib.onDomLoaded(function() { nicEditors.allTextAreas({iconsPath : '../libs/nicEdit/nicEditorIcons.gif', fullPanel : true}) });
+{/literal}
+</script>
+
+<div class="page_title">{$lng.panel.users} > <a href="user_groups.php">{$lng.panel.user_groups}</a> > {if !isset($id) || !$id}{$lng.panel.add_group}{else}{$lng.groups.modify_group}{/if}</div>
+
+<div class="p30">
+<form name="addgroup" method="post" action="{$self}{if isset($id) && $id}?id={$id}{/if}">
+
+<div class="form_container">
+
+{if isset($error) && $error}<div class="error">{$error}</div>{/if}
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.groups.name}<span class="mandatory"> *</span></div>
+	<div class="right_form"><input type="text" name="name_{$v.id}" size="30" value="{if isset($groups.name[$v.id])}{$groups.name[$v.id]}{/if}" /></div>
+</div>
+{/foreach}
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}<img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.groups.info.description}" />&nbsp;{$lng.groups.description}</div>
+	<div class="right_form"><textarea name="description_{$v.id}" rows="6" cols="60">{if isset($groups.description[$v.id])}{$groups.description[$v.id]}{/if}</textarea></div>
+</div>
+{/foreach}
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.groups.info.auto_register}" />&nbsp;{$lng.groups.auto_register}</div>
+	<div class="right_form"><input name="auto_register" type="checkbox" class="noborder" {if (isset($groups.auto_register) && $groups.auto_register==1) || (!isset($id) || !$id)}checked="checked"{/if}></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.groups.info.post_ads}" />&nbsp;{$lng.groups.post_ads}</div>
+	<div class="right_form"><input name="post_ads" id="post_ads" type="checkbox" class="noborder" {if (isset($groups.post_ads) && $groups.post_ads==1) || (!isset($id) || !$id)}checked="checked"{/if}></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.groups.info.activate_account}" />&nbsp;{$lng.groups.activate_account}&nbsp;{$lng.groups.via_email}</div>
+	<div class="right_form">
+	<input type="checkbox" name="activate_via_email" {if !isset($id) || $groups.activate_via_email==1}checked="checked"{/if} />
+	</div>
+</div>
+	
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.groups.info.sms_activate_account}" />&nbsp;&nbsp;{$lng.groups.activate_account}&nbsp;{$lng.groups.via_sms}</div>
+	<div class="right_form">
+	<input type="checkbox" name="activate_via_sms" {if isset($groups.activate_via_sms) && $groups.activate_via_sms==1}checked="checked"{/if} />
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.groups.info.admin_verification}" />&nbsp;{$lng.groups.admin_verification}</div>
+	<div class="right_form"><input name="admin_verification" type="checkbox" class="noborder" {if isset($groups.admin_verification) && $groups.admin_verification==1}checked="checked"{/if}></div>
+</div>
+
+<div id="post_ads_allowed" {if isset($id) && $id && $groups.post_ads==0}style="display: none"{/if} >
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.groups.info.store}" />&nbsp;{$lng.groups.store}</div>
+	<div class="right_form">
+		<input type="radio" class="noborder" name="store" value="0" {if !isset($groups.store) || !$groups.store}checked="checked"{/if}>&nbsp;
+		{$lng.groups.do_not_allow}&nbsp;&nbsp;
+		<input type="radio" class="noborder" name="store" value="1" {if isset($groups.store) && $groups.store==1}checked="checked"{/if}>&nbsp;
+		{$lng.groups.allow_to_buy}&nbsp;&nbsp;
+		<input type="radio" class="noborder" name="store" value="2" {if isset($groups.store) && $groups.store==2}checked="checked"{/if}>&nbsp;
+		{$lng.groups.enable_by_default}
+	</div>
+</div>
+
+{if in_array("showcase", $modules_array)}
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.groups.info.showcase}" />&nbsp;{$lng.groups.showcase}</div>
+	<div class="right_form">
+		<input type="radio" class="noborder" name="showcase" value="0" {if !isset($groups.showcase) || !$groups.showcase}checked="checked"{/if}>&nbsp;
+		{$lng.groups.do_not_allow}&nbsp;&nbsp;
+		<input type="radio" class="noborder" name="showcase" value="1" {if isset($groups.showcase) && $groups.showcase==1}checked="checked"{/if}>&nbsp;
+		{$lng.groups.allow_to_buy}&nbsp;&nbsp;
+		<input type="radio" class="noborder" name="showcase" value="2" {if isset($groups.showcase) && $groups.showcase==2}checked="checked"{/if}>&nbsp;
+		{$lng.groups.enable_by_default}
+	</div>
+</div>
+{/if}
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.groups.info.bulk_uploads}" />&nbsp;{$lng.groups.bulk_uploads}</div>
+	<div class="right_form"><input name="bulk_uploads" type="checkbox" class="noborder" {if isset($groups.bulk_uploads) && $groups.bulk_uploads==1}checked="checked"{/if}></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.groups.info.listing_pending}" />&nbsp;{$lng.groups.listing_pending}</div>
+	<div class="right_form"><input name="listing_pending" type="checkbox" class="noborder" {if isset($groups.listing_pending) && $groups.listing_pending==1}checked="checked"{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.groups.info.package_pending}" />&nbsp;{$lng.groups.package_pending}</div>
+	<div class="right_form"><input name="package_pending" type="checkbox" class="noborder" {if isset($groups.package_pending) && $groups.package_pending==1}checked="checked"{/if}></div>
+</div>
+
+{if $credits_enabled}
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.groups.info.default_credits}" />&nbsp;{$lng.groups.default_credits}</div>
+	<div class="right_form"><input name="default_credits" type="text" size="6" value="{if isset($groups.default_credits) && $groups.default_credits}{$groups.default_credits}{/if}" /></div>
+</div>
+{/if}
+</div> {* end post_ads_allowed *}
+
+{if $settings.enable_affiliates==1}
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.groups.info.affiliates}" />&nbsp;{$lng.groups.affiliates}</div>
+	<div class="right_form"><input name="affiliates" id="affiliates" type="checkbox" class="noborder" {if (isset($groups.affiliates) && $groups.affiliates==1)}checked="checked"{/if}></div>
+</div>
+
+<div id="div_affiliates" style="display: none">
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.affiliates_cookie_availability}" />&nbsp;{$lng.settings.affiliates_cookie_availability}</div>
+	<div class="right_form"><input name="affiliates_cookie_availability" size="4" type="text" value="{if isset($groups.affiliates_cookie_availability)}{$groups.affiliates_cookie_availability}{/if}" />&nbsp;{$lng.settings.days}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.affiliates_percentage}" />&nbsp;{$lng.settings.affiliates_percentage}</div>
+	<div class="right_form"><input name="affiliates_percentage" type="text" size="4" value="{if isset($groups.affiliates_percentage)}{$groups.affiliates_percentage}{/if}" />&nbsp;%</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.affiliates_payment_cycle}" />&nbsp;{$lng.settings.affiliates_payment_cycle}</div>
+	<div class="right_form"><input name="affiliates_payment_cycle" size="4" type="text" value="{if isset($groups.affiliates_payment_cycle)}{$groups.affiliates_payment_cycle}{/if}" />&nbsp;{$lng.settings.days}</div>
+</div>
+</div>
+
+{/if}
+
+
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+
+</form>
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+
+jQuery(document).ready(function() {
+
+$("#post_ads").change(function(){
+
+if($("#post_ads").is(':checked')) $("#post_ads_allowed").show(); 
+else $("#post_ads_allowed").hide();
+
+})
+
+$("#affiliates").change(function(){
+
+if($("#affiliates").is(':checked')) $("#div_affiliates").show(); 
+else $("#div_affiliates").hide();
+
+})
+
+if($("#affiliates").is(':checked')) $("#div_affiliates").show(); 
+else $("#div_affiliates").hide();
+
+});
+
+</script>
+
+{include file="footer.html"}

@@ -1,0 +1,321 @@
+{include file="header.html"}
+{include file="data/fancybox.html"}
+{include file="data/ui.html"}
+
+<div class="page_title">
+
+<div class="lfloat" width="200">{$lng.panel.users} > {$lng.users.affiliates}</div>
+<div class="rfloat mt5">
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab1-left">
+	<a href="affiliates_list.php"><span class="tab1-right">{$lng.users.affiliates}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="affiliates_revenues.php"><span class="tab2-right">{$lng.affiliates.revenues}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="affiliates_payments.php"><span class="tab2-right">{$lng.affiliates.payments_history}</span></a>
+	</div></div>
+
+</div>
+</div>
+
+
+<div class="p30">
+
+<form name="search" id="search" method="post" action="affiliates_list.php">
+
+<div class="lfloat" style="width: 600px;">
+
+<div class="lfloat mr10">
+
+	{if !$is_mod || $mod_sections.users.add==1}
+	<a href="adduser.php"><img src="{$template_path}images/add.png" class="tooltip" title="{$lng.general.add}" alt=""></a>
+	{/if}
+
+	{if !$is_mod || $mod_sections.users.delete==1}
+	<input type="image" value="delete_selected" name="delete_selected" src="{$template_path}images/delete_all.png" onclick="{if $demo}alert('{$lng.general.errors.demo}'); return false;{else}return myConfirm('{$lng.users.confirm_delete_all|addslashes}'){/if}" style="border: 0px;" class="tooltip" title="{$lng.general.delete_all}" alt="">
+	{/if}
+
+	{if !$is_mod || $mod_sections.users.edit==1}
+	<input type="image" value="activate_selected" name="activate_selected" src="{$template_path}images/activate_all.png" title="{$lng.general.activate_all}" class="tooltip" style="border: 0px;">
+
+	<input type="image" value="deactivate_selected" name="deactivate_selected" src="{$template_path}images/deactivate_all.png" title="{$lng.general.deactivate_all}" class="tooltip" onclick="{if $demo}alert('{$lng.general.errors.demo}'); return false;{else}return myConfirm('{$lng.users.confirm_deactivate_all|addslashes}'){/if}" style="border: 0px;">
+	{/if}
+
+</div>
+
+<div class="lfloat">
+
+	<select name="order" onchange="doSel(this);">
+	<option value="location.href='{$order_by_link|replace:'##order##':'registration_date'}'" {if $order=='registration_date'}selected="selected"{/if}>
+	{$lng.users.order_by_date}</option>
+
+	{if $settings.enable_username}
+	<option value="location.href='{$order_by_link|replace:'##order##':'username'}'" {if $order=='username'}selected="selected"{/if}>
+	{$lng.users.order_by_username}</option>
+	{/if}
+
+	<option value="location.href='{$order_by_link|replace:'##order##':$settings.contact_name_field}'" {if $order==$settings.contact_name_field}selected="selected"{/if}>
+	{$lng.users.order_by_contact_name}</option>
+
+	</select>
+
+	<select name="order_way" onchange="doSel(this);">
+
+	<option value="location.href='{$order_way_link|replace:'##order_way##':'desc'}'" {if $order_way=='desc'}selected="selected"{/if}>{$lng.general.desc}</option>
+	<option value="location.href='{$order_way_link|replace:'##order_way##':'asc'}'" {if $order_way=='asc'}selected="selected"{/if}>{$lng.general.asc}</option>
+
+	</select>
+
+</div>
+
+	<div class="buttonwrapper lfloat ml10"><div class="button3-left">
+
+	<a href="javascript:;" id="add_search"><span class="button3-right">{$lng.general.search}&nbsp;<img src="{$template_path}images/gray-down-arrow.png" /></span></a>
+
+	<a href="javascript:;" id="remove_search"><span class="button3-right">{$lng.general.search}&nbsp;<img src="{$template_path}images/gray-up-arrow.png" /></span></a>
+
+	</div></div>
+
+
+</div> {* end lfloat *}
+
+
+<div class="rfloat">
+{include file="paginator.html"}
+</div>
+
+<div class="clearfix"></div>
+
+<div id="search_box" style="display: none;">
+
+<input type="hidden" name="page" value = "{$page}" />
+<input type="hidden" name="order" value = "{$order}" />
+<input type="hidden" name="order_way" value = "{$order_way}" />
+<input type="hidden" name="no_per_page" value = "{$no_per_page}" />
+
+<input type="text" name="id" size="6" class="defaultText" title="{$lng.listings.id}" value="{if isset($post_array.id)}{$post_array.id}{/if}"/>
+
+{if $settings.enable_username}
+<input type="text" name="username" size="20" class="defaultText" title="{$lng.users.username}" value="{if isset($post_array.username)}{$post_array.username}{/if}" />
+{/if}
+
+<input type="text" name="{$settings.contact_name_field}" size="30" class="defaultText" title="{$lng.users.contact_name}" value="{if isset($post_array[$settings.contact_name_field])}{$post_array[$settings.contact_name_field]}{/if}" />
+
+<input type="text" name="email" size="30" class="defaultText" title="{$lng.users.email}" value="{if isset($post_array.email)}{$post_array.email}{/if}" />
+
+<input type="text" name="ip" size="15" class="defaultText" title="{$lng.search.ip}" value="{if isset($post_array.ip)}{$post_array.ip}{/if}" />
+
+<input name="date_from_vis" id="date_from_vis" type="text" size="15" class="defaultText" title="{$lng.search.date_from}"/>
+<input name="date_from" id="date_from" type="hidden"/>
+
+<input name="date_to_vis" id="date_to_vis" type="text" size="15" class="defaultText" title="{$lng.search.date_to}" />
+<input name="date_to" id="date_to" type="hidden" />
+
+<div class="buttons"><strong><input type="submit" name="Search" id="Search" value="{$lng.general.search}" /></strong></div>
+
+</div> {* end search box *}
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+
+<tr id="theading">
+	<th width="30" class="hleft"><input type="checkbox" class="noborder" name="check_all" id="check_all" /></th>
+	<th width="30">{$lng.listings.id}</th>
+	{if $settings.enable_username}<th>{$lng.users.username}</th>{/if}
+	<th>{$lng.users.contact_name}</th>
+	<th>{$lng.users.email}</th>
+	<th>{$lng.users.date}</th>
+	<th width="150" class="hright">{$lng.general.action}</th>
+</tr>
+
+
+{foreach from=$array_users item=v}
+<tr class="{if !$v.active} inactive{/if}">
+	<td><input type="checkbox" class="noborder" name="user{$v.id}" id="user{$v.id}"></td>
+	<td>#{$v.id}</td>
+	{if $settings.enable_username}<td>{$v.username}{if in_array("connect", $modules_array) && $v.auth_provider}&nbsp;<img src="{$template_path}modules/connect/images/{$v.auth_provider}_icon.png" />{/if}</td>{/if}
+	<td>{$v[$settings.contact_name_field]}</td>
+	<td>{$v.email}</td>
+	<td>{$v.date}
+		{if $v.pending || (isset($v.pending_actions) && $v.pending_actions|@count)}
+		{if $v.pending_actions|@count>1 || ( !$v.pending && $v.pending_actions|@count>0 )}
+		{if !$is_mod || $mod_sections.users.edit==1}<a href="javascript:;" class="invoice" id="inv{$v.id}">{/if}
+		<div class="small-btn pendingbutton icon tooltip"  title="{$v.pending_info}">{$lng.listings.pending}</div>
+		{if !$is_mod || $mod_sections.users.edit==1}</a>{/if}
+		{else}
+		{if !$is_mod || $mod_sections.users.edit==1}<a href="javascript:;" onclick="onUserAccept('{$v.id}');">{/if}
+		<div class="small-btn pendingbutton icon tooltip"  title="{$lng.general.accept}">{$lng.listings.pending}</div>
+		{if !$is_mod || $mod_sections.users.edit==1}</a>{/if}
+		{/if}
+		{/if}
+	</td>
+	<td width="100">
+
+		<a href="javascript:;" class="usrinfo" id="info{$v.id}"><img src="{$template_path}images/info.png" class="tooltip icon" title="{$lng.general.info}"></a>
+
+		<a href="javascript:;" class="usrmail" id="mail{$v.id}">
+		<img src="{$template_path}images/mail.png" class="tooltip icon" title="{$lng.general.mail}" alt=""></a>
+
+		{if !$is_mod || $mod_sections.users.edit==1}
+		<a href="edituser.php?id={$v.id}">
+		<img src="{$template_path}images/edit.png" class="tooltip icon" title="{$lng.general.edit}" alt=""></a>
+
+		{if $v.active}
+		<a href="?login_as={$v.id}">
+		<img src="{$template_path}images/login_as.png" class="tooltip icon" title="{$lng.users.login_as_this_user}" alt=""></a>
+		{/if}
+
+		<a href="change_password.php?id={$v.id}">
+		<img src="{$template_path}images/change_pass.png" class="tooltip icon" title="{$lng.users.change_password}" alt=""></a>
+		{/if} {* if !$is_mod || $mod_sections.users.edit==1 *}
+
+		{if !$is_mod || $mod_sections.users.delete==1}
+		<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onUserDelete('{$v.id}','{$template_path}');{/if}">
+		<img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt=""></a>
+		{/if}
+
+		{if !$is_mod || $mod_sections.users.edit==1}
+		<span id="div_block{$v.id}">
+			{if $v.blocked==0}
+			<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onUserBlock('{$v.id}','{$template_path}', '{$lng.users.block_ip|addslashes}', '{$lng.users.unblock_ip|addslashes}');{/if}">
+			<img src="{$template_path}images/block.png" class="tooltip icon" title="{$lng.users.block_ip}" alt="">
+			</a>
+			{else}
+			<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onUserUnblock('{$v.id}','{$template_path}', '{$lng.users.block_ip|addslashes}', '{$lng.users.unblock_ip|addslashes}');{/if}">
+			<img src="{$template_path}images/unblock.png" class="tooltip icon" title="{$lng.users.unblock_ip}" alt="">
+			</a>
+			{/if}
+		</span>
+	
+		<span id="div_active{$v.id}">
+		{if $v.active==0}
+			<a href="javascript:;" onclick="onEnable('{$v.id}','user', '');">
+			<img id="active{$v.id}" src="{$template_path}images/enable.png" class="tooltip icon" title="{$lng.general.enable}" alt="">
+			</a>
+		{else}
+			<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDisable('{$v.id}','user', '{$lng.users.confirm_disable}');{/if}">
+			<img id="active{$v.id}" src="{$template_path}images/disable.png" class="tooltip icon" title="{$lng.general.disable}" alt="">
+			</a>
+		{/if}
+		</span>
+
+		{/if} {* if !$is_mod || $mod_sections.users.edit==1 *}
+	</td>
+</tr>
+{/foreach}
+
+{if $total==0}
+	<tr>
+	{assign var="no_columns" value="6"}
+	{if $credits_enabled}{assign var="no_columns" value="`$no_columns+1`"}{/if}
+	{if $settings.enable_username}{assign var="no_columns" value="`$no_columns+1`"}{/if}
+	<td colspan="{$no_columns}">{$lng.users.no_users}</td></tr>
+{/if}
+
+
+</table>
+
+</form>
+
+{if $total}<div class="rfloat mt20">{include file="paginator.html"}</div>{/if}
+
+<div class="mt20">
+	{$lng.general.show}
+	<select name="no_per_page_sel" onchange="doSel(this);">
+		{section name=pg loop=60 start=10 step=10}
+		<option value="location.href='{$crt_page_link}&no_per_page={$smarty.section.pg.index}'" {if $no_per_page==$smarty.section.pg.index} selected="selected" {/if}>{$smarty.section.pg.index}</option>
+		{/section}
+	</select>
+	{$lng.general.on_a_page}
+</div>
+
+
+</div> {* end p30 *}
+
+
+<script type="text/javascript">
+{literal}
+
+$(function() {
+	$('#date_from_vis').datepicker({
+		dateFormat: "M dd yy",
+		changeMonth: true,
+		changeYear: true,
+		altField: '#date_from', altFormat: 'yy-mm-dd'
+	});
+
+	$('#date_to_vis').datepicker({
+		dateFormat: "M dd yy",
+		changeMonth: true,
+		changeYear: true,
+		altField: '#date_to', altFormat: 'yy-mm-dd'
+	});
+});
+
+$(document).ready(function() {
+
+	$("input").keypress(function(e)
+	{
+        	// if the key pressed is the enter key
+        	if (e.which == 13)
+        	{
+			// delay action so the autocomplete list to fill
+			setTimeout(function() { $("#search").submit();}, 200);
+
+			return false;
+        	}
+	});
+	$("#remove_search").hide();
+	$("#search_box").hide();
+	$("#add_search").click(function()
+	{
+		$("#remove_search").show();
+		$("#add_search").hide();
+		$("#search_box").slideDown('fast').show();
+	});
+
+	$("#remove_search").click(function()
+	{
+		$("#add_search").show();
+		$("#remove_search").hide();
+		$("#search_box").hide().slideUp('fast');
+	});
+
+$("a.usrinfo").click(function(event){
+	var user_id = jQuery(this).attr("id").substr(4);
+	$.fancybox({
+		'width'         		: 730,
+		'height'        		: 700,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'margin'		: '0',
+		'padding'		: '0',
+		'titleShow'		: false,
+		'type'			: 'iframe',
+		'href'			: '{/literal}{$live_site}{literal}/admin/include/info_user.php?id='+user_id
+	});
+});
+
+$("a.usrmail").click(function(event){
+	var user_id = jQuery(this).attr("id").substr(4);
+	$.fancybox({
+		'width'         		: 630,
+		'height'        		: 650,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'margin'		: '0',
+		'padding'		: '0',
+		'titleShow'		: false,
+		'type'			: 'iframe',
+		'href'			: '{/literal}{$live_site}{literal}/admin/mailto.php?id='+user_id
+	});
+});
+
+}); // end document ready
+{/literal}
+</script>
+
+{include file="footer.html"}

@@ -1,0 +1,272 @@
+/* flux sand rtl */
+body { 
+	background: #f8f6ea; 
+}
+a { 
+	color: #a17555; 
+}
+a:hover { 
+	color: #dd6031; 
+}
+
+.display_mode, .display_mode_map { 
+	color: #dd6031; 
+}
+.display_mode span, .display_mode_map span { 
+	color: #a17555;
+}
+.search_details span { 
+	color: #dd6031; 
+}
+header { 
+	background-color: #f1ecd3; 
+}
+#quick-search { 
+	background: #ece4b7; 
+}
+#fav_button { 
+	background: #ffcd47 url(../images/favorite-icon.png) 8px 8px no-repeat; 
+}
+.search-button input { 
+	background: #614e40 !important; 
+}
+
+.tabs > label {
+	background: #f1ecd3;
+}
+.tabs > label:hover { 
+	background: #a8ac5d; 
+	border: 1px solid #989c4d; 
+	color: #fff; 
+}
+.tabs > input:checked + label { 
+	border-top: 3px solid #a8ac5d;
+	background: #f8f6ea;
+	border-bottom: 1px solid #edf0e9;
+}
+
+.browse-tabs label { 
+	color: #a17555;
+}
+.browse-tabs label:hover { 
+	color: #dd6031;
+}
+.browse-tabs input:checked + label { 
+	background: #dd6031;
+}
+.browse-tabs input:checked + label:hover { 
+	background: #ed7041;
+}
+a.news_title { 
+	color: #dd6031; 
+}
+a.news_title:hover { 
+	color: #ed7041; 
+}
+
+.more:hover {
+	background: #a8ac5d;
+}
+
+.cat-path { 
+	color: #a17555; 
+}
+.btn1 { 
+	background: #fbbe1b; 
+}
+.btn2 { 
+	background: #5d4f45;
+}
+.btn3 { 
+	background: #ca3710;
+}
+.wide_btn1 { 
+	background: #5d4f45;
+}
+.button { 
+	background-color: #5d4f45;
+}
+.sq-btn2 { 
+	background: #42352b;
+}
+.positive { 
+	background-color: #719834; 
+}
+.dark-bg {  
+	background: #4e423a;
+}
+.search_tabs a { 
+	background-color: #e1dcc5; 
+}
+.search_tabs a:hover { 
+	background-color: #f1ecd5; 
+}
+.listig-extra { 
+	background-color: #f0efe7; 
+}
+.dark-container { 
+	background-color: #f0efe7; 
+}
+.light-container { 
+	background-color: #f7f6ee; 
+}
+
+.plan_button {
+	border: 2px solid #ed6031;
+	color: #fd4011;
+}
+.plan_button:hover { 
+	background: #ed6031;
+	color: #fff;
+}
+
+footer { 
+	background-color: #4d4f29; 
+	color: #d8d9be; 
+}
+footer a { 
+	color: #d8d9be; 
+}
+footer a:hover { 
+	color: #fd9061; 
+}
+#secnav .parent { 
+	color: #d8d9be; 
+	border-bottom: 1px solid #88896e; 
+}
+
+a.map_btn { 
+	background: #42352b url("../images/map_icon.png") no-repeat 5px 3px; 
+}
+
+@media all and (min-width: 600px) {
+	.post-listing-btn { 
+		background: #dd6031; 
+		color: #fff; 
+	}
+	#nav li:hover {
+		background: #97b1fd;
+	}
+
+}
+
+.location { 
+	background-color: #f1ecd3; 
+}
+#choose_location a { 
+	background: #a96c40; 
+}
+.mlink:hover { 
+	color: #dd6031; 
+}
+.more {
+	background: #dd6031;
+}
+.main_cat:hover { 
+	background-color: #fefcf0; 
+}
+.outline { 
+	background-color: #f8f6ea; 
+	border: 1px solid #614e40; 
+	color: #614e40;
+}
+a.outline:hover { 
+	color: #715e50 !important;
+}
+.cd-top {
+  background: #dd6031 url(../images/top-arrow.png) no-repeat center 50%;
+}
+#compare_button { 
+	background: #c1bca3; 
+}
+#nav li.post-listing { 
+	background: #dd6031; 
+	border-bottom: 1px solid #cd5021; 
+}
+#nav li.post-listing:hover { 
+	background: #dd6031; 
+	opacity: 0.8; 
+}
+#nav li.post-listing a { 
+	border-bottom: 1px solid #ed7041;
+}
+#nav ul li:hover {
+    background: #e5cb99;
+}
+#nav{
+	background: #f8f6ea;
+    border: 1px solid #d8d6da;
+}
+#nav li{
+    border-bottom:1px solid #d8d6da;
+}
+#nav li a.starfav { 
+	background: transparent url("../images/star.png") 15px 50% no-repeat; 
+}
+#nav li a.starfav:hover { 
+	background: #e5cb99 url("../images/star_white.png") 15px 50% no-repeat; 
+}
+.form_heading { 
+	background: #f8f6fa; 
+	border: 1px solid #d8d6da; 
+}
+.form_footer { 
+	background: #f8f6fa; 
+	border: 1px solid #d8d6da; 
+}
+.login_footer { 
+	background: #f8f6fa; 
+	border: 1px solid #d8d6da; 
+}
+.plan_title { 
+	background: #f8f6fa; 
+	border: 1px solid #d8d6da; 
+}
+.negative { 
+	background-color: #de2c09;
+}
+.btn-green { 
+	background: #68912d; 
+}
+.dark-container2 { 
+	background: #e3ddba; 
+}
+.item { 
+	background: #f0eee2; 
+}
+
+.dialogbox .body {
+	background: #e0ded2;
+}
+.wide_btn2 { 
+	background: #eb4c3b; 
+}
+.listing-extra { 
+	background: #f0efe7; 
+}
+.bid { 
+	background: #7b716a; 
+}
+.bid:nth-child(odd) { 
+	background: #8b817a; 
+}
+
+@media all and (min-width: 600px) {
+	#nav{
+		background: transparent;
+		border: 0;
+	}
+	#nav li{
+		border: 0;
+	}
+	#nav li:hover {
+		background: #e5cb99;
+	}
+	#nav ul{
+		background: #f8f6ea;
+		border: 1px solid #d8d6da;
+	}
+	#nav ul li {
+		border-bottom:1px solid #d8d6da;
+	}
+}

@@ -1,0 +1,68 @@
+{include file="header.html"}
+<link rel="stylesheet" type="text/css" href="{$template_path}css/style-uploader.css" />
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/fileuploader.js"></script>
+<script type="text/javascript" src="{$live_site}/libs/jQuery/jquery.livequery.min.js"></script>
+
+
+<div class="page_title">{$lng.panel.listings} > <a href="manage_listings.php">{$lng.panel.manage_listings}</a> > {$lng.listings.edit_photos} {$lng.listings.for_listing} <a href="{if $seo_settings.enable_mod_rewrite}{seo->makeDetailsLink p1=$id}{else}{$live_site}/details.php?id={$id}{/if}"> #{$id}</a></div>
+
+<div class="form_container">
+
+	<div id="file-uploader" class="p30">
+		<noscript>
+		<p>Please enable JavaScript to use file uploader.</p>
+		</noscript>
+	</div>
+
+	{literal}
+	<script>
+	function createUploader(){            
+		var uploader = new qq.FileUploader({
+			element: document.getElementById('file-uploader'),{/literal}
+			action: '../include/upload.php?id={$id}',
+			max_photos: '{$no_photos}',
+			crt_photos: '{if isset($crt_photos)}{$crt_photos}{/if}',
+			order_up: '{$lng.listings.order_up|addslashes}',
+			order_down: '{$lng.listings.order_down|addslashes}',
+			delete_file: '{$lng.general.delete|addslashes}',
+			template_path: '{$template_path}',
+			files_uploaded: "{$lng.listings.files_uploaded|addslashes}",
+			allowed: "{$lng.listings.allowed|addslashes}",
+			limit_reached: "{$lng.listings.limit_reached|addslashes}",
+			click_to_upload: "{$lng.listings.click_to_upload|addslashes}",
+	{literal}
+			messages: { 
+			failed_message: "{/literal}{$lng.login_history.failed|addslashes}{literal}",
+			typeError: "{/literal}{$lng.images.errors.file_type_not_accepted|addslashes}{literal}" 
+			},
+			params: {
+        			max_photos: '{/literal}{$no_photos}{literal}'
+    			},
+			allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+			debug: false
+	});	
+        }
+        window.onload = createUploader;
+</script>
+{/literal}
+	<div id="maincol"></div>
+	<div class="clearfix"></div>
+
+<div class="form_footer2">
+
+	<div class="buttons rfloat">
+		{if isset($crt_usr) && $crt_usr}
+		<span class="positive"><a href="manage_listings.php">{$lng.general.back}</a></span>
+		{/if}
+
+		<span class="positive"><a href="{if $seo_settings.enable_mod_rewrite && isset($crt_usr) && $crt_usr}{seo->makeDetailsLink p1=$id}{else}{$live_site}/details.php?id={$id}{if isset($key) && $key}&key={$key}{/if}{/if}">{$lng.listings.ad_details}</a></span>
+
+	</div>
+	<div class="clearfix"></div>
+
+</div>{* end form_footer *}
+
+</div> {* end form_container *}
+<div class="clearfix"></div>
+
+{include file="footer.html"}

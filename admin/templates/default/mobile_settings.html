@@ -1,0 +1,127 @@
+{include file="header.html"}
+{include file="data/fancybox.html"}
+
+<div class="page_title">{$lng.panel.settings} > {$lng.settings.mobile_settings}</div>
+
+<div class="p30">
+<form name="settings" method="post" action="mobile_settings.php" enctype="multipart/form-data">
+
+<div class="form_container">
+
+{if $error != ""}<div class="error">{$error}</div>{/if}
+{if $successful}<div class="info">{$lng.settings.settings_saved}</div>{/if}
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.settings.listings_display_settings|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.enable_mobile_templates}</div>
+	<div class="right_form"><input type="checkbox" name="enable_mobile_templates" {if $mobile_settings.enable_mobile_templates==1} checked="checked" {/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.template}</div>
+	<div class="right_form">
+		<select name="mobile_template">
+		{foreach from=$templates item=v}
+			<option value="{$v}" {if $mobile_settings.mobile_template==$v} selected="selected" {/if}>{$v}</option>
+		{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info1.enable_mobile_subdomain}" />&nbsp;{$lng.settings.enable_mobile_subdomain}</div>
+	<div class="right_form"><div class="lfloat"><input type="checkbox" name="enable_mobile_subdomain" {if $mobile_settings.enable_mobile_subdomain==1} checked="checked" {/if}></div><div class="information lfloat ml10">{$lng.settings.info2.enable_mobile_subdomain}</div></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.ads_per_page}</div>
+	<div class="right_form"><input type="text" maxlength="4" name="mobile_ads_per_page" size=10 value="{$mobile_settings.mobile_ads_per_page}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.show_header}" />&nbsp;{$lng.settings.show_header}</div>
+	<div class="right_form"><input type="checkbox" name="mobile_show_header" {if $mobile_settings.mobile_show_header==1} checked="checked" {/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.img_header}</div>
+	<div class="right_form">
+		<input type="file" name="mobile_header_pic" />&nbsp;&nbsp;
+		{if $mobile_settings.mobile_header_pic!=""}
+		<a href="{$live_site}/images/{$mobile_settings.mobile_header_pic}" class="imgfield"><img src="{$template_path}images/camera.png" /></a>
+		{else}
+		<img src="{$template_path}images/camera_off.png">
+		{/if}
+		{if $mobile_settings.mobile_header_pic!=""}&nbsp;&nbsp;<a href="mobile_settings.php?delete=mobile_header_pic"><img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt="" /></a>{/if}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.header_link}</div>
+	<div class="right_form"><input type="text" maxlength="200" name="mobile_header_pic_link" size="50" value="{$mobile_settings.mobile_header_pic_link}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.small_thumb_dimmensions}</div>
+	<div class="right_form">
+		{$lng.settings.width}&nbsp;<input type="text" name="mobile_thmb_width" size="5" maxlength="4" value="{$mobile_settings.mobile_thmb_width}" />&nbsp;&nbsp;
+		{$lng.settings.height}&nbsp;<input type="text" name="mobile_thmb_height" size="5" maxlength="4" value="{$mobile_settings.mobile_thmb_height}" />
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.big_thumb_dimmensions}</div>
+	<div class="right_form">
+		{$lng.settings.width}&nbsp;<input type="text" name="mobile_big_thmb_width" size="5" maxlength="4" value="{$mobile_settings.mobile_big_thmb_width}" />&nbsp;
+		{$lng.settings.height}&nbsp;<input type="text" name="mobile_big_thmb_height" size="5" maxlength="4" value="{$mobile_settings.mobile_big_thmb_height}" />
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.default_small_image}" />&nbsp;{$lng.settings.default_small_image}</div>
+	<div class="right_form">
+		<input type="file" name="mobile_nopic" />&nbsp;&nbsp;
+		{if $ads_settings.nopic!=""}
+		<a href="{$live_site}/images/{$mobile_settings.mobile_nopic}" class="imgfield">
+		<img src="{$template_path}images/camera.png" /></a>
+		{else}
+		<img src="{$template_path}images/camera_off.png" />
+		{/if}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.default_big_image}" />&nbsp;{$lng.settings.default_big_image}</div>
+	<div class="right_form">
+		<input type="file" name="mobile_big_nopic" />&nbsp;&nbsp;
+		{if $mobile_settings.mobile_big_nopic!=""}
+		<a href="{$live_site}/images/{$mobile_settings.mobile_big_nopic}" class="imgfield">
+		<img src="{$template_path}images/camera.png" /></a>
+		{else}
+		<img src="{$template_path}images/camera_off.png" />
+		{/if}
+	</div>
+</div>
+
+
+<div class="form_footer">
+	<div class="buttons rfloat"  onClick='{if $demo}alert("{$lng.general.errors.demo}");return false;{else}return checkAdsSettings("{$lng.settings.error.search_in_fields|addslashes}");{/if}'>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.save_changes}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+{literal}
+<script type="text/javascript">
+$(document).ready(function() {
+	$("a.imgfield").fancybox();
+});
+</script>
+{/literal}
+
+{include file="footer.html"}

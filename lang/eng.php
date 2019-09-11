@@ -11,6 +11,7 @@
 $lng['navbar']['home'] = 'Home';
 $lng['navbar']['login'] = 'Sign In';
 $lng['navbar']['logout'] = 'Sign Out';
+$lng['navbar']['information'] = 'Information';
 $lng['navbar']['price'] = 'price';
 $lng['navbar']['register'] = 'Register';
 $lng['navbar']['add_vehicle_km'] = 'Add Vehicle Km';
@@ -40,7 +41,7 @@ $lng['general']['Total_Loss'] = 'Total Loss';
 $lng['general']['submit'] = 'Submit';
 $lng['general']['Reset'] = 'Reset';
 $lng['general']['Request_New'] = 'Request New';
-$lng['general']['Request_make_model'] = 'You can request to us the new make or model if there doesnt exist.'
+$lng['general']['Request_make_model'] = 'You can request to us the new make or model if there doesnt exist.';
 $lng['general']['search'] = 'Search';
 $lng['general']['download'] = 'Download';
 
@@ -56,6 +57,7 @@ $lng['login']['Email'] = 'Email';
 $lng['login']['password'] = 'Password';
 $lng['login']['forgot_pass'] = 'Forgot your password?';
 $lng['login']['click_here'] = 'Click here to reset it!';
+$lng['login']['Select_type_to_login'] = 'Please select user type to login.';
 
 
 // -------------------------- LOGOUT -----------------------
@@ -63,6 +65,7 @@ $lng['logout']['logout'] = 'Sign Out';
 $lng['logout']['loggedout'] = 'You have been signed out!';
 
 // --------------------------User REGISTER -----------------------
+$lng['users']['Select_type_to_register'] = 'Please select user type to register.';
 $lng['users']['register'] = 'Register';
 $lng['users']['User'] = 'User';
 $lng['users']['Delaer'] = 'Dealer';
@@ -91,14 +94,18 @@ $lng['useraccount']['Current_Password'] = 'Current Password';
 $lng['useraccount']['New_password'] = 'New Password';
 $lng['useraccount']['Confirm_New_Password'] = 'Confirm New Password';
 $lng['useraccount']['change_password'] = 'Change Password';
-$lng['useraccount']['Update'] = 'Update'
-$lng['useraccount']['Cancel'] = 'Cancel'
+$lng['useraccount']['Update'] = 'Update';
+$lng['useraccount']['Cancel'] = 'Cancel';
 
 
 // ------------------- CONTACT -----------------
+$lng['contact']['Contact_us'] = 'Contact Us';
+$lng['contact']['fill_all_field'] = 'Please fill all fields and submit';
 $lng['contact']['name'] = 'Name';
 $lng['contact']['Phone Number'] = 'Phone Number';
 $lng['contact']['email'] = 'Email';
+$lng['contact']['your_mail_address'] = 'Your Email address';
+$lng['contact']['never_share_mail'] = 'We will never share your email with anyone else.';
 $lng['contact']['Enter_Your_Massage'] = 'Enter Your Massage';
 $lng['contact']['message_sent'] = 'Your message was sent!';
 $lng['contact']['Submit'] = 'Submit';
@@ -123,7 +130,7 @@ $lng['Payment']['Paypal'] = 'Paypal';
 $lng['Payment']['Copun'] = 'Copun';
 $lng['Payment']['after'] = 'After that you get Full Information about vehicle KM.';
 $lng['Payment']['Close'] = 'Close';
-$lng['Payment']['Copun_code'] = 'Copun Code';
+$lng['Payment']['Copun_code'] = 'Coupon Code';
 $lng['Payment']['Submit'] = 'Submit';
 
 
@@ -135,17 +142,55 @@ $lng['Pdf']['Tellerrapport'] = 'Tellerrapport';
 $lng['Pdf']['License_Plate'] = 'Licens Plate';
 $lng['Pdf']['Vin'] = 'Vin';
 $lng['Pdf']['Make_Model'] = 'Make / Model';
-$lng['Pdf']['Year_Build'] = 'Year Build'
-$lng['Pdf']['Current_km_reading'] = 'Print'
-$lng['Pdf']['Print'] = 'Current KM Reading'
-$lng['Pdf']['Car_Crashed'] = 'Car Crashed'
-$lng['Pdf']['No-Judgement'] = 'No Judgement'
-$lng['Pdf']['KM_records'] = 'KM Records'
-$lng['Pdf']['KM'] = 'KM'
-$lng['Pdf']['add_date'] = 'Add Date'
-$lng['Pdf']['Explamation'] = 'Explanation'
+$lng['Pdf']['Year_Build'] = 'Year Build';
+$lng['Pdf']['Current_km_reading'] = 'Current KM Reading';
+$lng['Pdf']['Car_Crashed'] = 'Car Crashed';
+$lng['Pdf']['No-Judgement'] = 'No Judgement';
+$lng['Pdf']['Logical'] = 'Logical';
+$lng['Pdf']['Not_Logical'] = 'Not Logical';
+$lng['Pdf']['KM_records'] = 'KM Records';
+$lng['Pdf']['KM'] = 'KM';
+$lng['Pdf']['no'] = 'no';
+$lng['Pdf']['front'] = 'front';
+$lng['Pdf']['left'] = 'left';
+$lng['Pdf']['right'] = 'right';
+$lng['Pdf']['yes'] = 'yes';
+$lng['Pdf']['add_date'] = 'Add Date';
+$lng['Pdf']['Explamation'] = 'Explanation';
 $lng['Pdf']['registration_text'] = 'Registration of the car KM in Greece is From 2019, we cannot JUDGEMENT about the Km before this year.
-You see in the report Logical, Not Logical, No JUDGEMENT that means:'
-$lng['Pdf']['1'] = '1 - Logical that means the KM is Logical as we have Registered by Carpass.'
-$lng['Pdf']['2'] = '2 - Not Logical, That means the km is change after registration by Carpass.'
-$lng['Pdf']['3'] = '3 - No Judgment, that mean we have no any data of this vehicle, that is first Registration by Carpass.'
+You see in the report Logical, Not Logical, No JUDGEMENT that means:';
+$lng['Pdf']['1'] = '1 - Logical that means the KM is Logical as we have Registered by Carpass.';
+$lng['Pdf']['2'] = '2 - Not Logical, That means the km is change after registration by Carpass.';
+$lng['Pdf']['3'] = '3 - No Judgment, that mean we have no any data of this vehicle, that is first Registration by Carpass.';
+
+// ------------------- Footer -----------------
+$lng['footer']['home'] = 'Home';
+$lng['footer']['Information'] = 'information';
+$lng['footer']['Add-vehicle-km'] = 'Add Vehicle Km';
+$lng['footer']['Price'] = 'Price';
+$lng['footer']['Privacy-Policy'] = 'Privacy Policy';
+$lng['footer']['Term-and-Service'] = 'Term and Service';
+$lng['footer']['Contact'] = 'Contact';
+$lng['footer']['Address'] = 'Address';
+$lng['footer']['Phone'] = 'Phone';
+
+//---------------------invoice-------------------
+$lng['invoice']['download_as_pdf'] = 'Download as PDF';
+$lng['invoice']['print'] = 'Print';
+$lng['invoice']['close_this_window'] = 'Close this window';
+$lng['invoice']['Click_to_generate_invoice'] = 'Click to generate invoice';
+$lng['invoice']['back_to_report'] = 'Back to report';
+$lng['invoice']['invoice'] = 'Invoice';
+$lng['invoice']['invoice_from'] = 'Invoice from';
+$lng['invoice']['invoice_to'] = 'Invoice to';
+$lng['invoice']['invoice_date'] = 'Invoice date';
+$lng['invoice']['order_amount'] = 'Order Amount';
+$lng['invoice']['product'] = 'Product';
+$lng['invoice']['qty'] = 'Qty';
+$lng['invoice']['Price'] = 'price';
+$lng['invoice']['line_total'] = 'Line total';
+$lng['invoice']['tax'] = 'Tax';
+$lng['invoice']['subtotal'] = 'Subtotal';
+$lng['invoice']['total'] = 'Total';
+$lng['invoice']['registration'] = 'Registration';
+$lng['invoice']['thanks_register'] = 'Thanks for Registration of your Vehicle and thanks for your order and payment';

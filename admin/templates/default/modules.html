@@ -1,0 +1,60 @@
+{include file="header.html"}
+
+<div class="page_title">{$lng.panel.modules}</div>
+
+<div class="p30">
+<form name="modules" method="post" action="modules.php" enctype="multipart/form-data">
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th class="hleft">{$lng.modules.module}</th>
+	<th></th>
+	<th width="70" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$array_modules item=v}
+
+{if $is_admin || $v.id=="news" || $v.id=="multicurrency"}
+
+<tr>
+	<td class="laligned">{if $v.installed}<a href="{$live_site}/admin/modules/{$v.id}/index.php">{/if}<b>{$v.name}</b>{if $v.installed}</a>{/if}<br/>
+	<span class="module_info">{$v.description}</span></td>
+	
+	<td>
+		{if $v.installed}
+			<a href="{$live_site}/admin/modules/{$v.id}/index.php"><div class="small-btn inactivebutton icon">{$lng.panel.settings}</div></a>
+		{else}
+		{if $is_admin}
+			<a href="javascript:;"  {if $demo}onClick="alert('{$lng.general.errors.demo}'); return false;"{else}onclick="onInstall('{$v.id}');"{/if}><div class="small-btn installbutton icon">{$lng.modules.install}</div></a>
+		{/if}
+		{/if}
+	</td>
+
+	<td>
+		{if $v.installed && $is_admin}
+		<span id="div_active{$v.id}">
+			{if $v.enabled==0}
+			<a href="javascript:;"  {if $demo}onClick="alert('{$lng.general.errors.demo}'); return false;"{else}onclick="onEnable('{$v.id}','module', '');"{/if}><img id="active{$v.id}" src="{$template_path}images/enable.png" class="tooltip icon" title="{$lng.general.enable}" alt=""></a>
+			{else}
+			<a href="javascript:;"  {if $demo}onClick="alert('{$lng.general.errors.demo}'); return false;"{else}onclick="onDisable('{$v.id}','module','{$lng.modules.confirm_disable}');"{/if}><img id="active{$v.id}" src="{$template_path}images/disable.png" class="tooltip icon" title="{$lng.general.disable}" alt=""></a>
+			{/if}
+		</span>
+		
+		<span><a href="javascript:;"  {if $demo}onClick="alert('{$lng.general.errors.demo}'); return false;"{else}onclick="onUninstall('{$v.id}','{$lng.modules.confirm_uninstall|addslashes}');"{/if}><img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.modules.uninstall}" alt=""></a></span>
+		{/if}
+	</td>
+</tr>
+
+{/if}
+
+{/foreach}
+
+{if $no_modules==0}
+	<tr><td colspan="3">{$lng.modules.no_modules}</td></tr>
+{/if}
+
+</table>
+</form>
+</div> {* p30 *}
+
+{include file="footer.html"}

@@ -1,0 +1,596 @@
+{include file="header.html"}
+
+<script type="text/javascript" src="{$live_site}/admin/js/cf.js"></script>
+
+<div class="page_title">{$lng.panel.settings} >{if $type=="cf"}<a href="manage_custom_fields.php">{$lng.panel.custom_fields}</a>{else}<a href="user_fields.php">{$lng.panel.user_fields}</a>{/if} > {if isset($id) && $id}{$lng.custom_fields.edit_custom_field}{else}{$lng.custom_fields.add_custom_field}{/if}</div>
+
+<div class="p30">
+<form name="add_cf" method="post" enctype="multipart/form-data" action="{$self}{if isset($id) && $id}?id={$id}{/if}">
+
+<div class="form_container">
+
+{if isset($error) && $error}<div class="error">{$error}</div>{/if}
+
+{if isset($id) && $id && $fields.type=="depending"}
+<div class="clearfix" style="background-color: #f0f0f0; padding: 10px; margin-bottom: 10px;">
+<div class="rfloat">
+<a href="edit_depending_field.php?id={$fields.dep_id}&type={$type}"><div class="edit-depending-button">{$lng.custom_fields.edit_values}</div></a>
+</div>
+</div>
+{/if}
+
+{if $type=="cf"}
+<div class="clearfix">
+	<div class="left_form">{$lng.custom_fields.fieldset}</div>
+	<div class="right_form">
+	<input type="radio" name="all_fieldsets" value="1" {if !isset($fields.id) || !$fields.id || !isset($fileds.fielset) || $fileds.fielset==0}checked="checked"{/if}>&nbsp;&nbsp;{$lng.custom_fields.all_fieldsets}
+	&nbsp;&nbsp;<input type="radio" name="all_fieldsets" value="0" {if isset($fields.fieldset) && $fields.fieldset!=0}checked="checked"{/if}>&nbsp;&nbsp;{$lng.custom_fields.choose_fieldsets}
+	&nbsp;&nbsp;
+	<select multiple="multiple" name="fieldset[]" id="fieldset" class="mselect">
+		{foreach from=$array_fieldsets item=v}
+		<option value="{$v.id}" {if isset($fields.fieldset) && in_array($v.id, ','|explode:$fields.fieldset)}selected="selected"{/if}>{$v.name}</option>
+		{/foreach}
+	</select>
+	</div>
+</div>
+{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.general.type}<span class="mandatory">*</span></div>
+	<div class="right_form">
+		{if isset($id) && $id}{$fields.type}
+		{else}
+			<select name="type" id="type" onchange="selectCFType(0,'{$type}')">
+			{foreach from=$fields_types item=v}
+				{if !$v.default && ($type=="uf" || $v.name!="terms")}
+				<option value="{$v.name}" {if isset($fields.type) && $fields.type==$v.name}selected="selected"{/if}>{$lng.custom_fields[$v.name]}</option>
+				{/if}
+			{/foreach}
+			{foreach from=$extra_fields_types item=v}
+				<option value="{$v}" {if isset($fields.type) && $fields.type==$v}selected="selected"{/if}>{$v}</option>
+			{/foreach}
+			</select>
+		{/if}
+	</div>
+</div>
+
+<div class="clearfix f_options" id="div_depending_no" style="display: none">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.custom_fields.depending_no_info}" />&nbsp;{$lng.custom_fields.depending_no}</div>
+	<div class="right_form">
+		<input type="hidden" id="depending_no" name="depending_no" value="{if isset($fields.depending.no) &&  $fields.depending.no}{$fields.depending.no}{else}2{/if}" />
+		<select name="depending_no_var" onchange="this.form.depending_no.value = this.value; selectCFType('depending','{$type}'); ">
+		<option value="2" {if isset($fields.depending.no) &&  $fields.depending.no==2}selected = "selected"{/if}>2</option>
+		<option value="3" {if isset($fields.depending.no) &&  $fields.depending.no==3}selected = "selected"{/if}>3</option>
+		<option value="4" {if isset($fields.depending.no) &&  $fields.depending.no==4}selected = "selected"{/if}>4</option>
+		<option value="5" {if isset($fields.depending.no) &&  $fields.depending.no==5}selected = "selected"{/if}>5</option>
+		</select>
+	</div>
+</div>
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.general.name}<span class="mandatory"> *</span></div>
+	<div class="right_form"><input type="text" maxlength="200" name="name_{$v.id}" id="name_{$v.id}" size=30 value="{if isset($fields.name[$v.id])}{$fields.name[$v.id]|replace:'"':'&quot;'}{/if}" /></div>
+</div>
+{/foreach}
+
+<div class="f_options" id="div_error" style="display: block">
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_fields.error_message}</div>
+	<div class="right_form"><input type="text" maxlength="500" name="error_message_{$v.id}"  id="error_message_{$v.id}" size=60 value="{if isset($fields.error_message[$v.id])}{$fields.error_message[$v.id]|replace:'"':'&quot;'}{/if}" /></div>
+</div>
+{/foreach}
+</div>
+
+<div class="f_options" id="div_info" style="display: block">
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_fields.info_message}</div>
+	<div class="right_form"><input type="text" maxlength="500" name="info_message_{$v.id}" id="info_message_{$v.id}" size=60 value="{if isset($fields.info_message[$v.id])}{$fields.info_message[$v.id]|replace:'"':'&quot;'}{/if}" /></div>
+</div>
+{/foreach}
+</div>
+
+<div class="f_options" id="div_top_str" style="display: none">
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_fields.top_str}</div>
+	<div class="right_form"><input type="text" maxlength="200" name="top_str_{$v.id}" id="top_str_{$v.id}" size=30 value="{if isset($fields.top_str[$v.id])}{$fields.top_str[$v.id]|replace:'"':'&quot;'}{/if}" /></div>
+</div>
+{/foreach}
+</div>
+
+
+<div class="clearfix f_options" id="div_is_numeric" style="display: block">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.custom_fields.info.is_numeric}" />&nbsp;{$lng.custom_fields.is_numeric}</div>
+	<div class="right_form"><input type="checkbox" name="is_numeric" id="is_numeric" {if isset($fields.is_numeric) && $fields.is_numeric}checked="checked"{/if}  onClick="onEnableSearch({if isset($fields.type) && $fields.type}'{$fields.type}'{else}0{/if}); onEnableNumeric()"/></div>
+</div>
+
+<div class="clearfix f_options" id="div_number_format" style="display: none">
+	<div class="left_form">{$lng.settings.number_format}</div>
+	<div class="right_form">
+		{$lng.settings.decimals}&nbsp;<input type="text" size="5" name="format_decimals"  id="format_decimals" value="{if isset($fields.format_decimals) && $fields.format_decimals}{$fields.format_decimals}{else}0{/if}"/>&nbsp;&nbsp;
+		{$lng.settings.decimals_point}&nbsp;<input type="text" size="5" name="format_point" id="format_point" value="{if isset($fields.format_point) && $fields.format_point}{$fields.format_point}{else}.{/if}" />&nbsp;&nbsp;
+		{$lng.settings.thousands_separator}&nbsp;<input type="text" size="5" name="format_separator" id="format_separator" value="{if isset($fields.format_separator) && $fields.format_separator}{$fields.format_separator}{/if}" />
+	</div>
+</div>
+
+
+<div class="clearfix f_options" id="div_validation" style="display: block">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.custom_fields.validation_info}" />&nbsp;{$lng.custom_fields.validation_type}</div>
+	<div class="right_form"><input type="text" name="validation_type" id="validation_type"  size=20  value="{if isset($fields.validation_type)}{$fields.validation_type}{/if}" /></div>
+</div>
+
+<div class="clearfix f_options" id="div_length" style="display: block">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.custom_fields.length_info}" />&nbsp;{$lng.custom_fields.length}</div>
+	<div class="right_form"><input maxlength="10" type="text" name="size" id="size" size=10  value="{if isset($fields.size)}{$fields.size}{/if}" /></div>
+</div>
+
+<div class="clearfix f_options" id="div_min" style="display: block">
+	<div class="left_form">{$lng.custom_fields.minimum}</div>
+	<div class="right_form"><input maxlength="10" type="text" name="min" id="min" size=10  value="{if isset($fields.min)}{$fields.min}{/if}" /></div>
+</div>
+
+<div class="clearfix f_options" id="div_max" style="display: block">
+	<div class="left_form">{$lng.custom_fields.maximum}</div>
+	<div class="right_form"><input maxlength="10" type="text" name="max" id="max" size=10 value="{if isset($fields.max)}{$fields.max}{/if}"  /></div>
+</div>
+
+<div class="clearfix f_options" id="div_min_selections" style="display: none">
+	<div class="left_form">{$lng.custom_fields.minimum_selections}</div>
+	<div class="right_form"><input maxlength="10" type="text" name="min" id="min_selections" size=10  value="{if isset($fields.min)}{$fields.min}{/if}" disabled="disabled" /></div>
+</div>
+
+<div class="clearfix f_options" id="div_max_selections" style="display: none">
+	<div class="left_form">{$lng.custom_fields.maximum_selections}</div>
+	<div class="right_form"><input maxlength="10" type="text" name="max" id="max_selections" size=10 value="{if isset($fields.max)}{$fields.max}{/if}" disabled="disabled" /></div>
+</div>
+
+<div class="f_options" id="div_default_textbox" style="display: block">
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_fields.default_val}</div>
+	<div class="right_form"><input maxlength="200" type="text" name="default_textbox_{$v.id}" id="default_textbox_{$v.id}" size=30 value="{if isset($fields.default_val[$v.id])}{$fields.default_val[$v.id]|replace:'"':'&quot;'}{/if}" /></div>
+</div>
+{/foreach}
+</div>
+
+<div class="f_options" id="div_default_textarea" style="display: none">
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_fields.default_val}</div>
+	<div class="right_form"><textarea maxlength="500" name="default_textarea_{$v.id}" id="default_textarea_{$v.id}" rows=3 cols=30>{if isset($fields.default_val[$v.id])}{$fields.default_val[$v.id]}{/if}</textarea></div>
+</div>
+{/foreach}
+</div>
+
+<div class="clearfix f_options" id="div_default_checkbox" style="display: none">
+	<div class="left_form">{$lng.custom_fields.default}</div>
+	<div class="right_form">
+		<select name="default_checkbox" id="default_checkbox">
+			<option value="0">{$lng.custom_fields.not_selected}</option>
+			<option value="1" {if isset($fields.default_checkbox) && $fields.default_checkbox==1}selected="selected"{/if}>{$lng.custom_fields.selected}</option>
+		</select>
+	</div>
+</div>
+
+<div class="f_options" id="div_prefix" style="display: block">
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_fields.prefix}</div>
+	<div class="right_form"><input maxlength="64" type="text" name="prefix_{$v.id}" id="prefix_{$v.id}" size=10 value="{if isset($fields.prefix[$v.id])}{$fields.prefix[$v.id]}{/if}" /></div>
+</div>
+{/foreach}
+</div>
+
+<div class="f_options" id="div_postfix" style="display: block">
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_fields.postfix}</div>
+	<div class="right_form"><input maxlength="64" type="text" name="postfix_{$v.id}" id="postfix_{$v.id}" size=10 value="{if isset($fields.postfix[$v.id])	}{$fields.postfix[$v.id]}{/if}" /></div>
+</div>
+{/foreach}
+</div>
+
+<div class="f_options" id="div_date_format" style="display: none">
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}<img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.custom_fields.date_format_info}" />&nbsp;{$lng.custom_fields.date_format}</div>
+	<div class="right_form"><input maxlength="64" type="text" name="date_format_{$v.id}" id="date_format_{$v.id}" size=10 value="{if isset($fields.date_format[$v.id]) && $fields.date_format[$v.id]}{$fields.date_format[$v.id]}{else}dd/mm/yy{/if}" /></div>
+</div>
+{/foreach}
+</div>
+
+<div class="clearfix f_options" id="div_uploaded" style="display: none">
+	<div class="left_form">{$lng.custom_fields.max_uploaded_size}</div>
+	<div class="right_form"><input maxlength="10" type="text" name="max_uploaded_size" id="max_uploaded_size" size=10 value="{if isset($fields.max_uploaded_size)}{$fields.max_uploaded_size}{/if}" />&nbsp;Mb</div>
+</div>
+
+<div class="clearfix f_options" id="div_extensions" style="display: none">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.custom_fields.extensions_info}" />&nbsp;{$lng.custom_fields.extensions}</div>
+	<div class="right_form"><input maxlength="64" type="text" name="extensions" size=40 value="{if isset($fields.extensions)}{$fields.extensions}{/if}" /></div>
+</div>
+
+<div class="clearfix f_options" id="div_resize" style="display: none">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.custom_fields.image_resize_info}" />&nbsp;{$lng.custom_fields.image_resize}</div>
+	<div class="right_form"><input maxlength="10" type="text" name="image_resize" size=10  value="{if isset($fields.image_resize)}{$fields.image_resize}{/if}" /></div>
+</div>
+
+<div  id="div_elements" style="display: none">
+{foreach from =$languages item=v name=elem}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}<img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.custom_fields.elements_info}" />&nbsp;{$lng.custom_fields.elements}</div>
+	<div class="right_form"><textarea name="elements_{$v.id}" rows=7 cols=40>{if isset($fields.elements[$v.id])}{$fields.elements[$v.id]}{/if}</textarea></div>
+</div>
+{/foreach}
+</div>
+
+{if $type=="uf"}
+<div class="f_options" id="div_terms" style="display: none">
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}<img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.custom_fields.terms_info}" />&nbsp;{$lng.custom_fields.terms}</div>
+	<div class="right_form"><textarea name="terms_{$v.id}" rows=40 cols=75>{if isset($fields.default_val[$v.id])}{$fields.default_val[$v.id]}{/if}</textarea></div>
+</div>
+{/foreach}
+</div>
+{/if}
+
+<div class=" f_optionsclearfix" id="div_other_val" style="display: none">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.custom_fields.info.other_val}" />&nbsp;{$lng.custom_fields.other_val}</div>
+	<div class="right_form"><input type="checkbox" name="other_val" {if isset($fields.other_val) && $fields.other_val==1}checked="checked"{/if} /></div>
+</div>
+
+<div class=" f_optionsclearfix" id="div_all_val" style="display: none">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.custom_fields.info.all}" />&nbsp;{$lng.custom_fields.all}</div>
+	<div class="right_form"><input type="checkbox" name="all_val" {if isset($fields.all_val) && $fields.all_val==1}checked="checked"{/if} /></div>
+</div>
+
+<div class="f_options" id="div_dep1" style="display: none">
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_fields.depending_field}1</div>
+	<div class="right_form"><input type="text" maxlength="200" name="dep_name1_{$v.id}" size=30 value="{if isset($fields.depending.dep_name1[$v.id])}{$fields.depending.dep_name1[$v.id]}{/if}" /></div>
+</div>
+{/foreach}
+</div>
+
+<div class="f_options" id="div_dep2" style="display: none">
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_fields.depending_field}2</div>
+	<div class="right_form"><input type="text" maxlength="200" name="dep_name2_{$v.id}" size=30 value="{if isset($fields.depending.dep_name2[$v.id])}{$fields.depending.dep_name2[$v.id]}{/if}" /></div>
+</div>
+{/foreach}
+</div>
+
+<div class="f_options" id="div_dep3" style="display: none">
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_fields.depending_field}3</div>
+	<div class="right_form"><input type="text" maxlength="200" name="dep_name3_{$v.id}" size=30 value="{if isset($fields.depending.dep_name3[$v.id])}{$fields.depending.dep_name3[$v.id]}{/if}" /></div>
+</div>
+{/foreach}
+</div>
+
+<div class="f_options" id="div_dep4" style="display: none">
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_fields.depending_field}4</div>
+	<div class="right_form"><input type="text" maxlength="200" name="dep_name4_{$v.id}" size=30 value="{if isset($fields.depending.dep_name4[$v.id])}{$fields.depending.dep_name4[$v.id]}{/if}" /></div>
+</div>
+{/foreach}
+</div>
+
+<div class="f_options" id="div_dep5" style="display: none">
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_fields.depending_field}5</div>
+	<div class="right_form"><input type="text" maxlength="200" name="dep_name5_{$v.id}" size=30 value="{if isset($fields.depending.dep_name5[$v.id])}{$fields.depending.dep_name5[$v.id]}{/if}" /></div>
+</div>
+{/foreach}
+</div>
+
+<div class="f_options" id="div_top_str1" style="display: none">
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_fields.top_str}1</div>
+	<div class="right_form"><input type="text" maxlength="200" name="dep_top_str1_{$v.id}" size=30 value="{if isset($fields.depending.dep_top_str1[$v.id])}{$fields.depending.dep_top_str1[$v.id]}{/if}" /></div>
+</div>
+{/foreach}
+</div>
+
+<div class="f_options" id="div_top_str2" style="display: none">
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_fields.top_str}2</div>
+	<div class="right_form"><input type="text" maxlength="200" name="dep_top_str2_{$v.id}" size=30 value="{if isset($fields.depending.dep_top_str2[$v.id])}{$fields.depending.dep_top_str2[$v.id]}{/if}" /></div>
+</div>
+{/foreach}
+</div>
+
+<div class="f_options" id="div_top_str3" style="display: none">
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_fields.top_str}3</div>
+	<div class="right_form"><input type="text" maxlength="200" name="dep_top_str3_{$v.id}" size=30 value="{if isset($fields.depending.dep_top_str3[$v.id])}{$fields.depending.dep_top_str3[$v.id]}{/if}" /></div>
+</div>
+{/foreach}
+</div>
+
+<div class="f_options" id="div_top_str4" style="display: none">
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_fields.top_str}4</div>
+	<div class="right_form"><input type="text" maxlength="200" name="dep_top_str4_{$v.id}" size=30 value="{if isset($fields.depending.dep_top_str4[$v.id])}{$fields.depending.dep_top_str4[$v.id]}{/if}" /></div>
+</div>
+{/foreach}
+</div>
+
+<div class="f_options" id="div_top_str5" style="display: none">
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_fields.top_str}5</div>
+	<div class="right_form"><input type="text" maxlength="200" name="dep_top_str5_{$v.id}" size=30 value="{if isset($fields.depending.dep_top_str5[$v.id])}{$fields.depending.dep_top_str5[$v.id]}{/if}" /></div>
+</div>
+{/foreach}
+</div>
+
+<div class="f_options" id="div_dep_error1" style="display: none">
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_fields.depending_error}1</div>
+	<div class="right_form"><input type="text" maxlength="500" name="dep_error_message1_{$v.id}" size=60 value="{if isset($fields.depending.dep_error_message1[$v.id])}{$fields.depending.dep_error_message1[$v.id]}{/if}" /></div>
+</div>
+{/foreach}
+</div>
+
+<div class="f_options" id="div_dep_error2" style="display: none">
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_fields.depending_error}2</div>
+	<div class="right_form"><input type="text" maxlength="500" name="dep_error_message2_{$v.id}" size=60 value="{if isset($fields.depending.dep_error_message2[$v.id])}{$fields.depending.dep_error_message2[$v.id]}{/if}" /></div>
+</div>
+{/foreach}
+</div>
+
+<div class="f_options" id="div_dep_error3" style="display: none">
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_fields.depending_error}3</div>
+	<div class="right_form"><input type="text" maxlength="500" name="dep_error_message3_{$v.id}" size=60 value="{if isset($fields.depending.dep_error_message3[$v.id])}{$fields.depending.dep_error_message3[$v.id]}{/if}" /></div>
+</div>
+{/foreach}
+</div>
+
+<div class="f_options" id="div_dep_error4" style="display: none">
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_fields.depending_error}4</div>
+	<div class="right_form"><input type="text" maxlength="500" name="dep_error_message4_{$v.id}" size=60 value="{if isset($fields.depending.dep_error_message4[$v.id])}{$fields.depending.dep_error_message4[$v.id]}{/if}" /></div>
+</div>
+{/foreach}
+</div>
+
+<div class="f_options" id="div_dep_error5" style="display: none">
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_fields.depending_error}5</div>
+	<div class="right_form"><input type="text" maxlength="500" name="dep_error_message5_{$v.id}" size=60 value="{if isset($fields.depending.dep_error_message5[$v.id])}{$fields.depending.dep_error_message5[$v.id]}{/if}" /></div>
+</div>
+{/foreach}
+</div>
+
+<div class="clearfix f_options" id="div_location_fields" style="display: none">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.custom_fields.info.auto_locate_fields}" />&nbsp;{$lng.custom_fields.auto_locate_fields}</div>
+	<div class="right_form">
+		<select id="auto_locate_fields" name="auto_locate_fields[]" multiple="multiple" size="6" class="mselect">
+		{foreach from = $fields_array item = v}
+		{if $v.caption!="username" && $v.caption!="email" && $v.caption!="password" && $v.caption!=$fields.caption}
+		<option value="{$v.caption}" {if isset($fields.type) && $fields.type && $fields.type=="google_maps" && in_array($v.caption, $fields.extensions_array)}selected="selected"{/if}>{$v.name}</option>
+		{/if}
+		{/foreach}
+		</select>
+
+	</div>
+</div>
+
+<div class="clearfix f_options" id="div_dep_required1" style="display: none">
+	<div class="left_form">{$lng.custom_fields.depending_required1}</div>
+	<div class="right_form"><input type="checkbox" name="dep_required1" {if isset($fields.depending.dep_required1) && $fields.depending.dep_required1==1}checked="checked"{/if} /></div>
+</div>
+
+<div class="clearfix f_options" id="div_dep_required2" style="display: none">
+	<div class="left_form">{$lng.custom_fields.depending_required2}</div>
+	<div class="right_form"><input type="checkbox" name="dep_required2" {if isset($fields.depending.dep_required2) && $fields.depending.dep_required2==1}checked="checked"{/if} /></div>
+</div>
+
+<div class="clearfix f_options" id="div_dep_required3" style="display: none">
+	<div class="left_form">{$lng.custom_fields.depending_required3}</div>
+	<div class="right_form"><input type="checkbox" name="dep_required3" {if isset($fields.depending.dep_required3) && $fields.depending.dep_required3==1}checked="checked"{/if} /></div>
+</div>
+
+<div class="clearfix f_options" id="div_dep_required4" style="display: none">
+	<div class="left_form">{$lng.custom_fields.depending_required4}</div>
+	<div class="right_form"><input type="checkbox" name="dep_required4" {if isset($fields.depending.dep_required4) && $fields.depending.dep_required4==1}checked="checked"{/if} /></div>
+</div>
+
+<div class="clearfix f_options" id="div_dep_required5" style="display: none">
+	<div class="left_form">{$lng.custom_fields.depending_required5}</div>
+	<div class="right_form"><input type="checkbox" name="dep_required5" {if isset($fields.depending.dep_required5) && $fields.depending.dep_required5==1}checked="checked"{/if} /></div>
+</div>
+
+<!-- end depending -->
+
+{if $type=="cf"}
+
+<div class="clearfix f_options" id="div_advanced_search" style="display: block">
+	<div class="left_form">{$lng.custom_fields.advanced_search}</div>
+	<div class="right_form"><input type="checkbox" name="advanced_search" id="advanced_search" {if isset($fields.advanced_search) && $fields.advanced_search==1}checked="checked"{/if} onClick="onEnableSearch({if isset($fields.type) && $fields.type}'{$fields.type}'{else}0{/if})" /></div>
+</div>
+
+<div class="clearfix f_options" id="div_quick_search" style="display: block">
+	<div class="left_form">{$lng.custom_fields.quick_search}</div>
+	<div class="right_form"><input type="checkbox" name="quick_search" id="quick_search" {if isset($fields.quick_search) && $fields.quick_search==1}checked="checked"{/if} onClick="onEnableSearch({if isset($fields.type) && $fields.type}'{$fields.type}'{else}0{/if})" /></div>
+</div>
+
+<div class="clearfix f_options" id="div_search_type" style="display: none">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.custom_fields.info.search_type}" />&nbsp;{$lng.custom_fields.search_type}</div>
+	<div class="right_form">
+		<input type="radio" name="search_type" value="1" checked="checked" onClick="onEnableSearch({if isset($fields.type) && $fields.type}'{$fields.type}'{else}0{/if})">&nbsp;{$lng.custom_fields.exact_match}<br/>
+		<span id="span_search_interval"><input id="search_interval" type="radio" name="search_type" value="2" {if isset($fields.search_type) && $fields.search_type ==2}checked="checked"{/if} onClick="onEnableSearch({if isset($fields.type) && $fields.type}'{$fields.type}'{else}0{/if})"&nbsp;>
+		{$lng.custom_fields.interval}<br/></span>
+		<input type="radio" name="search_type" value="3" {if isset($fields.search_type) && $fields.search_type==3}checked="checked"{/if} onClick="onEnableSearch( {if isset($fields.type) && $fields.type}'{$fields.type}'{else}0{/if})">&nbsp;{$lng.custom_fields.search_keyword}
+	</div>
+</div>
+
+<div class="f_options" id="div_search_interval" style="display: none">
+{foreach from =$languages item=v name=elem}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}<img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.custom_fields.info.search_values}<br/>{$lng.custom_fields.elements_info}" />&nbsp;{$lng.custom_fields.search_values}</div>
+	<div class="right_form">
+		{if $languages|@count > 1 && $smarty.foreach.elem.index==0}<span class="note">{$lng.custom_fields.elements_multilanguage}</span><br/>{/if}
+		<textarea name="search_elements_{$v.id}" rows=7 cols=40>{if isset($fields.search_elements[$v.id])}{$fields.search_elements[$v.id]}{/if}</textarea>
+	</div>
+</div>
+{/foreach}
+</div>
+
+{/if}
+
+<div class="clearfix f_options" id="div_required" style="display: block">
+	<div class="left_form">{$lng.custom_fields.required}</div>
+	<div class="right_form"><input type="checkbox" name="required" {if isset($fields.required) && $fields.required==1}checked="checked"{/if} /></div>
+</div>
+
+<div class="clearfix f_options" id="div_editable" style="display: block">
+	<div class="left_form">{$lng.custom_fields.editable}</div>
+	<div class="right_form"><input type="checkbox" name="editable" {if (isset($fields.editable) && $fields.editable==1) || !isset($id) || !$id}checked="checked"{/if} /></div>
+</div>
+
+<div id="div_unique" class="f_options" style="display: block;">
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.custom_fields.info.unique}" />&nbsp;{$lng.custom_fields.unique}</div>
+	<div class="right_form"><input type="checkbox" name="unique" id="unique" {if (isset($fields.unique) && $fields.unique==1)}checked="checked"{/if} onchange="onUnique()" /></div>
+</div>
+
+<div id="div_unique_error" style="display: none;">
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_fields.unique_error_message}</div>
+	<div class="right_form"><input type="text" maxlength="500" name="error_message2_{$v.id}"  id="error_message2_{$v.id}" size=60 value="{if isset($fields.error_message2[$v.id])}{$fields.error_message2[$v.id]|replace:'"':'&quot;'}{/if}" /></div>
+</div>
+{/foreach}
+
+</div> {* end unique_error *}
+</div> {* end unique *}
+
+
+<div class="clearfix f_options" id="div_active" style="display: block">
+	<div class="left_form">{$lng.general.active}</div>
+	<div class="right_form"><input type="checkbox" name="active" {if (isset($fields.active) && $fields.active==1) || !isset($id) || !$id}checked="checked"{/if} /></div>
+</div>
+
+{if $type=="uf"}
+<div class="clearfix f_options" id="div_public" style="display: block">
+	<div class="left_form"><img src="{$template_path}images/info.png" class="tooltip icon" title="{$lng.custom_fields.info.public}" alt="">&nbsp;{$lng.custom_fields.public}</div>
+	<div class="right_form">
+		<input type="radio" name="public" value="1" {if (isset($fields.public) && $fields.public==1) || !isset($id) || !$id}checked="checked"{/if}/>&nbsp;{$lng.general.yes}&nbsp;&nbsp;
+		<input type="radio" name="public" value="0" {if isset($fields.public) && $fields.public==0}checked="checked"{/if}/>&nbsp;{$lng.general.no}&nbsp;&nbsp;
+		{assign var=uc_array value=["textbox", "textarea", "htmlarea", "menu", "url", "email", "phone", "date", "user_email", "twitter"]}
+		{if !isset($fields.type) || (isset($fields.type) && in_array($fields.type, $uc_array))}
+		<span id="uc">
+		<input type="radio" name="public" value="2" {if isset($fields.public) && $fields.public==2}checked="checked"{/if}/>&nbsp;{$lng.custom_fields.user_choice}
+		</span>
+		{/if}
+
+</div>
+</div>
+
+
+{if $settings.nologin_enabled}
+<div class="clearfix f_options" id="div_not_logged_in" style="display: block">
+	<div class="left_form">{$lng.custom_fields.not_logged_in}</div>
+	<div class="right_form"><input type="checkbox" name="not_logged_in" id="not_logged_in" {if isset($fields.groups) && $fields.groups==-1}checked="checked"{/if} {if (isset($fields.read_only) && $fields.read_only==1) || (isset($id) &&  $id)}disabled="disabled"{/if} onClick="onEnableNotLoggedIn()" /></div>
+</div>
+{/if}
+
+{if !isset($fields.read_only) || $fields.read_only==0}
+<div class="clearfix f_options" id="div_choose_groups" style="display: block">
+	<div class="left_form">{$lng.custom_fields.use_field_for}</div>
+	<div class="right_form">
+		<input type="radio" name="choose_group" id="choose_group1" value="all" {if isset($fields.choose_group) && $fields.choose_group!="choose"}checked="checked"{/if} onchange="onChooseGroup(this.form)" onClick="onChooseGroup(this.form)">&nbsp;{$lng.custom_fields.all_groups}
+		&nbsp;<input type="radio" name="choose_group" id="choose_group2" value="choose" {if isset($fields.choose_group) && $fields.choose_group=="choose"}checked="checked"{/if} onchange="onChooseGroup(this.form)" onClick="onChooseGroup(this.form)">&nbsp;{$lng.custom_fields.choose_groups}
+	</div>
+</div>
+
+<div class="clearfix f_options" id="div_groups" style="display: none">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.custom_fields.choose_groups_info}" /></div>
+	<div class="right_form">
+		<select multiple="multiple" size=8 name="groups[]" id="groups" class="mselect">
+		{foreach from=$groups_list item=v}
+			<option value="{$v.id}">{$v.name}</option>
+		{/foreach}
+		</select>
+	</div>
+</div>
+{/if}{* end if $fields.read_only==0 *}
+
+<div class="clearfix" id="div_repeat" {if !isset($id) || ( isset($id) && $id && $fields.type!="password" && $fields.type!="user_email")}style="display: none;"{/if}>
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.custom_fields.info.double_verification}" />&nbsp;{$lng.custom_fields.double_verification}</div>
+	<div class="right_form"><input type="checkbox" name="double_verification" id="double_verification" {if isset($fields.ext1) && $fields.ext1==1}checked="checked"{/if} /></div>
+</div>
+
+{/if} {* end if uf *}
+
+<div class="f_options" id="div_phone_extra" {if !isset($id) || ( isset($id) && $id && $fields.type!="phone")}style="display: none;"{/if}>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.custom_fields.info.international_format}" />&nbsp;{$lng.custom_fields.international_format}</div>
+	<div class="right_form"><input type="checkbox" name="international_format" id="international_format" {if isset($fields.ext1) && $fields.ext1==1}checked="checked"{/if} onClick="onEnableInternationalFormat()" /></div>
+</div>
+
+<div class="clearfix" id="div_only_countries" {if !isset($fields.ext1) || $fields.ext1==0}style="display: none;"{/if}>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.custom_fields.info.only_countries}" />&nbsp;{$lng.custom_fields.only_countries}</div>
+	<div class="right_form"><input type="text" size="40" name="only_countries" id="only_countries" value="{if isset($fields.extensions) && $fields.extensions}{$fields.extensions}{/if}" />&nbsp;{$lng.custom_fields.info.only_countries2}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.custom_fields.info.country_autodetect}" />&nbsp;{$lng.custom_fields.country_autodetect}</div>
+	<div class="right_form"><input type="checkbox" name="country_autodetect" id="country_autodetect" {if isset($fields.other_val) && $fields.other_val==1}checked="checked"{/if} /></div>
+</div>
+
+</div>
+
+</div> {* end div_phone_extra *}
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+
+</form>
+</div>
+
+
+<script type="text/javascript">
+
+var old_field="{if isset($fields.type)}{$fields.type}{/if}";
+var old_numeric="{if isset($fields.is_numeric)}{$fields.is_numeric}{/if}";
+{if $type=="uf"}var old_group_val="{if isset($fields.groups)}{$fields.groups}{/if}";{/if}
+if(old_field) selectCFType(old_field,'{$type}');
+{if $type=="uf" && isset($fields.read_only) && $fields.read_only==0}if(old_group_val==-1) onEnableNotLoggedIn(); else if(old_group_val!="0") chooseGroup(document.forms["add_cf"], old_group_val);{/if}
+{if $type=="cf" && isset($fields.type) && $fields.type}onEnableSearch({if isset($fields.type)}'{$fields.type}'{else}0{/if});{/if}
+onEnableNumeric();
+
+</script>
+
+{include file="footer.html"}

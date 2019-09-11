@@ -1,0 +1,387 @@
+<!-- Custom Fields -->
+{foreach from=$fields_array item=v name=custom}
+
+<div class="clearfix">
+
+{if $v.type!="depending"  && $v.type!="terms" && ($v.type!="password" || !isset($edit) || !$edit)}
+	<div class="left_form">{if $v.info_message}<img src="{$template_path}images/info.png"  class="tooltip" title="{$v.info_message}" />&nbsp;{/if}{$v.name}{if $v.required==1}<span class="mandatory"> *</span>{/if}</div>
+	<div class="right_form">
+{/if}
+
+{*
+{if $v.type!="depending" && $v.type!="checkbox_group" && $v.type!="terms" && $v.type!="radio_group" && in_array($v.type, $default_fields_types)  && ($v.type!="password" || !isset($edit) || !$edit)}
+
+<div class="clearfix">
+		<div class="left_form">{$v.name}{if $v.required==1}<span class="mandatory">*</span>{/if}</div>
+		<div class="right_form">
+
+{/if}
+*}
+		{if $v.type=="password" && (!isset($edit) || !$edit)}
+			<input name="password" id="password" type="password" size="25" maxlength="255" value="{if isset($tmp.password)}{$tmp.password}{/if}" />
+		{/if}
+
+		{if $v.type=="textbox" || $v.type=="url" || $v.type=="email" || $v.type=="user_email" || $v.type=="username" || $v.type=="phone" || $v.type=="whatsapp" || $v.type=="twitter"}
+			{if $v.prefix!=""} {$v.prefix} {/if}
+			<input name="{$v.caption}" id="{$v.caption}" type="text" size="{$v.size}" value="{if isset($tmp[$v.caption])}{$tmp[$v.caption]}{else}{if $v.default_val!=''}{$v.default_val}{/if}{/if}" {if in_array($v.caption, $gmaps_unique)}onblur="autoLocator_{$gmaps_fields[$v.caption]}();"{/if} />
+			{if ($v.type=="phone" || $v.type=="whatsapp") && $v.ext1==1}<input type="hidden" name="{$v.caption}_hidden" id="{$v.caption}_hidden" value="{if isset($tmp[$v.caption]) && $tmp[$v.caption]}{$tmp[$v.caption]}{/if}" />{/if}
+			{if $v.postfix!=""} {$v.postfix} {/if}
+			
+			{if $v.type=="textbox"}
+
+			{if $v.is_numeric}
+			<script type="text/javascript">
+			{literal}
+			$('#{/literal}{$v.caption}{literal}').number( true, {/literal}'{$v.format_decimals}', '{$v.format_point}', '{$v.format_separator}' {literal});
+			{/literal}
+			</script>
+			{/if}
+			
+			{if $v.validation_type=="numeric"}
+			<script type="text/javascript">
+			{literal}
+			$('#{/literal}{$v.caption}{literal}').number( true, {/literal}'{$appearance.number_format_decimals}', '{$appearance.number_format_point}', '{$appearance.number_format_separator}' {literal});
+			{/literal}
+			</script>
+			{/if}
+			
+			{/if}
+
+		{/if}
+
+		{if $v.type=="file" || $v.type=="image" || $v.type=="video" || $v.type=="audio"}
+			{if $v.prefix!=""} {$v.prefix} {/if}
+			<input name="{$v.caption}" id="{$v.caption}" type="file" />
+			{if $v.postfix!=""} {$v.postfix} {/if}
+
+			{if isset($tmp[$v.caption]) && $tmp[$v.caption]}
+			{if $v.type=="file" || $v.type=="video" || $v.type=="audio"}<a href="{$live_site}/uploads/{$v.caption}/{$tmp[$v.caption]}"><img src="{$template_path}/images/download.png" class="tooltip" alt="" title="{$lng.general.download}"/></a>{/if}
+			{if $v.type=="image"}<a href="{$live_site}/uploads/{$v.caption}/{$tmp[$v.caption]}" class="imgfield"><img src="{$template_path}images/camera.png" /></a>
+			{/if}
+			<a href="javascript:;" onclick="deleteFile('{$v.caption}', '{$id}', '{$type}')"><img src="{$template_path}images/delete.png" /></a>
+			{/if}
+
+		{/if}
+
+		{if $v.type=="textarea"}
+			{if $v.prefix!=""} {$v.prefix} {/if}
+			<textarea name="{$v.caption}" id="{$v.caption}" rows="{$v.rows}" cols="{$v.cols}" {if in_array($v.caption, $gmaps_unique)}onblur="autoLocator_{$gmaps_fields[$v.caption]}();"{/if}>{if isset($tmp[$v.caption]) && $tmp[$v.caption]}{$tmp[$v.caption]}{else}{if $v.default_val!=''}{$v.default_val}{/if}{/if}</textarea>
+			{if $v.postfix!=""} {$v.postfix} {/if}
+		{/if}
+
+		{if $v.type=="htmlarea"}
+			{if $v.prefix!=""} {$v.prefix} {/if}
+			<textarea name="{$v.caption}" id="{$v.caption}" rows="{$v.rows}" cols="{$v.cols}" {if in_array($v.caption, $gmaps_unique)}onblur="autoLocator_{$gmaps_fields[$v.caption]}();"{/if}>{if isset($tmp[$v.caption]) && $tmp[$v.caption]}{$tmp[$v.caption]}{else}{if $v.default_val!=''}{$v.default_val}{/if}{/if}</textarea>
+			{if $v.postfix!=""} {$v.postfix} {/if}
+		{/if}
+
+		{if $v.type=="menu"}
+			{if $v.prefix!=""} {$v.prefix} {/if}
+			<select style="float: left !important" name="{$v.caption}" id="{$v.caption}" {if $v.other_val}onchange="checkOther(this.form.{$v.caption}, '{$v.caption}');"{/if} {if in_array($v.caption, $gmaps_unique)}onblur="autoLocator_{$gmaps_fields[$v.caption]}();"{/if}>
+				<option value="">{$v.top_str}</option>
+				{if $v.other_val}<option value="-1" {if isset($tmp[$v.caption]) && $tmp[$v.caption] && !in_array($tmp[$v.caption], $v.elements_array)}selected="selected"{/if}>{$lng.general.other}</option>{/if}
+				{if $v.all_val}<option value="all" {if isset($tmp[$v.caption]) && $tmp[$v.caption]=="all"}selected="selected"{/if}>{$lng.general.all}</option>{/if}
+				{foreach from=$v.elements_array item=t}
+				<option value="{$t}" {if isset($tmp[$v.caption]) && $tmp[$v.caption]!=''}{if $tmp[$v.caption]==$t}selected="selected"{/if} {elseif $v.default_val!='' && $v.default_val==$t} selected="selected" {/if}>{$t}</option>
+				{/foreach}
+			</select>
+			{if $v.postfix!=""} {$v.postfix} {/if}
+			{if $v.other_val}
+			{if isset($tmp[$v.caption]) && $tmp[$v.caption] && $tmp[$v.caption]!="all" && !in_array($tmp[$v.caption], $v.elements_array)}
+			<span id="span_{$v.caption}_other_val"><input type="text" name="{$v.caption}_other_val" id="{$v.caption}_other_val" value="{$tmp[$v.caption]}" /></span>
+			{else}
+			<span id="span_{$v.caption}_other_val" style="display: none;"><input type="text" name="{$v.caption}_other_val" id="{$v.caption}_other_val" /></span>
+			{/if}
+			{/if}
+		{/if}
+
+		{if $v.type=="multiselect"}
+			<select name="{$v.caption}[]" id="{$v.caption}" multiple size="{$v.size}" class="mselect">
+			{foreach from=$v.elements_array item=t}
+			<option value="{$t}" {if isset($tmp[$v.caption]) && $tmp[$v.caption] && in_array($t, $tmp[$v.caption])} selected="selected"{/if}>{$t}</option>
+			{/foreach}
+		</select>
+		{/if}
+
+		{if $v.type=="radio"}
+			{foreach from=$v.elements_array item=t}
+				<input name="{$v.caption}" id="{$v.caption}" type="radio" class="noborder" value="{$t}" {if isset($tmp[$v.caption]) && $tmp[$v.caption]!=''} {if $tmp[$v.caption]==$t} checked="checked"{/if} {elseif $v.default_val!='' && $v.default_val==$t} checked="checked" {/if} />&nbsp;
+				{if $v.prefix!=""} {$v.prefix} {/if}
+				{$t}
+				{if $v.postfix!=""} {$v.postfix} {/if}
+			{/foreach}
+				
+		{/if}
+
+		{if $v.type=="radio_group"}
+		<fieldset>
+			<table cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+			{foreach from=$v.elements_array item=t name=rad}
+				<td width="30%" height=25>
+				<input name="{$v.caption}" type="radio" value="{$t}" {if isset($tmp[$v.caption]) && $tmp[$v.caption]!='' &&  $tmp[$v.caption]==$t} checked="checked" {else} {if $v.default_val!='' && $v.default_val==$t} checked="checked" {/if}{/if} />&nbsp;
+				{if $v.prefix!=""} {$v.prefix} {/if}
+				{$t}
+				{if $v.postfix!=""} {$v.postfix} {/if}
+				</td>
+				{if $smarty.foreach.rad.index!=0 && $smarty.foreach.rad.index%3==2}</tr><tr>{/if}
+			{/foreach}
+			</tr>
+			</table>
+		</fieldset>
+		{/if}
+
+		{if $v.type=="checkbox"}
+			<input name="{$v.caption}" id="{$v.caption}" type="checkbox" class="noborder" {if isset($tmp[$v.caption]) && $tmp[$v.caption]!='' && $tmp[$v.caption]==1} checked="checked" {else} {if $v.default_val==1} checked="checked" {/if}{/if} />
+		{/if}
+
+		{if $v.type=="checkbox_group"}
+			<table cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+			{foreach from=$v.extra_elements_array item=t name=check}
+				<td width="30%" height=25>
+				<input name="{$t.input_name}" type="checkbox" {if isset($tmp[$v.caption]) && $tmp[$v.caption] && in_array($t.name, $tmp[$v.caption])} checked="checked"{/if} />&nbsp;
+				{if $v.prefix!=""} {$v.prefix} {/if}
+				{$t.name}
+				{if $v.postfix!=""} {$v.postfix} {/if}
+				</td>
+				{if $smarty.foreach.check.index!=0 && $smarty.foreach.check.index%3==2}</tr><tr>{/if}
+			{/foreach}
+			</tr>
+			</table>
+		</fieldset>
+		{/if}
+
+		{if $v.type=="date" }
+
+			{include file="data/date.html"}
+
+			{if $v.prefix!=""} {$v.prefix} {/if}
+			<input name="{$v.caption}_vis" id="{$v.caption}_vis" {if $v.size}size="{$v.size}"{/if} type="text" value="{if isset($tmp.vis[$v.caption]) && $tmp.vis[$v.caption]}{$tmp.vis[$v.caption]}{else}{if $v.default_val!=''}{$v.default_val}{/if}{/if}" onchange="checkDeleteData('{$v.caption}_vis', '{$v.caption}')"/> 
+			{if $v.postfix!=""} {$v.postfix} {/if}
+			<input type="hidden" name="{$v.caption}" id="{$v.caption}" value="{if isset($tmp[$v.caption]) && $tmp[$v.caption]}{$tmp[$v.caption]}{else}{if $v.default_val!=''}{$v.default_val}{/if}{/if}" />
+		{/if}
+
+		{if $v.type=="youtube"}
+			{if $v.prefix!=""} {$v.prefix} {/if}
+			<textarea name="{$v.caption}" id="{$v.caption}" rows="{$v.rows}" cols="{$v.cols}">{if isset($tmp[$v.caption]) && $tmp[$v.caption]}{$tmp[$v.caption]}{/if}</textarea>
+			{if $v.postfix!=""} {$v.postfix} {/if}
+		{/if}
+
+		{if $v.type=="google_maps" }
+
+			<input type="hidden" name="{$v.caption}" id="{$v.caption}" value="{if isset($tmp[$v.caption])}{$tmp[$v.caption]}{/if}" />
+			<div id="gm_{$v.caption}" class="map"></div>
+
+		{/if}
+
+		{if !in_array($v.type, $default_fields_types) && in_array($v.type, $modules_array)}
+			{include file="modules/`$v.type`/form.html"}
+		{/if}
+
+		{assign var=uc_array value=["textbox", "textarea", "htmlarea", "menu", "url", "email", "user_email", "phone", "whatsapp", "date"]}
+
+		{if $type=="user" && in_array($v.type, $uc_array) && $v.public==2} {* user choice for public *}
+
+		{capture name=some_content assign=pub_field}pb_{$v.caption}{/capture}
+		&nbsp;<input type="checkbox" name="pb_{$v.caption}" id="pb_{$v.caption}" {if !isset($edit) || !$edit || ($edit && isset($tmp[$pub_field]) && $tmp[$pub_field]==1)}checked="checked"{/if} />&nbsp;{$lng.listings.make_public}
+
+	{elseif $v.type=="user_email" && $v.ext1==1 && (!isset($edit) || !$edit)}
+		</div></div>
+	<div class="clearfix">
+	<div class="left_form">{$lng.users.repeat}&nbsp;{$v.name}<span class="mandatory"> *</span></div>
+	<div class="right_form">
+	<input name="{$v.caption}_repeat" id="{$v.caption}_repeat" type="text" size="{$v.size}" maxlength="255" value="" />
+	{/if}
+
+{if $v.type!='depending' && $v.type!='price'}
+
+	{if $v.type=="password" && $v.ext1==1 && ( !isset($edit) || !$edit)}
+	</div></div>
+	<div class="clearfix">
+	<div class="left_form">{$lng.users.repeat_password}<span class="mandatory"> *</span></div>
+	<div class="right_form"><input name="password_repeat" id="password_repeat" type="password" size="25" maxlength="255" value="{if isset($tmp.password_repeat)}{$tmp.password_repeat}{/if}" />
+	{/if}
+
+{elseif $v.type=='price' && $ads_settings.enable_price}
+
+<!-- PRICE -->
+	{* -------- price_extra ---------- *}
+
+	{if in_array("price_extra", $modules_array) && (isset($pe_settings[$fieldset]) || isset($pe_settings[0]))}
+
+	{if isset($pe_settings[$fieldset])}
+	{include file="modules/price_extra/custom_fields_form.html"}
+	{else}
+	{include file="modules/price_extra/custom_fields_form.html" fieldset=0}
+	{/if}
+
+
+	{else}
+
+	<input name="price" id="price" type="text" value="{if isset($tmp.price) && $tmp.price>=0}{$tmp.price}{/if}" />
+	{if $currencies|@count>1}
+	<span><select name="currency" id="currency">
+		{foreach from=$currencies item=c}
+			<option value="{$c.currency}" {if isset($tmp.currency) && $tmp.currency==$c.currency}selected="selected"{/if}>{$c.currency}</option>
+		{/foreach}
+	</select>
+	</span>
+	{else}
+	{$currencies[0].currency}
+	<input type="hidden" name="currency" value="{$currencies[0].currency}" />
+	{/if}
+	
+	<script type="text/javascript">
+	{literal}
+	$('#price').number( true, {/literal}'{$v.format_decimals}', '{$v.format_point}', '{$v.format_separator}' {literal});
+	{/literal}
+	</script>
+
+	{/if} {* end if price extra *}
+
+	{* ---------- if auctions enabled ------------ *}
+	{if $ads_settings.enable_auctions}
+	<br/>
+	<div class="mt10">
+	<input type="checkbox" name="enable_auction" id="enable_auction" {if isset($tmp.auction) && $tmp.auction.id>0}checked{/if} />&nbsp;{$lng.listings.enable_auction}&nbsp;&nbsp;<input type="text" size="10" name="starting_price" id="starting_price" placeholder="{$lng.auction.auction_start_price}" {if isset($tmp.auction) && $tmp.auction.id>0 && $tmp.auction.starting_price_nc}value="{$tmp.auction.starting_price_nc}"{/if} />&nbsp;
+	<select name="auction_currency">
+		{foreach from=$currencies item=t}
+			<option value="{$t.currency}" {if isset($tmp.auction.currency) && $tmp.auction.currency==$t.currency}selected="selected"{/if}>{$t.currency}</option>
+		{/foreach}
+	</select>
+	</div>
+	{/if}
+	
+	{* ---------- end if auctions enabled ------------ *}
+
+	
+{elseif $v.type=='depending'}
+	<div class="left_form">{if $v.info_message}<img src="{$template_path}images/info.png"  class="tooltip" title="{$v.info_message}" />{/if}{$v.depending.name1}{if $v.depending.required1==1}<span class="mandatory"> *</span>{/if}</div>
+	<div class="right_form">
+	<select name="{$v.depending.caption1}" id="{$v.depending.caption1}" onchange="selDepending(1, '{$v.depending.caption1}', '{$v.depending.caption2}', '{$v.depending.id}', {if isset($category) && $category}{$category}{else}0{/if}, {if $v.other_val}1{else}0{/if}, '{$lng.general.other}', {if $v.all_val}1{else}0{/if}, '{$lng.general.all}', '{$live_site}', '')" {if in_array($v.depending.caption1, $gmaps_unique)}onblur="autoLocator_{$gmaps_fields[$v.depending.caption1]}();"{/if} >
+		<option value="">{$v.depending.top_str1}</option>
+		{if $v.other_val}<option value="-1" {if isset($tmp[$v.depending.caption1]) && $tmp[$v.depending.caption1] && !in_array($tmp[$v.depending.caption1], $v.depending.elements)}selected="selected"{/if}>{$lng.general.other}</option>{/if}
+		
+		{if $v.all_val}<option value="all" {if isset($tmp[$v.depending.caption1]) && $tmp[$v.depending.caption1]=="all"}selected="selected"{/if}>{$lng.general.all}</option>{/if}
+		
+		{foreach from=$v.depending.elements item=t}
+		<option value="{$t.name}" {if isset($tmp[$v.depending.caption1]) && $tmp[$v.depending.caption1]!='' && $tmp[$v.depending.caption1]==$t.name} selected="selected"{/if}>{$t.name}</option>
+		{/foreach}
+	</select>
+	<input type="hidden" name="dep_id_{$v.depending.caption1}" id="dep_id_{$v.depending.caption1}" value="" />
+	{if $v.other_val}
+	{if isset($tmp[$v.depending.caption1]) && $tmp[$v.depending.caption1] && !in_array($tmp[$v.depending.caption1], $v.depending.elements)}
+	<span id="span_{$v.depending.caption1}_other_val">&nbsp;<input type="text" name="{$v.depending.caption1}_other_val" value="{$tmp[$v.depending.caption1]}"></span>
+	{else}
+	<span id="span_{$v.depending.caption1}_other_val" style="display: none;">&nbsp;<input type="text" name="{$v.depending.caption1}_other_val"/></span>
+	{/if}
+	{/if}
+
+	</div>{* end right_form *}
+	</div>{* end clearfix *}
+
+	<div class="clearfix">
+	<div class="left_form">
+	{if $v.info_message}<img src="{$template_path}images/info.png"  class="tooltip" title="{$v.info_message}" />{/if}{$v.depending.name2}{if $v.depending.required2==1}<span class="mandatory"> *</span>{/if}</div>
+	<div class="right_form">
+	<select disabled='disabled' name="{$v.depending.caption2}" id="{$v.depending.caption2}" {if $v.depending.no>2}onchange="selDepending(2, '{$v.depending.caption2}', '{$v.depending.caption3}', '{$v.depending.id}', 0, {if $v.other_val}1{else}0{/if}, '{$lng.general.other}', {if $v.all_val}1{else}0{/if}, '{$lng.general.all}', '{$live_site}', 'dep_id_{$v.depending.caption1}')"{else}{if $v.other_val}onchange="checkOther(this.form.{$v.depending.caption2}, '{$v.depending.caption2}')"{/if}{/if} {if in_array($v.depending.caption2, $gmaps_unique)}onblur="autoLocator_{$gmaps_fields[$v.depending.caption2]}();"{/if} >
+		<option value="">{$v.depending.top_str2}</option>
+	</select>
+	<input type="hidden" name="dep_id_{$v.depending.caption2}" id="dep_id_{$v.depending.caption2}" value="" />
+	{if $v.other_val}
+	<span id="span_{$v.depending.caption2}_other_val" style="margin-left: 10px; display: none;">&nbsp;
+	<input type="text" name="{$v.depending.caption2}_other_val" id="{$v.depending.caption2}_other_val" value="{if isset($tmp[$v.depending.caption2])}{$tmp[$v.depending.caption2]}{/if}"/>
+	</span>
+	{/if}
+	</div>{* end right_form *}
+
+{if $v.depending.no>=3}
+	</div>{* end clearfix *}
+
+	<div class="clearfix">
+	<div class="left_form">
+
+	{if $v.info_message}<img src="{$template_path}images/info.png"  class="tooltip" title="{$v.info_message}" />{/if}{$v.depending.name3}{if $v.depending.required3==1}<span class="mandatory"> *</span>{/if}
+	</div>
+	<div class="right_form">
+	<select disabled='disabled' name="{$v.depending.caption3}" id="{$v.depending.caption3}" {if $v.depending.no>3}onchange="selDepending(3, '{$v.depending.caption3}', '{$v.depending.caption4}', '{$v.depending.id}', 0, {if $v.other_val}1{else}0{/if}, '{$lng.general.other}', {if $v.all_val}1{else}0{/if}, '{$lng.general.all}', '{$live_site}', 'dep_id_{$v.depending.caption2}')"{else}{if $v.other_val}onchange="checkOther(this.form.{$v.depending.caption3}, '{$v.depending.caption3}')"{/if}{/if} {if in_array($v.depending.caption3, $gmaps_unique)}onblur="autoLocator_{$gmaps_fields[$v.depending.caption3]}();"{/if} >
+		<option value="">{$v.depending.top_str3}</option>
+	</select>
+	<input type="hidden" name="dep_id_{$v.depending.caption3}" id="dep_id_{$v.depending.caption3}" value="" />
+	{if $v.other_val}
+	<span id="span_{$v.depending.caption3}_other_val" style="margin-left: 10px; display: none;">&nbsp;
+	<input type="text" name="{$v.depending.caption3}_other_val" id="{$v.depending.caption3}_other_val" value="{if isset($tmp[$v.depending.caption3])}{$tmp[$v.depending.caption3]}{/if}"/>
+	</span>
+	{/if}
+	</div>{* end right_form *}
+
+{/if}
+
+{if $v.depending.no>=4}
+	</div>{* end clearfix *}
+
+	<div class="clearfix">
+	<div class="left_form">
+	{if $v.info_message}<img src="{$template_path}images/info.png"  class="tooltip" title="{$v.info_message}" />{/if}{$v.depending.name4}{if $v.depending.required4==1}<span class="mandatory"> *</span>{/if}
+	</div>
+	<div class="right_form">
+	<select disabled='disabled' name="{$v.depending.caption4}" id="{$v.depending.caption4}" {if $v.depending.no>4}onchange="selDepending(4, '{$v.depending.caption4}', '{$v.depending.caption5}', '{$v.depending.id}', 0, {if $v.other_val}1{else}0{/if}, '{$lng.general.other}', {if $v.all_val}1{else}0{/if}, '{$lng.general.all}', '{$live_site}', 'dep_id_{$v.depending.caption3}')"{else}{if $v.other_val}onchange="checkOther(this.form.{$v.depending.caption4}, '{$v.depending.caption4}')"{/if}{/if} {if in_array($v.depending.caption4, $gmaps_unique)}onblur="autoLocator_{$gmaps_fields[$v.depending.caption4]}();"{/if} >
+		<option value="">{$v.depending.top_str4}</option>
+	</select>
+	{if $v.other_val}
+	<span id="span_{$v.depending.caption4}_other_val" style="margin-left: 10px; display: none;">&nbsp;
+	<input type="text" name="{$v.depending.caption4}_other_val" id="{$v.depending.caption4}_other_val" value="{if isset($tmp[$v.depending.caption4])}{$tmp[$v.depending.caption4]}{/if}"/>
+	</span>
+	{/if}
+
+	</div>{* end right_form *}
+{/if}
+
+{if $v.depending.no>=5}
+	</div>{* end clearfix *}
+
+	<div class="clearfix">
+	<div class="left_form">
+	{if $v.info_message}<img src="{$template_path}images/info.png"  class="tooltip" title="{$v.info_message}" />{/if}{$v.depending.name5}{if $v.depending.required5==1}<span class="mandatory"> *</span>{/if}
+	</div>
+	<div class="right_form">
+	<select disabled='disabled' name="{$v.depending.caption5}" id="{$v.depending.caption5}" {if $v.other_val}onchange="checkOther(this.form.{$v.depending.caption5}, '{$v.depending.caption5}')"{/if} {if in_array($v.depending.caption5, $gmaps_unique)}onblur="autoLocator_{$gmaps_fields[$v.depending.caption5]}();"{/if} >
+		<option value="">{$v.depending.top_str5}</option>
+	</select>
+	{if $v.other_val}
+	<span id="span_{$v.depending.caption5}_other_val" style="margin-left: 10px; display: none;">&nbsp;
+	<input type="text" name="{$v.depending.caption5}_other_val" id="{$v.depending.caption5}_other_val" value="{if isset($tmp[$v.depending.caption5])}{$tmp[$v.depending.caption5]}{/if}"/>
+	</span>
+	{/if}
+
+	</div>{* end right_form *}
+{/if}
+
+	<script type="text/javascript">
+	var old_dep{$smarty.foreach.custom.index}={if isset($tmp[$v.depending.caption1]) && $tmp[$v.depending.caption1]}'{$tmp[$v.depending.caption1]}'{else}0{/if};
+	var sec_val{$smarty.foreach.custom.index}={if isset($tmp[$v.depending.caption2]) && $tmp[$v.depending.caption2]}'{$tmp[$v.depending.caption2]}'{else}0{/if};
+	var third_val{$smarty.foreach.custom.index}={if $v.depending.no>=3 && isset($tmp[$v.depending.caption3]) && $tmp[$v.depending.caption3]}'{$tmp[$v.depending.caption3]}'{else}0{/if};
+	var forth_val{$smarty.foreach.custom.index}={if $v.depending.no>=4 && isset($tmp[$v.depending.caption4]) && $tmp[$v.depending.caption4]}'{$tmp[$v.depending.caption4]}'{else}0{/if};
+	var fifth_val{$smarty.foreach.custom.index}={if $v.depending.no==5 && isset($tmp[$v.depending.caption5]) && $tmp[$v.depending.caption5]}'{$tmp[$v.depending.caption5]}'{else}0{/if};
+
+	if(old_dep{$smarty.foreach.custom.index}) oldDepending(1, '{$v.depending.caption1}', '{$v.depending.caption2}', {$v.depending.id}, sec_val{$smarty.foreach.custom.index}, {if $v.other_val}1{else}0{/if}, '{$lng.general.other}', {if $v.all_val}1{else}0{/if}, '{$lng.general.all}', '{$live_site}');
+
+	if(sec_val{$smarty.foreach.custom.index} && {$v.depending.no}>=3) oldDepending(2,'{$v.depending.caption2}', '{$v.depending.caption3}', {$v.depending.id}, third_val{$smarty.foreach.custom.index}, {if $v.other_val}1{else}0{/if}, '{$lng.general.other}', {if $v.all_val}1{else}0{/if}, '{$lng.general.all}', '{$live_site}');
+
+	if(third_val{$smarty.foreach.custom.index} && {$v.depending.no}>=4) oldDepending(3, '{$v.depending.caption3}', '{$v.depending.caption4}', {$v.depending.id}, forth_val{$smarty.foreach.custom.index}, {if $v.other_val}1{else}0{/if}, '{$lng.general.other}', {if $v.all_val}1{else}0{/if}, '{$lng.general.all}', '{$live_site}');
+
+	if(forth_val{$smarty.foreach.custom.index} && {$v.depending.no}==5) oldDepending(4, '{$v.depending.caption4}', '{$v.depending.caption5}', {$v.depending.id}, forth_val{$smarty.foreach.custom.index}, {if $v.other_val}1{else}0{/if}, '{$lng.general.other}', {if $v.all_val}1{else}0{/if}, '{$lng.general.all}', '{$live_site}');
+
+	</script>
+
+{/if} {* end else if depending *}
+
+{if $v.type!="depending"  && ($v.type!="password" || !isset($edit) || !$edit)}
+</div>{* end right_form *}
+{/if}
+</div>{* end clearfix *}
+
+{/foreach}
+
+<!-- End Custom Fields -->

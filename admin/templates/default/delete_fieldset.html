@@ -1,0 +1,40 @@
+{include file="overlay_header.html"}
+<script type="text/javascript" src="{$live_site}/libs/jQuery/jquery.js"></script>
+
+<div class="wait"></div>
+
+<div class="overlay-top-bg">{$lng.fieldsets.delete}: {$fieldset.name}</div>
+
+{if isset($info) && $info}<div class="info">{$info}</div>
+{else}
+
+<form method="post" action="{$live_site}/admin/delete_fieldset.php?id={$id}">
+
+<div class="info" style="display: none"></div>
+
+<div class="form2 lpdiv100" style="height: 370px;">
+
+<ul>
+
+<li>
+	<label>{$lng.fieldsets.move_categ_to}</label>
+	{foreach from=$fieldsets_array item=v}
+	{if $v.id!=$id}
+	<input type="radio" name="move_to" value="{$v.id}" checked>&nbsp;&nbsp;{$v.name}&nbsp;&nbsp;
+	{/if}
+	{/foreach}
+</li>
+
+</ul>
+
+</div> {* end form2 *}
+
+<div class="overlay-bottom-bg">
+<div class="buttons" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+	<strong><input type="submit" name="Submit" value="{$lng.general.submit}" /></strong>
+</div>
+</div>
+
+</form>
+{/if}
+{include file="overlay_footer.html"}

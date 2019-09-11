@@ -1,0 +1,644 @@
+{if isset($id) && $id}{assign var="crt_page" value="edituser.php"}{else}{assign var="crt_page" value="adduser.php"}{/if}
+
+{if $step<=1}
+{include file="header.html"}
+{include file="data/fancybox.html"}
+
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/fileuploader.js"></script>
+<script type="text/javascript" src="{$live_site}/libs/nicEdit/nicEdit.min.js"></script>
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/jquery.form.js"></script>
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/jquery.number.min.js"></script>
+
+<link rel="stylesheet" href="{$live_site}/libs/jQuery/plugins/intlTelInput/intlTelInput.css">
+<script src="{$live_site}/libs/jQuery/plugins/intlTelInput/intlTelInput.min.js"></script>
+
+
+<div class="page_title">
+	<div class="lfloat" width="200">
+	{$lng.panel.users} > <a href="users_list.php">{$lng.panel.users}</a> > {if isset($id) && $id}{$lng.panel.edit_user}{else}{$lng.panel.add_user}{/if}
+	</div>
+</div>
+
+<div id="user_form" class="p30">
+<div class="form_container">
+
+<form name="users_form" id="users_form" method="post" action="{$crt_page}?step=3{if isset($id) && $id}&id={$id}{/if}" enctype="multipart/form-data">
+
+<div class="clearfix">
+	<div class="left_form">{$lng.users.group}<span class="mandatory">*</span></div>
+	<div class="right_form">
+	<select name="group" id="group">
+		<option value="">{$lng.users.choose_group}</option>
+		{foreach from=$groups_array item=v}
+		<option value="{$v.id}" {if isset($group) && $group==$v.id}selected{/if}>{$v.name}</option>
+		{/foreach}
+	</select>
+	</div>
+</div>
+
+<div id="user_details"></div>
+
+</form>
+</div> {* end form_container *}
+</div> {* end user_form *}
+
+<div id="user"></div>
+
+
+<script type="text/javascript">
+{literal}
+
+$(document).ready(function() {
+
+
+{/literal}
+{if isset($group) && $group}
+loadUserDetailsForm();
+{/if}
+{literal}
+
+$(document).on("click", "#next", function(){ 
+
+	loadUserDetailsForm();
+
+}); // end #next click
+
+
+$(document).on("change", "#group", function(){ 
+
+	loadUserDetailsForm();
+
+}); // end #group change
+
+}); // end document ready
+
+function loadUserDetailsForm() {
+
+	// clean all fields possible err class
+	$(".err").removeClass("err");
+
+	var err = 0;
+	if(!$("#group").val()) { $("#group").addClass("err"); err = 1;  }
+
+	if(!err) {
+
+	// get custom fields
+	$.ajax({
+		type		: "GET",
+		cache		: false,
+		url		: "{/literal}{$live_site}/admin/{$crt_page}{literal}?step=2&group="+$("#group").val(){/literal}{if isset($id) && $id}+"&id={$id}"{/if}{literal},
+		data		: $(this).serializeArray(),
+		success: function(data) {
+
+			$("#user_details").html(data);
+			
+		}// end data
+	}); // end ajax
+	} // end if not err
+
+}
+
+{/literal}
+</script>
+
+{include file="footer.html"}
+{/if} {* end step 1 *}
+
+
+{if $step==2}
+
+<div class="wait"></div>
+
+{if $credits_enabled && $group_settings.post_ads}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.credits.credits}</div>
+	<div class="right_form"><input type="text" name="no_credits" type="no_credits" size="10" value="{if isset($tmp.no_credits)}{$tmp.no_credits}{else}{$group_settings.default_credits}{/if}" /></div>
+</div>
+
+{/if}
+
+{if $group_settings.affiliates}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.users.affiliate_paypal_email}<span class="mandatory">*</span></div>
+	<div class="right_form"><input type="text" size="30" name="affiliate_paypal_email" id="affiliate_paypal_email"  value="{if isset($tmp.affiliate_paypal_email)}{$tmp.affiliate_paypal_email}{/if}" /></div>
+</div>
+
+{/if}
+
+
+{include file="data/form_includes.html" fields_array=$fields}
+{include file="custom_fields_form.html" fields_array=$fields type="user"}
+
+{if $group_settings.store == 2 || (isset($tmp.store) && $tmp.store)}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.users.store_banner}</div>
+	<div class="right_form">
+		<input type="file" name="store_banner">
+		{if $tmp.store_banner}
+		<a href="{$live_site}/images/store/{$tmp.store_banner}" class="imgfield"><img src="{$template_path}images/camera.png"></a>
+		&nbsp;&nbsp;<a href="{$live_site}/admin/{if isset($id) && $id}edituser.php?id={$id}&{else}adduser.php?{/if}delete=store_banner"><img src="{$template_path}images/delete.png" class="tooltip" title="{$lng.general.delete}" alt=""></a>
+		{/if}
+	</div>
+</div>
+
+{/if}
+
+{if $is_admin}
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.users.info.moderator}" />&nbsp;{$lng.users.moderator}</div>
+	<div class="right_form"><input type="checkbox" name="moderator" id="moderator" {if isset($tmp.moderator) && $tmp.moderator}checked="checked"{/if} /></div>
+</div>
+
+<div class="clearfix" id="div_moderator" style="display: none">
+	<div class="left_form">{$lng.banners.sections}</div>
+	<div class="right_form">
+
+
+	<table cellpadding="10" cellspacing="10">
+
+		<tr><td><b>{$lng.panel.listings}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;<input type="checkbox" name="listings_view" {if isset($tmp.sections.listings.view) && $tmp.sections.listings.view}checked="checked"{/if} /></td>
+		<td>{$lng.general.add}&nbsp;&nbsp;<input type="checkbox" name="listings_add" {if isset($tmp.sections.listings.add) && $tmp.sections.listings.add}checked="checked"{/if} /></td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;<input type="checkbox" name="listings_edit" {if isset($tmp.sections.listings.edit) && $tmp.sections.listings.edit}checked="checked"{/if} /></td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;<input type="checkbox" name="listings_delete" {if isset($tmp.sections.listings.delete) && $tmp.sections.listings.delete}checked="checked"{/if} /></td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.users}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;<input type="checkbox" name="users_view" {if isset($tmp.sections.users.view) && $tmp.sections.users.view}checked="checked"{/if} /></td>
+		<td>{$lng.general.add}&nbsp;&nbsp;<input type="checkbox" name="users_add" {if isset($tmp.sections.users.add) && $tmp.sections.users.add}checked="checked"{/if} /></td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;<input type="checkbox" name="users_edit" {if isset($tmp.sections.users.edit) && $tmp.sections.users.edit}checked="checked"{/if} /></td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;<input type="checkbox" name="users_delete" {if isset($tmp.sections.users.delete) && $tmp.sections.users.delete}checked="checked"{/if} /></td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.users_subscriptions}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;<input type="checkbox" name="subscriptions_view" {if isset($tmp.sections.subscriptions.view) && $tmp.sections.subscriptions.view}checked="checked"{/if} /></td>
+		<td>{$lng.general.add}&nbsp;&nbsp;<input type="checkbox" name="subscriptions_add" {if isset($tmp.sections.subscriptions.add) && $tmp.sections.subscriptions.add}checked="checked"{/if} /></td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;<input type="checkbox" name="subscriptions_edit" {if isset($tmp.sections.subscriptions.edit) && $tmp.sections.subscriptions.edit}checked="checked"{/if} /></td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;<input type="checkbox" name="subscriptions_delete" {if isset($tmp.sections.subscriptions.delete) && $tmp.sections.subscriptions.delete}checked="checked"{/if} /></td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.saved_searches}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;<input type="checkbox" name="searches_view" {if isset($tmp.sections.searches.view) && $tmp.sections.searches.view}checked="checked"{/if} /></td>
+		<td></td>
+		<td></td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;<input type="checkbox" name="searches_delete" {if isset($tmp.sections.searches.delete) && $tmp.sections.searches.delete}checked="checked"{/if} /></td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.email_alerts}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;<input type="checkbox" name="alerts_view" {if isset($tmp.sections.alerts.view) && $tmp.sections.alerts.view}checked="checked"{/if} /></td>
+		<td></td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;<input type="checkbox" name="alerts_edit" {if isset($tmp.sections.alerts.edit) && $tmp.sections.alerts.edit}checked="checked"{/if} /></td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;<input type="checkbox" name="alerts_delete" {if isset($tmp.sections.alerts.delete) && $tmp.sections.alerts.delete}checked="checked"{/if} /></td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.messages}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;<input type="checkbox" name="messages_view" {if isset($tmp.sections.messages.view) && $tmp.sections.messages.view}checked="checked"{/if} /></td>
+		<td></td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;<input type="checkbox" name="messages_edit" {if isset($tmp.sections.messages.edit) && $tmp.sections.messages.edit}checked="checked"{/if} /></td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;<input type="checkbox" name="messages_delete" {if isset($tmp.sections.messages.delete) && $tmp.sections.messages.delete}checked="checked"{/if} /></td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.orders}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;<input type="checkbox" name="orders_view" {if isset($tmp.sections.orders.view) && $tmp.sections.orders.view}checked="checked"{/if} /></td>
+		<td></td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;<input type="checkbox" name="orders_edit" {if isset($tmp.sections.orders.edit) && $tmp.sections.orders.edit}checked="checked"{/if} /></td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;<input type="checkbox" name="orders_delete" {if isset($tmp.sections.orders.delete) && $tmp.sections.orders.delete}checked="checked"{/if} /></td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.security}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;<input type="checkbox" name="security_view" {if isset($tmp.sections.security.view) && $tmp.sections.security.view}checked="checked"{/if} /></td>
+		<td></td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;<input type="checkbox" name="security_edit" {if isset($tmp.sections.security.edit) && $tmp.sections.security.edit}checked="checked"{/if} /></td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;<input type="checkbox" name="security_delete" {if isset($tmp.sections.security.delete) && $tmp.sections.security.delete}checked="checked"{/if} /></td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.banners}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;<input type="checkbox" name="banners_view" {if isset($tmp.sections.banners.view) && $tmp.sections.banners.view}checked="checked"{/if} /></td>
+		<td>{$lng.general.add}&nbsp;&nbsp;<input type="checkbox" name="banners_add" {if isset($tmp.sections.banners.add) && $tmp.sections.banners.add}checked="checked"{/if} /></td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;<input type="checkbox" name="banners_edit" {if isset($tmp.sections.banners.edit) && $tmp.sections.banners.edit}checked="checked"{/if} /></td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;<input type="checkbox" name="banners_delete" {if isset($tmp.sections.banners.delete) && $tmp.sections.banners.delete}checked="checked"{/if} /></td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.custom_pages}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;<input type="checkbox" name="custom_pages_view" {if isset($tmp.sections.custom_pages.view) && $tmp.sections.custom_pages.view}checked="checked"{/if} /></td>
+		<td>{$lng.general.add}&nbsp;&nbsp;<input type="checkbox" name="custom_pages_add" {if isset($tmp.sections.custom_pages.add) && $tmp.sections.custom_pages.add}checked="checked"{/if} /></td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;<input type="checkbox" name="custom_pages_edit" {if isset($tmp.sections.custom_pages.edit) && $tmp.sections.custom_pages.edit}checked="checked"{/if} /></td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;<input type="checkbox" name="custom_pages_delete" {if isset($tmp.sections.custom_pages.delete) && $tmp.sections.custom_pages.delete}checked="checked"{/if} /></td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.news}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;<input type="checkbox" name="news_view" {if isset($tmp.sections.news.view) && $tmp.sections.news.view}checked="checked"{/if} /></td>
+		<td>{$lng.general.add}&nbsp;&nbsp;<input type="checkbox" name="news_add" {if isset($tmp.sections.news.add) && $tmp.sections.news.add}checked="checked"{/if} /></td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;<input type="checkbox" name="news_edit" {if isset($tmp.sections.news.edit) && $tmp.sections.news.edit}checked="checked"{/if} /></td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;<input type="checkbox" name="news_delete" {if isset($tmp.sections.news.delete) && $tmp.sections.news.delete}checked="checked"{/if} /></td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.send_bulk_emails}:</b></td>
+		<td>{$lng.general.add}&nbsp;&nbsp;<input type="checkbox" name="bulk_emails_add" {if isset($tmp.sections.bulk_emails.add) && $tmp.sections.bulk_emails.add}checked="checked"{/if} /></td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.import_export}:</b></td>
+		<td>{$lng.general.add}&nbsp;&nbsp;<input type="checkbox" name="import_export_add" {if isset($tmp.sections.import_export.add) && $tmp.sections.import_export.add}checked="checked"{/if} /></td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.multicurrency}:</b></td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;<input type="checkbox" name="multicurrency_edit" {if isset($tmp.sections.multicurrency.edit) && $tmp.sections.multicurrency.edit}checked="checked"{/if} /></td>
+		</tr>
+		
+	</table>
+	</div>
+</div>
+
+
+{/if} {* end moderators section *}
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+
+{literal}
+<script type="text/javascript">
+$(document).ready(function() {
+
+{/literal}
+var gmaps_on = {if isset($gmaps) && $gmaps}1{else}0{/if};
+// initialize google maps
+if (gmaps_on) load_gmaps();
+{literal}
+
+var options = { 
+       // target:        '#output1',   // target element(s) to be updated with server response 
+	beforeSerialize: beforeSerialize,
+        beforeSubmit:  beforeSubmit,  // pre-submit callback 
+        success:       successResponse  // post-submit callback 
+ 
+        // other available options: 
+        //url:       url         // override for form's 'action' attribute 
+        //type:      type        // 'get' or 'post', override for form's 'method' attribute 
+        //dataType:  null        // 'xml', 'script', or 'json' (expected server response type) 
+        //clearForm: true        // clear all form fields after successful submit 
+        //resetForm: true        // reset the form after successful submit 
+ 
+        // $.ajax options can be used here too, for example: 
+        //timeout:   3000 
+    }; 
+
+function beforeSerialize(jqForm, options) {
+
+	$("body").addClass("loading"); 
+
+	if (typeof data_htmlarea !== 'undefined')
+	for(var i=0;i<data_htmlarea.nicInstances.length;i++){ data_htmlarea.nicInstances[i].saveContent(); }
+
+	// international phones errors
+	var extra_phone_error = recheckIntlPhone();
+	if(extra_phone_error.length>0) {
+
+		// clean all fields possible err class
+		$(".err").removeClass("err");
+		// remove all err_labels
+		$(".err_label").remove();
+			
+		for (var i = 0, len = extra_phone_error.length; i < len; i++) {
+
+			$("#"+extra_phone_error[i]).addClass("err");
+			// add as child to first right_form
+			$("#"+extra_phone_error[i]).closest( ".right_form").prepend('<label class="err_label">{/literal}{$lng.listings.errors.invalid_phone}{literal}</label>');
+			
+		}
+
+		$("body").removeClass("loading"); 
+
+		// move the page to the first err_label element
+		$('html,body').animate({scrollTop:$(".err:first").offset().top-60}, 'slow');
+
+		return false;
+			
+	} // end international phone error
+
+	
+	// return false to cancel submit
+
+}
+
+// pre-submit callback 
+function beforeSubmit(formData, jqForm, options) { 
+
+    // formData is an array; here we use $.param to convert it to a string to display it 
+    // but the form plugin does this for you automatically when it submits the data 
+    var queryString = $.param(formData); 
+ 
+    // jqForm is a jQuery object encapsulating the form element.  To access the 
+    // DOM element for the form do this: 
+    // var formElement = jqForm[0]; 
+ 
+    //alert('About to submit: \n\n' + queryString); 
+ 
+    // here we could return false to prevent the form from being submitted; 
+    // returning anything other than false will allow the form submit to continue 
+    return true; 
+} 
+
+// post-submit callback 
+function successResponse(responseText, statusText, xhr, $form)  { 
+
+    // for normal html responses, the first argument to the success callback 
+    // is the XMLHttpRequest object's responseText property 
+ 
+    // if the ajaxForm method was passed an Options Object with the dataType 
+    // property set to 'xml' then the first argument to the success callback 
+    // is the XMLHttpRequest object's responseXML property 
+ 
+    // if the ajaxForm method was passed an Options Object with the dataType 
+    // property set to 'json' then the first argument to the success callback 
+    // is the json data object returned by the server 
+ 
+    //alert('status: ' + statusText + '\n\nresponseText: \n' + responseText + 
+    //    '\n\nThe output div should have already been updated with the responseText.'); 
+
+//alert(responseText);
+			var ret = JSON.parse(responseText);
+
+			$("body").removeClass("loading"); 
+
+			if(ret.response==1) {
+
+				// show ad details
+				$.ajax({
+					type		: "GET",
+					cache		: false,
+					url		: "{/literal}{$live_site}/admin/{$crt_page}{literal}?step=4&id="+ret.id,
+					data		: $(this).serializeArray(),
+					success: function(data) {
+
+						$("#user_form").hide();
+						$("#user").html(data);
+			
+					}// end data
+				}); // end ajax
+
+				return;
+			}
+
+			// response = 0 -> there are errors in submit ad process 
+			var no_err = ret.error.length;
+			var err_field, err_string;
+
+			// clean all fields possible err class
+			$(".err").removeClass("err");
+			// remove all err_labels
+			$(".err_label").remove();
+
+			// mark each field with error 
+			for (var idx=0;idx<no_err;idx++) { 
+
+				err_field = ret.error[idx].field;
+				err_string = ret.error[idx].error;
+
+				$("#"+err_field).addClass("err");
+				$("#"+err_field).before('<label class="err_label">'+err_string+'</label>');
+
+			}
+			
+			// move the page to the first err_label element
+			$('html,body').animate({scrollTop:$(".err_label:first").offset().top}, 'slow');
+
+} 
+
+
+//initialize the AJAX form for submit ad
+ $('#users_form').ajaxForm(options);
+
+	var old_mod = {/literal}{if isset($tmp.moderator) && $tmp.moderator}1{else}0{/if}{literal};
+	if(old_mod) $("#div_moderator").slideDown();
+
+	$("a.imgfield").fancybox();
+	$("#moderator").change(function() {
+    		if(this.checked)
+        		$("#div_moderator").slideDown();
+    		else $("#div_moderator").slideUp();
+	});
+});
+</script>
+{/literal}
+
+{/if} {* end step 2 *}
+
+{if $step==4}
+
+<div class="form_container" style="padding-top: 0 !important;">
+
+<div class="form_footer2">
+
+	<div class="buttons rfloat">
+		<span class="positive"><a href="users_list.php">{$lng.panel.users_list}</a></span>
+	</div>
+	<div class="clearfix"></div>
+
+</div>{* end form_footer *}
+
+<script type="text/javascript">
+//<![CDATA[
+
+{assign var="gmap_on" value="0"}
+
+{foreach from=$fields item=v}
+	{if $v.type=='google_maps'}
+		{include file="data/gmap-ro.html"}
+		{assign var="gmap_on" value="1"}
+	{/if}
+{/foreach}
+
+{literal}
+$(document).ready(function() {
+
+$("a.imgfield").fancybox();
+
+{/literal}
+
+{if $gmap_on}
+{literal}
+init_gmap();
+{/literal}
+{/if}
+//var gmaps_on = {if $gmaps}1{else}0{/if};
+
+// initialize google maps
+//if (gmaps_on) load_gmaps();
+
+{literal}
+});
+{/literal}
+
+//]]>
+</script>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.users.group}:</div>	
+	<div class="right_form">{$tmp.group_name}</div>
+</div>
+
+{if $credits_enabled && $group_settings.post_ads}
+<div class="clearfix">
+	<div class="left_form">{$lng.credits.credits}:</div>	
+	<div class="right_form">{$tmp.no_credits}</div>
+</div>
+
+{/if}
+
+{if $group_settings.affiliates}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.users.affiliate_paypal_email}:</div>	
+	<div class="right_form">{$tmp.affiliate_paypal_email}</div>
+</div>
+
+{/if}
+
+{include file="custom_fields_form_list.html" fields_array=$fields values_array=$tmp}
+
+{if $group_settings.store == 2 || (isset($tmp.store) && $tmp.store)}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.users.store_banner}</div>
+	<div class="right_form">
+		{if $tmp.store_banner}
+		<a href="{$live_site}/images/store/{$tmp.store_banner}" class="imgfield"><img src="{$template_path}images/camera.png"></a>
+		{else}-
+		{/if}
+	</div>
+</div>
+
+{/if}
+
+{if $is_admin}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.users.moderator}</div>
+	<div class="right_form">{if $tmp.moderator==1}{$lng.general.yes}{else}{$lng.general.no}{/if}</div>
+</div>
+
+{/if}
+
+
+{if isset($tmp.moderator) && $tmp.moderator}
+<div class="clearfix">
+	<div class="left_form">{$lng.users.moderator}</div>
+	<div class="right_form">
+
+	<table cellpadding=10 cellspacing=10>
+
+		<tr><td><b>{$lng.panel.listings}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;{if isset($tmp.sections.listings.view) && $tmp.sections.listings.view}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.add}&nbsp;&nbsp;{if isset($tmp.sections.listings.add) && $tmp.sections.listings.add}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;{if isset($tmp.sections.listings.edit) && $tmp.sections.listings.edit}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;{if isset($tmp.sections.listings.delete) && $tmp.sections.listings.delete}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.users}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;{if isset($tmp.sections.users.view) && $tmp.sections.users.view}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.add}&nbsp;&nbsp;{if isset($tmp.sections.users.add) && $tmp.sections.users.add}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;{if isset($tmp.sections.users.edit) && $tmp.sections.users.edit}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;{if isset($tmp.sections.users.delete) && $tmp.sections.users.delete}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.users_subscriptions}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;{if isset($tmp.sections.subscriptions.view) && $tmp.sections.subscriptions.view}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.add}&nbsp;&nbsp;{if isset($tmp.sections.subscriptions.add) && $tmp.sections.subscriptions.add}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;{if isset($tmp.sections.subscriptions.edit) && $tmp.sections.subscriptions.edit}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;{if isset($tmp.sections.subscriptions.delete) && $tmp.sections.subscriptions.delete}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.saved_searches}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;{if isset($tmp.sections.searches.view) && $tmp.sections.searches.view}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td></td>
+		<td></td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;{if isset($tmp.sections.searches.delete) && $tmp.sections.searches.delete}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.email_alerts}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;{if isset($tmp.sections.alerts.view) && $tmp.sections.alerts.view}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td></td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;{if isset($tmp.sections.alerts.edit) && $tmp.sections.alerts.edit}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;{if isset($tmp.sections.alerts.delete) && $tmp.sections.alerts.delete}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.messages}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;{if isset($tmp.sections.messages.view) && $tmp.sections.messages.view}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td></td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;{if isset($tmp.sections.messages.edit) && $tmp.sections.messages.edit}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;{if isset($tmp.sections.messages.delete) && $tmp.sections.messages.delete}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.orders}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;{if isset($tmp.sections.orders.view) && $tmp.sections.orders.view}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td></td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;{if isset($tmp.sections.orders.edit) && $tmp.sections.orders.edit}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;{if isset($tmp.sections.orders.delete) && $tmp.sections.orders.delete}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.security}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;{if isset($tmp.sections.security.view) && $tmp.sections.security.view}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td></td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;{if isset($tmp.sections.security.edit) && $tmp.sections.security.edit}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;{if isset($tmp.sections.security.delete) && $tmp.sections.security.delete}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.banners}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;{if isset($tmp.sections.banners.view) && $tmp.sections.banners.view}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.add}&nbsp;&nbsp;{if isset($tmp.sections.banners.add) && $tmp.sections.banners.add}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;{if isset($tmp.sections.banners.edit) && $tmp.sections.banners.edit}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;{if isset($tmp.sections.banners.delete) && $tmp.sections.banners.delete}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.custom_pages}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;{if isset($tmp.sections.custom_pages.view) && $tmp.sections.custom_pages.view}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.add}&nbsp;&nbsp;{if isset($tmp.sections.custom_pages.add) && $tmp.sections.custom_pages.add}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;{if isset($tmp.sections.custom_pages.edit) && $tmp.sections.custom_pages.edit}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;{if isset($tmp.sections.custom_pages.delete) && $tmp.sections.custom_pages.delete}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.news}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;{if isset($tmp.sections.news.view) && $tmp.sections.news.view}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.add}&nbsp;&nbsp;{if isset($tmp.sections.news.add) && $tmp.sections.news.add}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;{if isset($tmp.sections.news.edit) && $tmp.sections.news.edit}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;{if isset($tmp.sections.news.delete) && $tmp.sections.news.delete}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.send_bulk_emails}:</b></td>
+		<td>{$lng.general.add}&nbsp;&nbsp;{if isset($tmp.sections.bulk_emails.add) && $tmp.sections.bulk_emails.add}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.import_export}:</b></td>
+		<td>{$lng.general.add}&nbsp;&nbsp;{if isset($tmp.sections.import_export.add) && $tmp.sections.import_export.add}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.multicurrency}:</b></td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;{if isset($tmp.sections.multicurrency.edit) && $tmp.sections.multicurrency.edit}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		</tr>
+		
+		</table>
+	</div>
+</div>
+{/if} {* end moderators section *}
+
+<div class="form_footer2">
+
+	<div class="buttons rfloat">
+		<span class="positive"><a  href="{$live_site}/admin/edituser.php?id={$id}">{$lng.panel.edit_user}</a></span>
+	</div>
+	<div class="clearfix"></div>
+
+</div>{* end form_footer *}
+
+</div> {* end form_container *}
+
+{/if} {* end if step=4 *}

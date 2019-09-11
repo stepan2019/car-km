@@ -1,0 +1,65 @@
+<div class="form_container">
+
+{if $error != ""}<div class="error">{$error}</div>{/if}
+{if $info != ""}<div class="info">{$info}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">Merchant ID</div>
+	<div class="right_form"><input type="text" maxlength="100" size="40" name="merchantID" id="merchantID" value="{$processor_settings.merchantID}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Secret code</div>
+	<div class="right_form"><input type="text" maxlength="200" size="40" name="secretCode" id="secretCode" value="{$processor_settings.secretCode}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Language</div>
+	<div class="right_form"><input type="text" size=4 name="ic_language" id="ic_language" value="{$processor_settings.ic_language}" />&nbsp;Enter a <a href="http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO 639-1</a> language code.</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Country</div>
+	<div class="right_form"><input type="text" size=4 name="ic_country" id="ic_country" value="{$processor_settings.ic_country}" />&nbsp;Enter a <a href="http://www.iso.org/iso/country_codes/iso_3166_code_lists.html">ISO 3166</a> country code.</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Currency</div>
+	<div class="right_form">
+		<select name="ic_currency" id="ic_currency">
+			<option value="EUR" {if $processor_settings.ic_currency=='EUR'} selected="selected" {/if}>EUR</option>
+			<option value="GBP" {if $processor_settings.ic_currency=='GBP'} selected="selected" {/if}>GBP</option>
+			<option value="USD" {if $processor_settings.ic_currency=='USD'} selected="selected" {/if}>USD</option>
+			<option value="KRO" {if $processor_settings.ic_currency=='KRO'} selected="selected" {/if}>KRO</option>
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Description</div>
+	<div class="right_form"><input type="text" class="noborder" name="description" id="description" value="{$processor_settings.description}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Success Url</div>
+	<div class="right_form">{$live_site}/payment_return/icepay.php?mode=success</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Error Url</div>
+	<div class="right_form">{$live_site}/payment_return/icepay.php?mode=cancel</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">PostBack Url</div>
+	<div class="right_form">{$live_site}/payment_return/icepay.php?mode=process</div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit_icepay" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}

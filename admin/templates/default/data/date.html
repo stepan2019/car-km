@@ -1,0 +1,14 @@
+	{include file="data/ui.html"}
+	<script type="text/javascript">
+	{literal}
+	$(function() {
+		$('#{/literal}{$v.caption}_vis{literal}').datepicker({
+			dateFormat: "{/literal}{$v.date_format}{literal}",
+			changeMonth: true,
+			changeYear: true,
+			altField: '#{/literal}{$v.caption}{literal}', altFormat: 'yy-mm-dd'
+		});
+	});
+	{/literal}
+	</script>
+

@@ -1,0 +1,416 @@
+{include file="header.html"}
+{include file="data/fancybox.html"}
+
+<div class="page_title">{$lng.panel.statistics}</div>
+
+<div class="p30">
+
+<div class="lfloat stats-column mr20">
+{* -------- current version -------- *}
+<div class="heading">{$lng.stats.current_version}</div>
+<div class="stats-odd">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.script_version}</div>
+		<div class="rfloat mr10">{$info.script_version}</div>
+	</div>
+</div>
+<div class="stats-even">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.last_update}</div>
+		<div class="rfloat mr10">{if $info.last_update}{$info.last_update}{else}-{/if}</div>
+	</div>
+</div>
+
+<div class="stats-odd stats-high">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.last_available_version}</div>
+		<div class="rfloat mr10"><span class="emphasized" id="available_version"><img src="{$template_path}/images/ajax-loader.gif" /></span>&nbsp;<div class="buttons"><strong><input type="submit" name="Submit" id="Check" value="{$lng.stats.check_now}" /></strong></div></div>
+	</div>
+</div>
+
+<div class="stats-odd stats-high bugfix">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.last_available_bugfix}</div>
+		<div class="rfloat mr10"><span class="emphasized" id="available_bugfix"><img src="{$template_path}/images/ajax-loader.gif" /></span></div>
+	</div>
+</div>
+
+
+{if $info.last_checked_version != $info.script_version}<div class="alert">A new version available! Please check <a href="http://www.oxyclassifieds.com/news.html" target="_blank">http://oxyclassifieds.com</a> for more information.</div>{/if}
+
+{* -------- last login --------- *}
+<div class="heading mt20">{$lng.stats.last_login}</div>
+<div class="stats-odd pl10"><a href="login_history_user.php?user={$admin_user}">{if $login_info.date_login_nice}{$login_info.date_login_nice}{else}-{/if}</a></td>  <td>{if $login_info.ip}{$login_info.ip}{else}-{/if}</div>
+
+{* -------- listings ---------- *}
+<div class="heading mt20">{$lng.stats.listings}</div>
+<div class="stats-odd">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.total_listings}&nbsp;[<a href="manage_listings.php" class="sc1">{$lng.stats.view}</a>]</div>
+		<div class="rfloat mr10">{$listings.total}</div>
+	</div>
+</div>
+{assign var="class" value="stats-even"}
+
+{if $ads_settings.pending_edited}
+<div class="stats-even">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.settings.pending_edited}&nbsp;[<a href="manage_listings.php?show=pe" class="sc1">{$lng.stats.view}</a>]</div>
+		<div class="rfloat mr10">{$listings.pending_edited}</div>
+	</div>
+</div>
+{assign var="class" value="stats-odd"}
+{/if}
+
+{if $class=="stats-odd"}{assign var="class" value="stats-even"}{else}{assign var="class" value="stats-odd"}{/if}
+<div class="{$class}">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.active_listings}&nbsp;[<a href="manage_listings.php?show=active" class="sc1">{$lng.stats.view}</a>]</div>
+		<div class="rfloat mr10">{$listings.active}</div>
+	</div>
+</div>
+
+{if $class=="stats-odd"}{assign var="class" value="stats-even"}{else}{assign var="class" value="stats-odd"}{/if}
+<div class="{$class}">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.pending_listings}&nbsp;[<a href="manage_listings.php?show=pending" class="sc1">{$lng.stats.view}</a>]</div>
+		<div class="rfloat mr10">{$listings.pending}</div>
+	</div>
+</div>
+
+{if $class=="stats-odd"}{assign var="class" value="stats-even"}{else}{assign var="class" value="stats-odd"}{/if}
+<div class="{$class}">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.expired_listings}&nbsp;[<a href="manage_listings.php?show=expired" class="sc1">{$lng.stats.view}</a>]</div>
+		<div class="rfloat mr10">{$listings.expired}</div>
+	</div>
+</div>
+
+{if $class=="stats-odd"}{assign var="class" value="stats-even"}{else}{assign var="class" value="stats-odd"}{/if}
+<div class="{$class}">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.featured_listings}&nbsp;[<a href="manage_listings.php?show=featured" class="sc1">{$lng.stats.view}</a>]</div>
+		<div class="rfloat mr10">{$listings.featured}</div>
+	</div>
+</div>
+
+{if $class=="stats-odd"}{assign var="class" value="stats-even"}{else}{assign var="class" value="stats-odd"}{/if}
+<div class="{$class}">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.highlited_listings}&nbsp;[<a href="manage_listings.php?show=highlited" class="sc1">{$lng.stats.view}</a>]</div>
+		<div class="rfloat mr10">{$listings.highlited}</div>
+	</div>
+</div>
+
+{if $class=="stats-odd"}{assign var="class" value="stats-even"}{else}{assign var="class" value="stats-odd"}{/if}
+<div class="{$class}">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.priorities_listings}&nbsp;[<a href="manage_listings.php?show=priorities" class="sc1">{$lng.stats.view}</a>]</div>
+		<div class="rfloat mr10">{$listings.priorities}</div>
+	</div>
+</div>
+
+<div class="{$class}">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.urgent_listings}&nbsp;[<a href="manage_listings.php?show=urgent" class="sc1">{$lng.stats.view}</a>]</div>
+		<div class="rfloat mr10">{$listings.urgent}</div>
+	</div>
+</div>
+
+{if $class=="stats-odd"}{assign var="class" value="stats-even"}{else}{assign var="class" value="stats-odd"}{/if}
+<div class="{$class}">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.video_listings}&nbsp;[<a href="manage_listings.php?show=video" class="sc1">{$lng.stats.view}</a>]</div>
+		<div class="rfloat mr10">{$listings.video}</div>
+	</div>
+</div>
+{if $class=="stats-odd"}{assign var="class" value="stats-even"}{else}{assign var="class" value="stats-odd"}{/if}
+<div class="{$class}">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.url_listings}&nbsp;[<a href="manage_listings.php?show=url" class="sc1">{$lng.stats.view}</a>]</div>
+		<div class="rfloat mr10">{$listings.video}</div>
+	</div>
+</div>
+
+{if $class=="stats-odd"}{assign var="class" value="stats-even"}{else}{assign var="class" value="stats-odd"}{/if}
+<div class="{$class}">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.total_views}</div>
+		<div class="rfloat mr10">{$listings.viewed}</div>
+	</div>
+</div>
+
+
+{* -------- registered users ---------- *}
+<div class="heading mt20">{$lng.stats.latest_users}</div>
+
+{foreach from=$latest_users item=v}
+<div class="{cycle values="stats-odd,stats-even"}">
+	<div class="clearfix">
+	<div class="lfloat ml10"><a href="javascript:;" class="usrinfo sc3" id="info{$v.id}">{if $settings.enable_username}{$v.username}{else}{$v.email}{/if}</a>&nbsp;|&nbsp;<span class="small light">{$v.date}</span>&nbsp;|&nbsp;{$v.listings} {$lng.stats.ads}</div>
+	</div>
+</div>
+{/foreach}
+
+
+{* -------- subscriptions ---------- *}
+<div class="heading mt20">{$lng.stats.latest_subscriptions}</div>
+
+{foreach from=$latest_subscriptions item=v}
+<div class="{cycle values="stats-odd,stats-even"}">
+	<div class="clearfix">
+		<div class="lfloat ml10"><a href="javascript:;" class="usrinfo sc3" id="info{$v.user_id}">{if $settings.enable_username}{$v.username}{else}{$v.email}{/if}</a>&nbsp;|&nbsp;<span class="small light">{$v.date_start_nice}</span></div>
+		<div class="rfloat mr10">{$v.package_name}</div>
+	</div>
+</div>
+{/foreach}
+
+</div> {* end stats-column *}
+
+{* ------------- RIGHT SIDE --------------- *}
+<div class="rfloat stats-column">
+
+{* -------- users ---------- *}
+<div class="heading">{$lng.stats.users}</div>
+<div class="stats-odd">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.total_users}&nbsp;[<a href="users_list.php" class="sc1">{$lng.stats.view}</a>]</div>
+		<div class="rfloat mr10">{$users.total}</div>
+	</div>
+</div>
+<div class="stats-even">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.users.view_moderators}&nbsp;[<a href="users_list.php?only_moderators=1" class="sc1">{$lng.stats.view}</a>]</div>
+		<div class="rfloat mr10">{$users.moderators}</div>
+	</div>
+</div>
+
+{if $settings.enable_affiliates}
+<div class="stats-odd">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.users.affiliates}&nbsp;[<a href="affiliates_revenues.php" class="sc1">{$lng.stats.view}</a>]</div>
+		<div class="rfloat mr10">{$users.affiliates}</div>
+	</div>
+</div>
+{/if}
+
+{if $class=="stats-odd"}{assign var="class" value="stats-even"}{else}{assign var="class" value="stats-odd"}{/if}
+<div class="{$class}">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.active_users}</div>
+		<div class="rfloat mr10">{$users.active}</div>
+	</div>
+</div>
+
+{if $class=="stats-odd"}{assign var="class" value="stats-even"}{else}{assign var="class" value="stats-odd"}{/if}
+<div class="{$class}">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.inactive_users}</div>
+		<div class="rfloat mr10">{$users.inactive}</div>
+	</div>
+</div>
+
+{if $class=="stats-odd"}{assign var="class" value="stats-even"}{else}{assign var="class" value="stats-odd"}{/if}
+<div class="{$class}">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.users_with_ads}</div>
+		<div class="rfloat mr10">{$users.with_ads}</div>
+	</div>
+</div>
+
+{if $class=="stats-odd"}{assign var="class" value="stats-even"}{else}{assign var="class" value="stats-odd"}{/if}
+<div class="{$class}">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.users_with_store}&nbsp;[<a href="users_list.php?only_stores=1" class="sc1">{$lng.stats.view}</a>]</div>
+		<div class="rfloat mr10">{$users.with_store}</div>
+	</div>
+</div>
+
+{if $class=="stats-odd"}{assign var="class" value="stats-even"}{else}{assign var="class" value="stats-odd"}{/if}
+<div class="{$class}">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.users_with_bulk_uploads}</div>
+		<div class="rfloat mr10">{$users.with_bulk_uploads}</div>
+	</div>
+</div>
+
+{if $settings.contact_messages_pending}
+{if $class=="stats-odd"}{assign var="class" value="stats-even"}{else}{assign var="class" value="stats-odd"}{/if}
+<div class="{$class}">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.pending_messages}&nbsp;[<a href="{$live_site}/admin/messages.php?show=pending" class="sc1">{$lng.stats.view}</a>]</div>
+		<div class="rfloat mr10">{$users.pending_messages}</div>
+	</div>
+</div>
+{/if}
+
+{* -------- latest ads ---------- *}
+<div class="heading mt20">{$lng.stats.latest_listings}</div>
+
+{foreach from=$latest_listings item=v}
+<div class="{cycle values="stats-odd,stats-even"}">
+	<div class="clearfix">
+		<div class="lfloat ml10"><a href="../details.php?id={$v.id}" target="_blank">{$v.title}</a>&nbsp;|&nbsp;<span class="small light">{$v.date}</span>&nbsp;|&nbsp;<a href="javascript:;" class="usrinfo sc3" id="info{$v.user_id}">{if $v.user_id}{if $settings.enable_username}{$v.user}{else}{$v.email}{/if}{else}{$v.mgm_email}{/if}</a></div>
+	</div>
+</div>
+{/foreach}
+
+{* -------- orders ---------- *}
+<div class="heading mt20">{$lng.stats.latest_orders}</div>
+
+{foreach from=$latest_orders item=v}
+<div class="{cycle values="stats-odd,stats-even"}">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$v.action_str}&nbsp;<a href="order_history.php?id={$v.invoice}" class="sc1">[{$lng.stats.view}]</a>&nbsp;|&nbsp;<span class="small light">{$v.date_nice}</span>&nbsp;|&nbsp;{$v.amount_nice}</div>
+	</div>
+</div>
+{/foreach}
+
+{* -------- system ---------- *}
+<div class="heading mt20">{$lng.stats.info}</div>
+
+<div class="stats-odd">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.view_php_info}</div>
+		<div class="rfloat mr10"><a href="javascript:;" class="phpinfo sc1" >[{$lng.stats.view}]</a></div>
+	</div>
+</div>
+<div class="stats-even">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.php_version}</div>
+		<div class="rfloat mr10">{$info.php_version}</div>
+	</div>
+</div>
+
+<div class="stats-odd">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.mysql_version}</div>
+		<div class="rfloat mr10">{$info.mysql_version}</div>
+	</div>
+</div>
+
+<div class="stats-even">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.gd_version}</div>
+		<div class="rfloat mr10">{$info.gd_version}</div>
+	</div>
+</div>
+
+{if $info.register_globals!=0}
+<div class="stats-odd">
+	<div class="clearfix">
+		<div class="lfloat ml10">{$lng.stats.register_globals}</div>
+		<div class="rfloat mr10">{if $info.register_globals=="On"}<font color="#ff0000">{else}<font color="#55bb55">{/if}<b>{$info.register_globals}</b></font></div>
+	</div>
+</div>
+{/if}
+
+{if $info.register_globals=="On"}
+<div class="stats-even">
+	<div class="clearfix">
+		<div class="lfloat ml10"><div  style="background: #ffff67; color: #000000;">{$lng.stats.register_globals_on}</div></div>
+	</div>
+</div>
+{/if}
+
+</div> {* end stats-column *}
+<div class="clearfix"></div>
+
+</div> {* end p30 *}
+
+
+<script type="text/javascript">
+{literal}
+
+$(document).ready(function() {
+
+// get latest available version
+$.ajax({
+  url: "{/literal}{$live_site}{literal}/admin/include/get_current_version.php",
+  success: function(data){
+	var res = data.split("|");
+	var last_version=res[0];
+	var bugfix;
+	if(res.length>1) bugfix=res[1];
+    $("#available_version").html(last_version);
+
+    if(bugfix) {
+		$(".bugfix").show();
+		$("#available_bugfix").show();
+		$("#available_bugfix").html(bugfix);
+    }
+    else {
+		$(".bugfix").hide();
+		$("#available_bugfix").hide();
+		}
+  }
+});
+
+$("#Check").click(function(event){
+	$("#available_version").html("<img src='{/literal}{$template_path}{literal}/images/ajax-loader.gif' />");
+	$(".bugfix").show();
+	$("#available_bugfix").html("<img src='{/literal}{$template_path}{literal}/images/ajax-loader.gif' />");
+	// get latest available version from the server
+	$.ajax({
+		url: "{/literal}{$live_site}{literal}/admin/include/get_current_version.php?now=1",
+		success: function(data){
+		
+			var res = data.split("|");
+			var last_version=res[0];
+			var bugfix;
+			if(res.length>1) bugfix=res[1];
+
+			$("#available_version").html("<font color='#b00'>"+last_version+"</font>");
+			
+			if(bugfix) {
+				$(".bugfix").show();
+				$("#available_bugfix").show();
+				$("#available_bugfix").html("<font color='#b00'>"+bugfix+"</font>");
+			}
+			else { 
+				$(".bugfix").hide();
+				$("#available_bugfix").hide();
+			}
+
+		}
+	});
+});
+
+$("a.usrinfo").click(function(event){
+	var user_id = jQuery(this).attr("id").substr(4);
+	$.fancybox({
+		'width'         		: 730,
+		'height'        		: 700,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'margin'		: '0',
+		'padding'		: '10',
+		'titleShow'		: false,
+		'type'			: 'iframe',
+		'href'			: '{/literal}{$live_site}{literal}/admin/include/info_user.php?id='+user_id
+	});
+});
+
+$("a.phpinfo").click(function(event){
+	$.fancybox({
+		'width'         		: 730,
+		'height'        		: 700,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'margin'		: '0',
+		'padding'		: '10',
+		'titleShow'		: false,
+		'type'			: 'iframe',
+		'href'			: '{/literal}{$live_site}{literal}/admin/include/phpinfo.php'
+	});
+});
+
+
+
+});
+{/literal}
+</script>
+
+
+
+{include file="footer.html"}

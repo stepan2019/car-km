@@ -1,0 +1,46 @@
+<div class="form_container">
+
+{if $error != ""}<div class="error">{$error}</div>{/if}
+{if $info != ""}<div class="info">{$info}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.paypal_email}</div>
+	<div class="right_form"><input type="text" maxlength="100" size="40" name="paypal_email" id="paypal_email" value="{$processor_settings.paypal_email}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.paypal_title}</div>
+	<div class="right_form"><input type="text" maxlength="200" size="40" name="paypal_pay_title" id="paypal_pay_title" value="{$processor_settings.paypal_pay_title}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.paypal_currency}</div>
+	<div class="right_form">
+		<select name="paypal_currency" id="paypal_currency" onchange="onPaypalCurrency(this.form);">
+		<option value="other" {if $other_paypal_currency}selected="selected"{/if}>{$lng.settings.other}</option>
+		{foreach from=$paypal_currencies item=c}
+		<option value="{$c}" {if $processor_settings.paypal_currency==$c} selected="selected" {/if}>{$c}</option>
+		{/foreach}
+		</select>&nbsp;
+		<div id="div_currency" {if !$other_paypal_currency}style="display:none;"{/if}><input type="text" name="other_paypal_currency" size="4" value="{$processor_settings.paypal_currency}" /></div>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.paypal_lc}</div>
+	<div class="right_form"><input type="text" size="4" name="paypal_lc" id="paypal_lc" value="{$processor_settings.paypal_lc}"></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.paypal_demo}" />&nbsp;{$lng.settings.paypal_demo}</div>
+	<div class="right_form"><input type="checkbox" name="paypal_demo" id="paypal_demo" {if $processor_settings.paypal_demo==1} checked="checked"{/if} /></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit_paypal" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}

@@ -1,0 +1,203 @@
+{include file="header.html"}
+
+<script type="text/javascript" src="{$live_site}/libs/encodings.min.js"></script>
+{if $mail_settings.html_mails}
+<script type="text/javascript" src="{$live_site}/libs/nicEdit/nicEdit.min.js"></script>
+
+<script type="text/javascript">
+{literal}	
+	$(document).ready(function () {
+	myEditor = new nicEditor({iconsPath : '{/literal}{$live_site}{literal}/libs/nicEdit/nicEditorIcons.gif', buttonList : ['bold','italic','underline', 'left', 'center', 'right', 'justify', 'ul', 'ol', 'indent', 'outdent', 'forecolor', 'bgcolor', 'hr', 'fontSize', 'fontFormat']}).panelInstance('message');
+	});
+
+{/literal}
+</script>
+{/if}
+
+<div class="page_title">{$lng.panel.users} > {$lng.panel.send_bulk_emails}</div>
+
+<div class="p30">
+<form name="users_form" method="post" action="{$self}{if isset($id) && $id}?id={$id}{/if}" enctype="multipart/form-data">
+
+<div class="form_container">
+
+<div class="info" id="info_msg"></div>
+<div class="error" id="error_msg"></div>
+
+{if isset($error) && $error}<div class="error">{$error}</div>{/if}
+{if isset($info) && $info}<div class="info">{$info}</div>{/if}
+
+<div class="wait"></div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.bulk_emails.test}</div>
+	<div class="right_form"><input type="checkbox" name="test" id="test"/></div>
+</div>
+
+<div class="clearfix" id="groups_div">
+	<div class="left_form">{$lng.users.group}<span class="mandatory">*</span></div>
+	<div class="right_form">
+		<select name="group" id="group">
+			<option value="">{$lng.groups.all_groups}</option>
+			<option value="-1">{$lng.tools.all_guests}</option>
+			{foreach from=$groups item=v}
+			<option value="{$v.id}">{$v.name}</option>
+			{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="clearfix" id="send_to_div">
+	<div class="left_form">{$lng.bulk_emails.send_to}</div>
+	<div class="right_form">
+		<select name="send_to" id="send_to">
+			<option value="all">{$lng.bulk_emails.all_users}</option>
+			<option value="active_users" selected>{$lng.bulk_emails.active_users}</option>
+			<option value="active_ads">{$lng.bulk_emails.active_ads_users}</option>
+			<option value="active_for_sale">{$lng.bulk_emails.active_for_sale}</option>
+			<option value="active_for_rent">{$lng.bulk_emails.active_for_rent}</option>
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.bulk_emails.subject}<span class="mandatory">*</span></div>
+	<div class="right_form"><input name="subject" id="subject" type="text" size="50" maxlength="255" value="{if isset($tmp.subject)}{$tmp.subject}{/if}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.messages.message}<span class="mandatory">*</span></div>
+	<div class="right_form"><textarea name="message" id="message" type="text" rows="30" cols="90"/></textarea></div>
+</div>
+
+<div class="form_footer2">
+	<div class="buttons rfloat">
+		<span class="positive"><a href="javascript:;" {if !$demo}id="Submit"{else} onClick="alert('{$lng.general.errors.demo}');"{/if}>{$lng.bulk_emails.send}</a></span>
+	</div>
+	<div class="clearfix"></div>
+</div>{* end form_footer *}
+
+</div> {* end form_container *}
+
+</form>
+</div>
+
+
+<script type="text/javascript">
+{literal}
+$(document).ready(function() {
+
+	$("#info_msg").hide();
+	$("#error_msg").hide();
+
+	var test = 0;
+	$("#test").click(function(){
+		if($("#test").is(':checked')) {
+			$("#groups_div").hide();
+			$("#send_to_div").hide();
+			test = 1;
+		}
+		else {
+			test = 0;
+			$("#groups_div").show();
+			$("#send_to_div").show();
+		}
+	});
+
+	$("#Submit").click(function(){
+
+{/literal}
+{if $mail_settings.html_mails}
+{literal}
+		for(var i=0;i<myEditor.nicInstances.length;i++){myEditor.nicInstances[i].saveContent();}
+{/literal}
+{/if}
+{literal}
+
+		$("#info_msg").hide();
+		error=0;
+		if(test) { group=0; send_to=''; }
+		else {
+			var group = $("#group").val();
+			var send_to = $("#send_to").val();
+		}
+		error_str = '';
+		var subject = $("#subject").val();
+		if(!subject) {
+			error = 1;
+			error_str = "{/literal}{$lng.bulk_emails.subject_missing}{literal}<br/>";
+			$("#error_msg").html(error_str);
+			$("#error_msg").show();
+			$('html,body').animate({scrollTop:$("#error_msg").offset().top-60}, 'slow');
+		}
+		else
+			var subject_enc = base64_encode(subject);
+		var message = $("#message").val();
+		if(!message) {
+			error = 1;
+			error_str+="{/literal}{$lng.bulk_emails.content_missing}{literal}";
+			$("#error_msg").html(error_str);
+			$("#error_msg").show();
+			$('html,body').animate({scrollTop:$("#error_msg").offset().top-60}, 'slow');
+		}
+		else
+			var message_enc = base64_encode(message);
+
+		if(!error) {
+			$("body").addClass("loading"); 
+			$("#error_msg").hide();
+			$("#info_msg").hide();
+			var first_id = 0;
+			if(group==-1) first_id='';
+			sendEmail(first_id, group, send_to, subject_enc, message_enc, test);
+		}
+		
+	});
+
+	function sendEmail(last_id, group, send_to, subject_enc, message_enc, test, no_sent, no_failed) {
+
+		$.post("{/literal}{$live_site}{literal}/admin/include/send_email.php", { last_id: last_id, test: test, group: group, send_to: send_to, subject: subject_enc, message: message_enc, no_sent: no_sent, no_failed: no_failed }, function(data){ 
+
+		if(data!=-1) {
+			var arr = data.split("|");
+			var sent = parseInt(arr[0]);
+			var last_id = arr[1];
+			no_sent = parseInt(arr[2]);
+			no_failed = parseInt(arr[3]);
+			if(sent==1) no_sent = no_sent+1; else no_failed = no_failed+1;
+			//alert(sent+" "+no_sent+" "+no_failed);
+		} else 	
+			var last_id = -1;
+
+		if(last_id>0 || (last_id!='' && last_id!='-1')) { sendEmail(last_id, group, send_to, subject_enc, message_enc, test, no_sent, no_failed); }
+		else { 
+			$("body").removeClass("loading"); 
+			if(test) { 
+				if(sent) {
+					$("#info_msg").html("{/literal}{$lng.bulk_emails.test_mail_sent}{literal}");
+					$("#info_msg").show();
+					$('html,body').animate({scrollTop:$("#info_msg").offset().top-60}, 'slow');			
+				}	
+				else {
+					$("#error_msg").html("{/literal}{$lng.mailto.sending_message_failed}{literal}");
+					$("#error_msg").show();
+					$('html,body').animate({scrollTop:$("#error_msg").offset().top-60}, 'slow');			
+				}
+			}	
+			else { 
+				var total = no_sent+no_failed;
+				$("#info_msg").html("{/literal}{$lng.bulk_emails.mails_sent}{literal}".replace("##NO_EMAILS##", total.toString()).replace("##SENT##", no_sent.toString()).replace("##FAILED##", no_failed.toString()));
+				$("#info_msg").show();
+				$('html,body').animate({scrollTop:$("#info_msg").offset().top-60}, 'slow');			
+			}	
+		}
+		});
+	}
+
+});
+
+{/literal}
+</script>
+
+
+{include file="footer.html"}

@@ -1,0 +1,59 @@
+body {
+    background: #eff1f0;
+}
+
+#pagetop { background: #72b399; color: #fff; width: 100%;}
+#pagetop a { color: #fff; }
+#pagetop a:focus,
+#pagetop a:hover,
+#pagetop a:active { color: #b3e2d0;}
+
+.page_title { background-color: #747474; color: #fff; }
+
+.paginator a{ color: #fff; background-color: #feb697; border-color: #ff986b; }
+.paginator a:hover, .paginator a:active{ color: #fff; background-color: #f2a381; border-color: #e79571; }
+
+#theading th { background-color: #809eb8; color: #fff;}
+#theading .hleft { background: url("../images/sage/theading_left.jpg") 0 0 no-repeat; background-color: #809eb8; } 
+#theading .hright {background: url("../images/sage/theading_right.jpg") 100% 0 no-repeat; background-color: #809eb8; } 
+
+.datatable tr { background-color: #f1f4f7; }
+.datatable tr:hover { background-color: #e3f0eb;}
+
+
+.buttons span.negative { background: url(../images/sage/submit-button-negative.png) no-repeat left;  padding: 1em 0 1em 5px; margin-right: 10px; cursor: pointer;}
+
+.buttons span.negative input, span.negative a { color: #7b7c7b; background: url(../images/sage/submit-button-negative.png) no-repeat right;  margin: 0 -5px 0 0; padding: 1em 10px 1em 5px; border: 0; cursor: pointer; }
+
+.buttons span.negative:hover { background: url(../images/sage/submit-button-over-negative.png) no-repeat left;  padding: 1em 0 1em 5px; margin-right: 10px; cursor: pointer;}
+
+.buttons span.negative input:hover, span.negative a:hover { color: #7b7c7b; background: url(../images/sage/submit-button-over-negative.png) no-repeat right; margin: 0 -5px 0 0; padding: 1em 10px 1em 5px; border: 0; cursor: pointer; }
+
+
+.buttons span.positive { background: url(../images/sage/submit-button-positive.png) no-repeat left; padding: 1em 0 1em 5px; margin-right: 10px; cursor: pointer; }
+
+.buttons span.positive input, span.positive a { color: #7b7c7b; background: url(../images/sage/submit-button-positive.png) no-repeat right; margin: 0 -5px 0 0; padding: 1em 10px 1em 5px; border: 0; cursor: pointer; }
+
+.buttons span.positive:hover { background: url(../images/sage/submit-button-over-positive.png) no-repeat left; padding: 1em 0 1em 5px; margin-right: 10px; cursor: pointer; }
+
+.buttons span.positive input:hover, span.positive a:hover { color: #7b7c7b; background: url(../images/sage/submit-button-over-positive.png) no-repeat right; margin: 0 -5px 0 0; padding: 1em 10px 1em 5px; border: 0; cursor: pointer; }
+
+
+.submenu2 { background-color: #9ed5bf; border: 1px solid #c3e7d9; border-bottom: 1px solid #65a78d; border-right: 1px solid #65a78d; }
+.submenu2 li a:hover { background: #bae3d3; border-top: 1px solid #c3e7d9; border-bottom: 1px solid #c3e7d9; color: #fff !important; } 
+
+.error { color: #fff;  background: url("../images/error.png") no-repeat 0 #e33a4a;}
+.info { color: #fff; background: url("../images/info1.png") no-repeat 0 #779dc7;}
+.warning { color: #ab803f; background: url("../images/warning.png") no-repeat 0 #ffc868;}
+
+.err { border: 2px solid #fe7360 !important; }
+.err:hover { border: 2px solid #f85842 !important;}
+.err_label { color: #fe7360 !important; }
+
+.btn1 {  background: url(../images/sage/btn1.png) no-repeat left;}
+.btn1 strong { background: url(../images/sage/btn1.png) no-repeat right;}
+div.btn1 strong:hover { color: #f0f2fd; }
+
+.btn2 {  background: url(../images/sage/btn1.png) no-repeat left;}
+.btn2 strong { background: url(../images/sage/btn1.png) no-repeat right;}
+div.btn2 strong:hover { color: #f0f2fd; }

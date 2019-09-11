@@ -1,0 +1,163 @@
+{include file="header.html"}
+
+<div class="page_title">
+<div class="lfloat" width="200"><a href="{$live_site}/admin/modules.php">{$lng.panel.modules}</a> > <a href="{$live_site}/admin/modules/spam_prevention/index.php">{$lng_sp.spam_prevention}</a> > {$lng.panel.settings}</div>
+<div class="rfloat mt5">
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="{$live_site}/admin/modules/spam_prevention/index.php"><span class="tab2-right">{$lng_sp.spam_log}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab1-left">
+	<a href="{$live_site}/admin/modules/spam_prevention/settings.php"><span class="tab1-right">{$lng.panel.settings}</span></a>
+	</div></div>
+
+</div>
+</div>
+
+<div class="p30">
+<form name="settings" id="sp_settings" method="post" action="">
+<div class="form_container">
+{if isset($info) && $info}<div class="info">{$info}</div>{/if}
+{if isset($error) && $error}<div class="error">{$error}</div>{/if}
+
+<div class="form_subtitle_bg">
+<div class="btn1"><strong>{$lng_sp.waiting_time|replace:" ":"&nbsp;"}</strong></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form1"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng_sp.info.add_waiting_time}" />&nbsp;{$lng_sp.add_waiting_time}</div>
+	<div class="right_form1"><input type="checkbox" name="add_waiting_time" {if $sp_settings.add_waiting_time==1}checked{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form1">{$lng_sp.waiting_time}</div>
+	<div class="right_form1"><input type="text" size="4" name="waiting_time" value="{$sp_settings.waiting_time}" />&nbsp;{$lng.general.minutes}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form1">{$lng_sp.waiting_groups}</div>
+	<div class="right_form1">
+	<input type="radio" name="choose_group" id="choose_group1" value="all" {if isset($sp_settings.waiting_groups) && $sp_settings.waiting_groups=="0"}checked="checked"{/if} onchange="onChooseGroup(this.form)" onclick="onChooseGroup(this.form)" />&nbsp;{$lng.custom_fields.all_groups}
+	&nbsp;&nbsp;<input type="radio" name="choose_group" id="choose_group2" value="choose" {if !isset($sp_settings.waiting_groups) || $sp_settings.waiting_groups!="0"}checked="checked"{/if} onchange="onChooseGroup(this.form)" onclick="onChooseGroup(this.form)"/>&nbsp;{$lng.custom_fields.choose_groups}
+	</div>
+</div>
+
+<div class="clearfix" id="div_groups" style="display: none">
+	<div class="left_form1">&nbsp;</div>
+	<div class="right_form1">
+	<select multiple="multiple" size=8 name="waiting_groups[]" id="waiting_groups" class="mselect">
+		{foreach from=$groups_list item=v}
+			<option value="{$v.id}" {if in_array($v.id, $sp_settings.waiting_groups_array)}selected{/if}>{$v.name}</option>
+		{/foreach}
+		{if $settings.nologin_enabled}<option value="1000" {if in_array(1000, $sp_settings.waiting_groups_array)}selected{/if}>{$lng.packages.not_logged_in}</option>{/if}
+	</select>
+	</div>
+</div>
+
+<div class="form_subtitle_bg">
+<div class="btn1"><strong>{$lng.settings.general_settings|replace:" ":"&nbsp;"}</strong></div>
+</div>
+
+
+<div class="clearfix">
+	<div class="left_form1">{$lng_sp.block_ip_after_attempt}</div>
+	<div class="right_form1"><input type="text" name="block_for" size="4" value="{if isset($sp_settings.block_for)}{$sp_settings.block_for}{/if}" />&nbsp;{$lng.general.hour_s}&nbsp;{$lng.settings.info_days_unlimited}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form1">{$lng_sp.check_registration}</div>
+	<div class="right_form1"><input type="checkbox" name="check_registration" {if $sp_settings.check_registration==1}checked{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form1">{$lng_sp.check_contact_forms}</div>
+	<div class="right_form1"><input type="checkbox" name="check_contact_forms" {if $sp_settings.check_contact_forms==1}checked{/if} /></div>
+</div>
+
+{if in_array("comments",$modules_array)}
+<div class="clearfix">
+	<div class="left_form1">{$lng_sp.check_comments}</div>
+	<div class="right_form1"><input type="checkbox" name="check_comments" {if $sp_settings.check_comments==1}checked{/if} /></div>
+</div>
+{/if}
+
+{if in_array("ratings",$modules_array)}
+<div class="clearfix">
+	<div class="left_form1">{$lng_sp.check_reviews}</div>
+	<div class="right_form1"><input type="checkbox" name="check_reviews" {if $sp_settings.check_reviews==1}checked{/if} /></div>
+</div>
+{/if}
+
+
+
+
+
+<div class="form_subtitle_bg">
+<div class="btn1"><strong>Stopforumspam.org:&nbsp;{$lng_sp.check_agains_spamlist|replace:" ":"&nbsp;"}</strong></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form1">{$lng_sp.use_sfs}</div>
+	<div class="right_form1"><input type="checkbox" name="use_sfs" {if $sp_settings.use_sfs==1}checked{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form1">{$lng_sp.block_tor_ips}</div>
+	<div class="right_form1"><input type="checkbox" name="sfs_block_tor_ips" {if $sp_settings.sfs_block_tor_ips==1}checked{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form1">{$lng_sp.block_networks}</div>
+	<div class="right_form1"><input type="checkbox" name="sfs_block_networks" {if $sp_settings.sfs_block_networks==1}checked{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form1">{$lng_sp.block_limit}</div>
+	<div class="right_form1"><input type="text" name="sfs_block_limit" size="4" value="{if isset($sp_settings.sfs_block_limit)}{$sp_settings.sfs_block_limit}{/if}" />%</div>
+</div>
+
+
+
+<div class="form_subtitle_bg">
+<div class="btn1"><strong>Abuseipdb.com:&nbsp;{$lng_sp.check_ip_only_agains_spamlist|replace:" ":"&nbsp;"}</strong></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form1">{$lng_sp.use_abip}</div>
+	<div class="right_form1"><input type="checkbox" name="use_abip" {if $sp_settings.use_abip==1}checked{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form1">{$lng_sp.api_key}</div>
+	<div class="right_form1"><input type="text" name="abip_api_key" size="40" value="{if isset($sp_settings.abip_api_key)}{$sp_settings.abip_api_key}{/if}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form1">{$lng_sp.block_limit}</div>
+	<div class="right_form1"><input type="text" name="abip_block_limit" size="4" value="{if isset($sp_settings.abip_block_limit)}{$sp_settings.abip_block_limit}{/if}" />%</div>
+</div>
+
+
+<div class="form_footer">
+	<div class="buttons rfloat" onclick='{if $demo}alert("{$lng.general.errors.demo}");return false;{else}getMultiple(document.settings.allowed_html_box_right, document.settings.allowed_html);{/if}'>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+
+<script type="text/javascript">
+
+var old_group_val="{if isset($sp_settings.waiting_groups)}{$sp_settings.waiting_groups}{/if}";
+if(old_group_val!="0") chooseGroup(document.forms["sp_settings"], old_group_val);
+
+</script>
+
+
+{include file="footer.html"}
+

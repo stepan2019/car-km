@@ -6,6 +6,15 @@
     if(@$_SESSION['user']) {
         $email = @$_SESSION['user'];
     }
+    include "../include/include.php";
+
+    global $lng;
+    global $crt_lang_code;
+    if (isset($_GET['lang_id'])) {
+        $lang_id = $_GET['lang_id'];
+    } else {
+        $lang_id = $crt_lang_code;
+    }
 
     $result = $config->getInformationContent();
     $information = $result->fetch_assoc();
@@ -57,8 +66,7 @@
     <link rel="stylesheet" href="../css/nivo-lightbox.css">
     <link rel="stylesheet" href="../css/nivo_themes/default/default.css">
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
-        integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/all.css" crossorigin="anonymous">
     <style>
         @media (max-width:1023px){
             footer {
@@ -67,6 +75,10 @@
         	
         }
     </style>
+    <script>
+        exdate = new Date();
+        exdate.setDate(exdate.getDate() + 365);
+    </script>
 </head>
 <body>
     <?php
@@ -76,33 +88,33 @@
     <div class="contact-sec dashboard-panel parallax-section" style="background-size: cover; background-repeat: no-repeat; min-height: 700px;">
         <form id="contactForm" method="post" name="contactForm">
             <div class="container mt-5">
-                <h2>Contact Us <small>Please fill all fields and submit</small> </h2>
+                <h2><?php echo $lng['contact']['Contact_us'];?><small><?php echo $lng['contact']['fill_all_field'];?></small> </h2>
                 <div class="row pt-5">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="fullname">Name</label>
+                            <label for="fullname"><?php echo $lng['contact']['name'];?></label>
                             <input type="text" name="fullname" class="form-control" id="fullname" required="" aria-describedby="emailHelp">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="examplePhone">Phone Number</label>
+                            <label for="examplePhone"><?php echo $lng['contact']['Phone Number'];?></label>
                             <input type="tel" name="phonenumber" class="form-control" id="examplePhone" required="" aria-describedby="emailHelp">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Your Email address</label>
+                            <label for="exampleInputEmail1"><?php echo $lng['contact']['your_mail_address'];?></label>
                             <input type="email" name="email" class="form-control" id="exampleInputEmail1" required="" value="<?php if(isset($email)) echo $email; ?>" aria-describedby="emailHelp">
-                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                            <small id="emailHelp" class="form-text text-muted"><?php echo $lng['contact']['never_share_mail'];?></small>
                         </div>
                     </div>
                     <div class="col-md-12">
-                        <label for="exampleTextarea">Enter your Message</label>
+                        <label for="exampleTextarea"><?php echo $lng['contact']['Enter_Your_Massage'];?></label>
                         <textarea class="form-control" name="message" id="exampleTextarea" required="" rows="3"></textarea>
                     </div>
                     <div class="col-md-12 text-center text-xs-center action-block">
-                        <button type="submit" name="contactSubmit" id="contactSubmit" class="btn btn-capsul btn-aqua submit-fs btn-custom">Submit</button>
+                        <button type="submit" name="contactSubmit" id="contactSubmit" class="btn btn-capsul btn-aqua submit-fs btn-custom"><?php echo $lng['contact']['Submit'];?></button>
                     </div>
                     <?php if($response != "") { ?>
                         <div class="col-md-12 text-center">

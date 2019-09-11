@@ -1,0 +1,375 @@
+{include file="header.html"}
+
+<div class="page_title">{$lng.panel.settings} > {$lng.settings.general_settings}</div>
+
+<div class="p30">
+<form name="settings" id="settings" method="post" action="settings.php" enctype="multipart/form-data">
+
+<div class="form_container">
+
+{if $error != ""}<div class="error">{$error}</div>{/if}
+{if $successful}<div class="info">{$lng.settings.settings_saved}</div>{/if}
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.settings.admin_name}</div>
+	<div class="right_form"><input type="text" maxlength="50" name="admin_name_{$v.id}" size=30 value="{$settings.admin_name[$v.id]}" /></div>
+</div>
+{/foreach}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.admin_username}</div>
+	<div class="right_form"><input type="text" maxlength="50" name="admin_username" size="30" value="{$settings.admin_username}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.admin_email}</div>
+	<div class="right_form"><input type="text" maxlength="50" name="admin_email" size="30" value="{$settings.admin_email}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.contact_email}</div>
+	<div class="right_form"><input type="text" maxlength="50" name="contact_email" size="30" value="{$settings.contact_email}" /></div>
+</div>
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.settings.site_name}</div>
+	<div class="right_form"><input type="text" maxlength="250" name="site_name_{$v.id}" size="50" value="{$settings.site_name[$v.id]}" /></div>
+</div>
+{/foreach}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.enable_verification_images}</div>
+	<div class="right_form">
+		<input type="checkbox" name="register_captcha" {if $settings.register_captcha==1} checked="checked" {/if}>&nbsp;
+		{$lng.settings.register}&nbsp;&nbsp;
+		<input type="checkbox" name="contact_captcha" {if $settings.contact_captcha==1} checked="checked" {/if}>&nbsp;
+		{$lng.settings.contact}&nbsp;&nbsp;
+		<input type="checkbox" name="login_captcha" {if $settings.login_captcha==1} checked="checked" {/if}>&nbsp;
+		{$lng.settings.login}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.enable_recaptcha}" />&nbsp;{$lng.settings.enable_recaptcha}</div>
+	<div class="right_form">
+		<input type="checkbox" name="enable_recaptcha" {if $settings.enable_recaptcha==1} checked="checked" {/if} />&nbsp;
+		{$lng.settings.recaptcha_public_key}&nbsp;&nbsp;
+		<input type="text" name="recaptcha_public_key" size="25" value="{$settings.recaptcha_public_key}" />&nbsp;
+		{$lng.settings.recaptcha_private_key}&nbsp;&nbsp;
+		<input type="text" name="recaptcha_private_key" size="25" value="{$settings.recaptcha_private_key}" />
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.users_can}</div>
+	<div class="right_form">
+		<input type="checkbox" name="users_delete_ads" {if $settings.users_delete_ads==1} checked="checked" {/if} />&nbsp;
+		{$lng.settings.delete_ads}&nbsp;&nbsp;
+		<input type="checkbox" name="users_feature_ads" {if $settings.users_feature_ads==1} checked="checked" {/if} />&nbsp;
+		{$lng.settings.feature_ads}&nbsp;&nbsp;
+		<input type="checkbox" name="users_can_ask_account_removal" {if $settings.users_can_ask_account_removal==1} checked="checked" {/if} />&nbsp;
+		{$lng.settings.request_removal}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.internal_messaging}" />&nbsp;{$lng.settings.internal_messaging}</div>
+	<div class="right_form"><input type="checkbox" name="internal_messaging" {if $settings.internal_messaging==1} checked="checked" {/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.contact_messages_pending}" />&nbsp;{$lng.settings.contact_messages_pending}</div>
+	<div class="right_form"><input type="checkbox" name="contact_messages_pending" {if $settings.contact_messages_pending==1} checked="checked" {/if} /></div>
+</div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.settings.post_without_login|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.post_without_login}" />&nbsp;{$lng.settings.enable_post_without_login}</div>
+	<div class="right_form"><input type="checkbox" name="nologin_enabled" {if $settings.nologin_enabled==1} checked="checked" {/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.nologin.info.activate_account}" />&nbsp;{$lng.settings.activate_listing}&nbsp;{$lng.groups.via_email}</div>
+	<div class="right_form">
+	<input type="checkbox" name="nologin_activate_via_email" {if isset($settings.nologin_activate_via_email) && $settings.nologin_activate_via_email==1}checked="checked"{/if} />
+	</div>
+</div>	
+	
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.nologin.info.sms_activate_account}" />&nbsp;{$lng.settings.activate_listing}&nbsp;{$lng.groups.via_sms}</div>
+	<div class="right_form">
+	<input type="checkbox" name="nologin_activate_via_sms" {if isset($settings.nologin_activate_via_sms) && $settings.nologin_activate_via_sms==1}checked="checked"{/if} />
+	</div>
+</div>	
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.pending_listing}" />&nbsp;{$lng.settings.pending_listing}</div>
+	<div class="right_form"><input type="checkbox" name="nologin_pending_listing" {if $settings.nologin_pending_listing==1} checked="checked" {/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.nologin_allow_edit}" />&nbsp;{$lng.settings.nologin_allow_edit}</div>
+	<div class="right_form"><input type="checkbox" name="nologin_allow_edit" {if $settings.nologin_allow_edit==1} checked="checked" {/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.nologin_allow_delete}" />&nbsp;{$lng.settings.nologin_allow_delete}</div>
+	<div class="right_form"><input type="checkbox" name="nologin_allow_delete" {if $settings.nologin_allow_delete==1} checked="checked" {/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.nologin_extra_options}" />&nbsp;{$lng.settings.nologin_extra_options}</div>
+	<div class="right_form"><input type="checkbox" name="nologin_extra_options" {if $settings.nologin_extra_options==1} checked="checked" {/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.nologin_image_verification}" />&nbsp;{$lng.settings.nologin_image_verification}</div>
+	<div class="right_form"><input type="checkbox" name="nologin_image_verification" {if $settings.nologin_image_verification==1} checked="checked" {/if}/></div>
+</div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.settings.affiliate_accounts|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.enable_affiliate_accounts}</div>
+	<div class="right_form">
+		<div class="lfloat"><input type="checkbox" name="enable_affiliates" {if $settings.enable_affiliates==1} checked="checked" {/if}/></div>
+		<div class="lfloat information ml20">{$lng.settings.info.enable_affiliate_accounts}</div>
+	</div>
+</div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.settings.periodic_operations|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.cron_simulator}" />&nbsp;{$lng.settings.cron_simulator}</div>
+	<div class="right_form">
+		<div class="lfloat"><input type="checkbox" name="cron_simulator" {if $settings.cron_simulator==1} checked="checked" {/if}/></div>
+		<div class="lfloat information ml20">{$lng.settings.cron_simulator_info|replace:'::CONFIG_ABS_PATH::':$abs_path}</div>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.delete_auth_info_older_than}" />&nbsp;{$lng.settings.delete_auth_info_older_than}</div>
+	<div class="right_form"><input type="text" maxlength="50" name="delete_login_older_than" size="4" value="{$settings.delete_login_older_than}" />{$lng.settings.days}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.delete_expired}</div>
+	<div class="right_form">
+		<input type="radio" name="delete_expired" value="never" {if $settings.delete_expired==0} checked="checked" {/if}/>&nbsp;{$lng.settings.never}&nbsp;&nbsp;
+		<input type="radio" name="delete_expired" value="immediately" {if $settings.delete_expired==1 && $settings.days_del_expired==0} checked="checked" {/if}/>&nbsp;{$lng.settings.immediately}&nbsp;&nbsp;
+		<input type="radio" name="delete_expired" value="after" {if $settings.delete_expired==1 && $settings.days_del_expired>0} checked="checked" {/if}/>&nbsp;{$lng.settings.after}&nbsp;&nbsp;
+		<input type="text" name="days_del_expired" maxlength="4" size="4" value="{$settings.days_del_expired}" />&nbsp;{$lng.settings.days}
+	</div>
+</div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.settings.notifications|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.admin_send_notifications}</div>
+	<div class="right_form">
+		<input type="checkbox" name="send_mail_to_admin_when_pending" {if $settings.send_mail_to_admin_when_pending==1} checked="checked" {/if} />&nbsp;{$lng.settings.when_pending_listing}&nbsp;&nbsp;
+		<input type="checkbox" name="send_mail_to_admin_when_registeres" {if $settings.send_mail_to_admin_when_registeres==1} checked="checked" {/if}/>&nbsp;{$lng.settings.when_user_registeres}&nbsp;&nbsp;
+		<input type="checkbox" name="send_mail_to_admin_when_new_ad" {if $settings.send_mail_to_admin_when_new_ad==1} checked="checked" {/if}/>&nbsp;{$lng.settings.when_new_ad}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.user_send_notifications}</div>
+	<div class="right_form">
+		<input type="checkbox" name="send_mail_to_user_when_posting_ads" {if $settings.send_mail_to_user_when_posting_ads==1} checked="checked" {/if} />&nbsp;
+		{$lng.settings.when_listing_posted}&nbsp;&nbsp;
+		<input type="checkbox" name="send_mail_to_user_when_expired" {if $settings.send_mail_to_user_when_expired==1} checked="checked" {/if} />&nbsp;
+		{$lng.settings.when_listing_expired}&nbsp;&nbsp;
+		<input type="checkbox" name="send_mail_to_user_before_expires" {if $settings.send_mail_to_user_before_expires>0} checked="checked" {/if}/>&nbsp;{$lng.settings.before_listing_expires}&nbsp;&nbsp;
+		<input type="text" name="days_notify" maxlength="4" size="4" value="{if $settings.send_mail_to_user_before_expires>0} {$settings.days_notify} {/if}"/>&nbsp;{$lng.settings.days}
+	</div>
+</div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.settings.google_maps|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.google_maps_api_key}</div>
+	<div class="right_form"><input type="text" name="google_maps_api_key" size=50 value="{$settings.google_maps_api_key}"></br>{$lng.settings.info.google_maps_api_key}</div>
+</div>
+
+<input type="hidden" name="google_maps_default_long" id="google_maps_default_long" value="{$settings.google_maps_default_long}">
+<input type="hidden" name="google_maps_default_lat" id="google_maps_default_lat" value="{$settings.google_maps_default_lat}">
+<input type="hidden" name="google_maps_default_height" id="google_maps_default_height" value="{$settings.google_maps_default_height}">
+
+{capture name=display assign=display}<div class=btn2><strong>{$lng.settings.display_map|replace:" ":"&nbsp;"}</strong></div>{/capture}
+{capture name=hide assign=hide}<div class=btn2><strong>{$lng.settings.hide_map|replace:" ":"&nbsp;"}</strong></div>{/capture}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.google_maps_default_location}</div>
+	<div class="right_form">
+		<div id="display_map"><a href="javascript:;" {if $settings.google_maps_api_key}onclick="mapStatus('{$display}', '{$hide}')"{else}onclick='alert("{$lng.settings.errors.google_maps_api_key_missing}");'{/if}><div class="btn2"><strong>{$lng.settings.display_map|replace:" ":"&nbsp;"}</strong></div></a><br/><br/></div>
+		<div id="google_maps_location" style="display: none">
+		<div id="map" class="map"></div>
+		</div>
+	</div>
+</div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.settings.locations|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.enable_locations}" />&nbsp;{$lng.settings.enable_locations}</div>
+	<div class="right_form"><input type="checkbox" name="enable_locations" {if $settings.enable_locations==1} checked="checked" {/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.location_fields}" />&nbsp;{$lng.settings.location_fields}</div>
+	<div class="right_form">
+		<select id="location_fields_box" name="location_fields_box" multiple="multiple" size="6" class="mselect">
+		{foreach from = $fields item = v}
+		<option value="{$v.caption}" {if in_array($v.caption, $settings.array_location_fields)}selected="selected"{/if}>{$v.name}</option>
+		{/foreach}
+		</select>
+		<input type="hidden" id="location_fields" name="location_fields" value="" />
+		<div class="information">{$lng.settings.info.comboselect}</div>
+
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.enable_subdomains}" />&nbsp;{$lng.settings.enable_subdomains}</div>
+	<div class="right_form">
+		<div class="lfloat"><input type="checkbox" name="enable_subdomains" {if $settings.enable_subdomains==1} checked="checked" {/if}/></div>
+		<div class="lfloat information ml20">{$lng.settings.important.enable_subdomains}</div>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.subdomain_field}" />&nbsp;{$lng.settings.subdomain_field}</div>
+	<div class="right_form">
+		<select id="subdomain_field" name="subdomain_field">
+		<option value=""></option>
+		{foreach from = $fields item = v}
+		<option value="{$v.caption}" {if $settings.subdomain_field==$v.caption}selected="selected"{/if}>{$v.name}</option>
+		{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat"  onClick='{if $demo}alert("{$lng.general.errors.demo}");return false;{else}return checkSettings();{/if}'>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.save_changes}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+
+<link rel="stylesheet" type="text/css" href="{$live_site}/libs/jQuery/plugins/css/jquery.comboselect.css" />
+{literal}
+<!--[if IE]>
+<style type="text/css">
+select.csleft, select.csright {
+	width: 100px;
+}
+</style>
+<![endif]-->
+{/literal}
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/jquery.selso.js"></script>
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/jquery.comboselect.js"></script>
+<script type="text/javascript">
+{literal}
+
+	$(function(){
+		$('#location_fields_box').comboselect({ sort: 'none', addbtn: '+',  rembtn: '-' });
+	});
+
+
+	function init_gmap(){
+
+	var height=2;
+
+	var p = new google.maps.LatLng(0,0);
+
+	{/literal}
+
+	{if ($settings.google_maps_default_lat && $settings.google_maps_default_long)}
+
+	height={$settings.google_maps_default_height};
+
+	p = new google.maps.LatLng( {$settings.google_maps_default_lat} , {$settings.google_maps_default_long} );
+
+	{/if}
+
+	{literal}
+
+
+	var myOptions = {
+  		zoom: height,
+
+  		center: p,
+
+		panControl: true,
+		zoomControl: true,
+		scaleControl: true,
+		mapTypeControl: true,
+		mapTypeId: google.maps.MapTypeId.ROADMAP
+	};
+
+	{/literal}
+
+	var map = new google.maps.Map(document.getElementById("map"), myOptions);
+
+	{literal}
+
+	// get click coordinates
+	google.maps.event.addListener(map, 'click', function(event) 
+	{
+		if (event.latLng) {
+			map.panTo(event.latLng);
+
+			var lat = event.latLng.lat();
+			var long = event.latLng.lng();
+			var h = map.getZoom();
+
+			document.getElementById("google_maps_default_lat").value = lat;
+			document.getElementById("google_maps_default_long").value = long;
+			document.getElementById("google_maps_default_height").value = h;
+		}
+
+	});
+
+	google.maps.event.addListener(map, 'mouseup', function(event) 
+	{
+		var newcenter = map.getCenter();
+		if (newcenter) {
+			var lat = newcenter.lat();
+			var long = newcenter.lng();
+
+			document.getElementById("google_maps_default_lat").value = lat;
+			document.getElementById("google_maps_default_long").value = long;
+		}
+
+	});
+
+
+	google.maps.event.addListener(map, 'zoom_changed', function() {
+		zoomLevel = map.getZoom();
+		{/literal}
+		document.getElementById("google_maps_default_height").value=zoomLevel;
+		{literal}
+	});
+
+	} // end display map
+
+	$(document).ready(function() {
+	// initialize google maps
+	load_gmaps();
+
+	});
+
+
+{/literal}
+</script>
+
+{include file="footer.html"}

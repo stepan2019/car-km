@@ -1,0 +1,63 @@
+{include file="header.html"}
+
+<div class="page_title">{$lng.panel.templates} > {$lng.panel.language_editor}</div>
+
+<div class="p30">
+<form name="templates" method="post" action="languages_editor.php{if $crt_lng}?language={$crt_lng}{/if}{if $crt_mod}&mod={$crt_mod}{/if}">
+
+<div class="form_container">
+
+{if $error}<div class="error">{$error}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.languages.select_language}</div>
+	<div class="right_form">
+		<select name="language" onChange="doSel(this);">
+			{foreach from=$array_languages item=v}
+			<option value="location.href='?language={$v.id}'" {if $crt_lng==$v.id}selected="selected"{/if}>{$v.name}</option>
+			{/foreach}
+		</select>
+		<span class="information">({$lng.general.file}: {$crt_lng_file})</span>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.languages.main_file_or_module}</div>
+	<div class="right_form">
+		<select name="mod" onChange="doSel(this);">
+			<option value="location.href='?language={$crt_lng}&mod=main'" {if $crt_mod=="main"}selected="selected"{/if}>{$lng.languages.main_language_file}</option>
+			{foreach from=$modules item=v}
+			<option value="location.href='?language={$crt_lng}&mod={$v.id}'" {if $crt_mod==$v.id}selected="selected"{/if}>{$v.name}</option>
+			{/foreach}
+		</select>
+		<span class="information">({$lng.general.file}: {$crt_lng_file})</span>
+	</div>
+</div>
+
+{if $warning}
+<div class="clearfix">
+	<div class="left_form">&nbsp;</div>
+	<div class="right_form"><span class="warning" style="margin: 0 !important;">{$warning}</span></div>
+</div>
+{/if}
+
+{if $content}
+<div class="clearfix">
+	<div class="left_form">&nbsp;</div>
+	<div class="right_form"><textarea name="content" rows=40 cols=90>{$content}</textarea></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Save" value="{$lng.general.save}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+{/if}
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+{include file="footer.html"}

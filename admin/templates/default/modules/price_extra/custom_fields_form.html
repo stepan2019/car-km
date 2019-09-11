@@ -1,0 +1,30 @@
+	<div>{if $pe_settings[$fieldset].use_free || $pe_settings[$fieldset].use_tags}<input type="radio" name="price_type" id="price_type" value="1" {if !isset($tmp.price) || (isset($tmp.price) && ($tmp.price>0 || ($tmp.price==0 && $pe_settings[$fieldset].use_free==0)))}checked="checked"{/if} />{else}<input type="hidden" name="price_type" id="price_type" value="1" />{/if}
+	<input type="text" name="price" id="price" value="{if isset($tmp.price) && $tmp.price>0}{$tmp.price}{elseif $v.default_val!=''}{$v.default_val}{/if}" size="{$v.size}" />
+	{if $currencies|@count>1}
+	<span><select name="currency" style="float: none !important;">
+		{foreach from=$currencies item=t}
+			<option value="{$t.currency}" {if isset($tmp.currency) && $tmp.currency==$t.currency}selected="selected"{/if}>{$t.currency}</option>
+		{/foreach}
+	</select>
+	</span>
+	{else}
+	{$currencies[0].currency}
+	<input type="hidden" name="currency" value="{$currencies[0].currency}"/>
+	{/if}
+	{if $pe_settings[$fieldset].use_negotiable==1}&nbsp;<input type="checkbox" name="negotiable" id="negotiable" {if isset($tmp.negotiable) && $tmp.negotiable==1}checked="checked"{/if} />&nbsp;{$pe_settings[$fieldset].lang[$crt_lang].negotiable}{/if}
+	{if $pe_settings[$fieldset].use_extra_option1==1}&nbsp;<input type="checkbox" name="extra_option1" id="extra_option1" {if isset($tmp.extra_option1) && $tmp.extra_option1==1}checked="checked"{/if} />&nbsp;{$pe_settings[$fieldset].lang[$crt_lang].extra_option1}{/if}
+	{if $pe_settings[$fieldset].use_extra_option2==1}&nbsp;<input type="checkbox" name="extra_option2" id="extra_option2" {if isset($tmp.extra_option2) && $tmp.extra_option2==1}checked="checked"{/if} />&nbsp;{$pe_settings[$fieldset].lang[$crt_lang].extra_option2}{/if}
+	</div>
+	
+	{if $pe_settings[$fieldset].use_free}<div><input type="radio" name="price_type" id="price_type" value="2" {if isset($tmp.price) && $tmp.price==0}checked="checked"{/if} />&nbsp;{$pe_settings[$fieldset].lang[$crt_lang].free}</div>{/if}
+	{if $pe_settings[$fieldset].use_tags}
+	{foreach $pe_settings[$fieldset].lang[$crt_lang].tags_array as $tag}
+	<div><input type="radio" name="price_type" id="price_type" value="{$tag}" {if isset($tmp.price) && $tmp.price==-1 && ( isset($tmp.price_tag) && $tmp.price_tag==$tag)}checked="checked"{/if}/>&nbsp;{$tag}</div>
+	{/foreach}
+	{/if}
+	
+	<script type="text/javascript">
+	{literal}
+	$('#price').number( true, {/literal}'{$v.format_decimals}', '{$v.format_point}', '{$v.format_separator}' {literal});
+	{/literal}
+	</script>

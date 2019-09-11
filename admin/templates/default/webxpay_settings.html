@@ -1,0 +1,64 @@
+<div class="form_container">
+
+{if $error != ""}<div class="error">{$error}</div>{/if}
+{if $info != ""}<div class="info">{$info}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">Secret key</div>
+	<div class="right_form"><input type="text" name="secret_key" id="secret_key" size="70" value="{if isset($processor_settings.secret_key) && $processor_settings.secret_key}{$processor_settings.secret_key}{/if}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Public key</div>
+	<div class="right_form"><textarea rows="4" cols=80 name="public_key" id="public_key">{if isset($processor_settings.public_key) && $processor_settings.public_key}{$processor_settings.public_key}{/if}</textarea></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.epay_currency}</div>
+	<div class="right_form">
+		<select name="currency" id="currency">
+		<option value="LKR" {if $processor_settings.currency=='LKR'} selected="selected" {/if}>LKR</option>
+		<option value="USD" {if $processor_settings.currency=='USD'} selected="selected" {/if}>USD</option>
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Phone field</div>
+	<div class="right_form">
+		<select name="phone_field" id="phone_field">
+		{foreach from=$fields item=v}
+			<option value="{$v.caption}" {if $processor_settings.phone_field==$v.caption}selected="selected"{/if}>{$v.name}</option>
+		{/foreach}
+		</select>
+	</div>
+</div>
+
+{if $settings.nologin_enabled}
+<div class="clearfix">
+	<div class="left_form">Not logged in guest phone field</div>
+	<div class="right_form">
+		<select name="nologin_phone_field" id="nologin_phone_field">
+		{foreach from=$nologin_fields item=v}
+			<option value="{$v.caption}" {if $processor_settings.nologin_phone_field==$v.caption}selected="selected"{/if}>{$v.name}</option>
+		{/foreach}
+		</select>
+	</div>
+</div>
+{/if}
+
+<div class="clearfix">
+	<div class="left_form">Callback URL:</div>
+	<div class="right_form">{$live_site}/payment_return/webxpay.php</div>
+</div>
+
+
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit_webxpay" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}

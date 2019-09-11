@@ -1,0 +1,40 @@
+{include file="header.html"}
+
+
+<div class="page_title">{$lng.panel.security} > <a href="login_history.php">{$lng.panel.login_history}</a> > {$lng.login_history.login_history_for}: {$user}</div>
+
+<div class="p30">
+
+<form name="search" method="post" action="login_history_user.php">
+<div class="rfloat">
+{include file="paginator.html"}
+</div>
+
+<div class="clearfix"></div>
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th class="hleft">{$lng.login_history.login_date}</th>
+	<th>{$lng.login_history.login_ip}</th>
+	<th>{$lng.login_history.status}</th>
+	<th class="hright"></th>
+</tr>
+
+{foreach from=$array_login item=v}
+<tr>
+	<td>{$v.date_login_nice}</td>
+	<td>{$v.ip}</td>
+	<td>{if $v.succeeded==1}<span class="sc1">{$lng.login_history.succeeded}</span>{else}<span class="sc2">{$lng.login_history.failed}</span>{/if}</td>
+	<td>{if $v.blocked==1}<span class="sc2">{$lng.security.blocked}</span>{/if}</td>
+</tr>
+{/foreach}
+
+
+{if !$array_login|@count}<tr><td colspan="3">{$lng.no_items}</td></tr>{/if}
+
+</table>
+
+</form>
+</div>{* p30 *}
+
+{include file="footer.html"}

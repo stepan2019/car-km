@@ -1,0 +1,54 @@
+<div class="form_container">
+
+{if $error != ""}<div class="error">{$error}</div>{/if}
+{if $info != ""}<div class="info">{$info}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.payfast_merchant_id}</div>
+	<div class="right_form"><input type="text" maxlength="100" size="40" name="payu_merchantId" id="payu_merchantId" value="{$processor_settings.payu_merchantId}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Account id</div>
+	<div class="right_form"><input type="text" maxlength="200" size="40" name="payu_accountId" id="payu_accountId" value="{$processor_settings.payu_accountId}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.experttexting_api_key}</div>
+	<div class="right_form"><input type="text" maxlength="200" size="40" name="payu_apikey" id="payu_apikey" value="{$processor_settings.payu_apikey}" /></div>
+</div>
+
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.hipay_currency}</div>
+	<div class="right_form">
+		<select name="payu_currency" id="payu_currency">
+		<option value="ARS" {if $processor_settings.payu_currency=='ARS'} selected="selected" {/if}>ARS</option>
+		<option value="BRL" {if $processor_settings.payu_currency=='BRL'} selected="selected" {/if}>BRL</option>
+		<option value="CLP" {if $processor_settings.payu_currency=='CLP'} selected="selected" {/if}>CLP</option>
+		<option value="COP" {if $processor_settings.payu_currency=='COP'} selected="selected" {/if}>COP</option>
+		<option value="MXN" {if $processor_settings.payu_currency=='MXN'} selected="selected" {/if}>MXN</option>
+		<option value="PEN" {if $processor_settings.payu_currency=='PEN'} selected="selected" {/if}>PEN</option>
+		<option value="USD" {if $processor_settings.payu_currency=='USD'} selected="selected" {/if}>USD</option>
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.payfast_item_name}</div>
+	<div class="right_form"><input type="text" maxlength="200" size="40" name="payu_description" id="payu_description" value="{$processor_settings.payu_description}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.payfast_demo}</div>
+	<div class="right_form"><input type="checkbox" name="payu_test" id="payu_test" {if $processor_settings.payu_test==1} checked="checked"{/if} /></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit_payu" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}

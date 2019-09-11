@@ -1,0 +1,42 @@
+{include file="header.html"}
+<script type="text/javascript" src="{$live_site}/libs/nicEdit/nicEdit.min.js"></script>
+<script type="text/javascript">
+{literal}	
+bkLib.onDomLoaded(function() { nicEditors.allTextAreas({iconsPath : '../../../libs/nicEdit/nicEditorIcons.gif', fullPanel : true}) });
+{/literal}
+</script>
+
+<div class="page_title"><a href="{$live_site}/admin/modules.php">{$lng.panel.modules}</a> > {$lng_ad.title}</div>
+
+<div class="p30">
+<form name="ad_settings" method="post" enctype="multipart/form-data" action="">
+
+<div class="form_container">
+
+{if isset($error) && $error != ""}<div class="error">{$error}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng_ad.info.cookie_availability}" />&nbsp;{$lng_ad.cookie_availability}</div>
+	<div class="right_form"><input type="text" size="4" name="cookie_availability" value="{$ad_settings.cookie_availability}" />&nbsp;{$lng.settings.days}</div>
+</div>
+
+{foreach from =$languages item=v}
+{capture name=some_content assign=field_name}disclaimer_{$v.id}{/capture}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng_ad.disclaimer}</div>
+	<div class="right_form"><textarea name="disclaimer_{$v.id}" id="disclaimer_{$v.id}" rows="15" cols="90">{$ad_settings[$field_name]}</textarea></div>
+</div>
+{/foreach}
+
+<div class="form_footer">
+	<div class="buttons rfloat" onClick='{if $demo}alert("{$lng.general.errors.demo}");return false;{else}getMultiple(document.ad_settings.categories_box_right, document.ad_settings.categories);{/if}'>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+{include file="footer.html"}

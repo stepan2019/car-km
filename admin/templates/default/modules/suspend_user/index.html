@@ -1,0 +1,36 @@
+{include file="header.html"}
+
+<div class="page_title"><a href="{$live_site}/admin/modules.php">{$lng.panel.modules}</a> > {$lng_su.title}</div>
+
+<div class="p30">
+<form name="su_settings" method="post" enctype="multipart/form-data" action="">
+
+<div class="form_container">
+
+{if isset($error) && $error != ""}<div class="error">{$error}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form1">{$lng_su.default_days}</div>
+	<div class="right_form1">
+		<input type="text" id="days" name="days" size="6" value="{$su_settings.days}" />
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form1">&nbsp;</div>
+	<div class="right_form1"><div class="lfloat information ml20">{$lng_su.info.suspend_user}</div></div>
+</div>
+
+
+<div class="form_footer">
+	<div class="buttons rfloat" onClick='{if $demo}alert("{$lng.general.errors.demo}");return false;{/if}'>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+{include file="footer.html"}

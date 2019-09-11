@@ -1,0 +1,112 @@
+{include file="overlay_header.html"}
+
+<script type="text/javascript" src="{$live_site}/libs/jQuery/jquery.js"></script>
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/jquery.form.js"></script>
+
+<div class="wait"></div>
+
+<div class="overlay-top-bg">{$lng.mailto.mailto}: {if $settings.enable_username}{$username}{else}{$useremail}{/if}</div>
+
+<form name="mailto" id="mailto" method="post" action="mailto.php?post=1{if isset($id) && $id}&id={$id}{/if}{if isset($aid) && $aid}&amp;aid={$aid}{/if}">
+
+<div class="info" style="display: none"></div>
+
+<div class="form2 lpdiv100" style="height: 520px;">
+
+<ul>
+
+<li>
+	<label>{$lng.mailto.title}<span class="mandatory"> *</span></label>
+	<input type="text" name="subject" size="55" />
+</li>
+
+<li>
+	<label>{$lng.mailto.content}<span class="mandatory"> *</span></label>
+	<textarea name="content" rows="15" cols="70"></textarea>
+</li>
+
+</ul>
+
+
+</div> {* end form2 *}
+
+<div class="overlay-bottom-bg">
+<div class="buttons">
+	<strong><input type="submit" name="Submit" value="{$lng.bulk_emails.send}" /></strong>
+</div>
+
+</div>
+
+</form>
+
+{literal}
+<script type="text/javascript">
+//<![CDATA[
+
+jQuery(document).ready(function() {
+
+	$(".info").hide();
+
+var options = { 
+
+	beforeSerialize: function(jqForm, options){ $("body").addClass("loading") },
+        beforeSubmit:  function(formData, jqForm, options) {var queryString = $.param(formData);  return true;  }, 
+        success:       successResponse 
+ 
+   }; 
+
+function successResponse(responseText, statusText, xhr, $form)  { 
+
+//alert(responseText);
+			var ret = JSON.parse(responseText);
+
+			$("body").removeClass("loading");
+
+			if(ret.response==1) {
+
+				$(".info").html("<p>"+ret.info+"</p>");
+				$(".info").show();
+				$(".form2").slideUp();
+				$(".overlay-bottom-bg").hide();
+				return;
+
+			}
+
+			// response = 0 -> there are errors
+			var no_err = ret.error.length;
+			var err_field, err_string;
+
+			// clean all fields possible err class
+			$(".err").removeClass("err");
+			// remove all err_labels
+			$(".err_label").remove();
+
+			// mark each field with error 
+			for (var idx=0;idx<no_err;idx++) { 
+
+				err_field = ret.error[idx].field;
+				err_string = ret.error[idx].error;
+				$("#"+err_field).addClass("err");
+				$("#"+err_field).before('<label class="err_label">'+err_string+'</label>');
+
+			}
+			
+			// move the page to the first err_label element
+//			$('html,body').animate({scrollTop:$(".err_label:first").offset().top}, 'slow');
+
+			{/literal}{if $settings.contact_captcha && $settings.enable_recaptcha}
+			// reload recaptcha
+			Recaptcha.reload();
+			{/if}{literal}
+
+
+} 
+
+ $('#mailto').ajaxForm(options);
+
+});
+{/literal}
+//]]>
+</script>
+
+{include file="overlay_footer.html"}

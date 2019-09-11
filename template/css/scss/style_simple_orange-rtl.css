@@ -1,0 +1,107 @@
+/* flux simple orange rtl */
+.default_logo { 
+	background: url("../images/flux-logo-gray.png") no-repeat 0 0; 
+}
+a {  
+	color: #3485fe; 
+}
+a:hover { 
+	color: #54a5fe; 
+}
+
+.search-button input { 
+	background: #555 !important; 
+	color: #fff !important; 
+}
+
+.tabs > label:hover { 
+	background: #fd5200; 
+	border: 1px solid #dd3200; 
+	color: #fff; 
+}
+
+.tabs > input:checked + label { 
+	border-top: 3px solid #fd5200;
+}
+
+.browse-tabs label { 
+	color: #3485fe;
+}
+.browse-tabs label:hover { 
+	color: #54a5fe;
+}
+
+.browse-tabs input:checked + label { 
+	background: #fd5200;
+}
+
+.browse-tabs input:checked + label:hover { 
+	background: #fd7220;
+}
+
+.cat-path { 
+	color: #3485fe; 
+}
+.cat-path a { 
+	color: #3485fe; 
+}
+.btn1 { 
+	background: #f6ae2d; 
+}
+
+.plan_button {
+	border: 2px solid #6a8be9;
+	color: #324c93;
+}
+.plan_button:hover { 
+	background: #6a8be9;
+	color: #fff;
+}
+
+footer a:hover { 
+	color: #fd8230; 
+}
+
+.more:hover {
+	background: #fd5200;
+}
+
+#nav ul li:hover {
+    background: #eee;
+}
+
+#nav li.post-listing { 
+	background: #fd5200; 
+	border-bottom: #ed4200; 
+}
+#nav li.post-listing:hover { 
+	background: #fd5200; 
+	opacity: 0.8; 
+}
+#nav li.post-listing a { 
+	border-bottom: 1px solid #ff6210;
+}
+#nav li:not(.post-listing) a:hover {
+    background: #fd5200;
+	text-shadow: none;
+	color: #fff;
+}
+#nav li a.starfav:hover { 
+	background: #fd5200 url("../images/star_white.png") 15px 50% no-repeat; 
+}
+.outline { 
+	color: #3485fe;
+}
+a.outline:hover { 
+	color: #54a5fe !important;
+}
+.mlink:hover { 
+	color: #3485fe; 
+}
+
+@media all and (min-width: 600px) {
+	#nav li:hover {
+		background: #eee;
+	}
+
+}

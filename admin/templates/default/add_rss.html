@@ -1,0 +1,192 @@
+{include file="header.html"}
+<link rel="stylesheet" type="text/css" href="{$live_site}/libs/jQuery/plugins/css/jquery.comboselect.css" />
+{literal}
+<!--[if IE]>
+<style type="text/css">
+select.csleft, select.csright {
+	width: 100px;
+}
+</style>
+<![endif]-->
+{/literal}
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/jquery.selso.js"></script>
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/jquery.comboselect.js"></script>
+
+<div class="page_title">{$lng.panel.tools} > <a href="rss.php">{$lng.panel.rss}</a> > {if !isset($id) || !$id}{$lng.rss.add_rss}{else}{$lng.rss.edit_rss}{/if}</div>
+
+<div class="p30">
+<form name="addrss" method="post" action="{$self}{if isset($id) && $id}?id={$id}{/if}" enctype="multipart/form-data">
+
+<div class="form_container">
+
+{if $error}<div class="error">{$error}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.general.enabled}</div>
+	<div class="right_form"><input type="checkbox" class="noborder" name="enabled" checked = "checked" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.general.type}</div>
+	<div class="right_form"><input type="radio" name="type" value="1" {if !isset($tmp.type) || $tmp.type==1}checked = "checked"{/if} />&nbsp;{$lng.panel.listings}&nbsp;&nbsp;<input type="radio" name="type" value="2" {if isset($tmp.type) && $tmp.type==2}checked = "checked"{/if} />&nbsp;{$lng.panel.users}</div>
+</div>
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}<img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.rss.info.short_title}" />&nbsp;{$lng.rss.short_title}<span class="mandatory">*</span></div>
+	<div class="right_form"><input type="text" name="short_title_{$v.id}" size=20 value="{if isset($tmp.short_title[$v.id])}{$tmp.short_title[$v.id]}{/if}" /></div>
+</div>
+{/foreach}
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}<img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.rss.info.title}" />&nbsp;{$lng.rss.title}<span class="mandatory">*</span></div>
+	<div class="right_form"><input type="text" name="title_{$v.id}" size=50 value="{if isset($tmp.title[$v.id])}{$tmp.title[$v.id]}{/if}" /></div>
+</div>
+{/foreach}
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}<img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.rss.info.description}" />&nbsp;{$lng.rss.description}<span class="mandatory">*</span></div>
+	<div class="right_form"><textarea name="description_{$v.id}" rows=3 cols=40>{if isset($tmp.description[$v.id])}{$tmp.description[$v.id]}{/if}</textarea></div>
+</div>
+{/foreach}
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.rss.info.feedburner_link}" />&nbsp;{$lng.rss.feedburner_link}</div>
+	<div class="right_form"><input type="text" name="feedburner" size=50 value="{if isset($tmp.feedburner)}{$tmp.feedburner}{/if}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.rss.link}<span class="mandatory">*</span></div>
+	<div class="right_form"><input type="text" name="link" size=50 value="{if isset($tmp.link)}{$tmp.link}{else}{$live_site}{/if}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.rss.info.language}" />&nbsp;{$lng.rss.language}</div>
+	<div class="right_form"><input type="text" name="language" size=10 value="{if isset($tmp.language)}{$tmp.language}{/if}" /></div>
+</div>
+
+<div id="div_listings" {if isset($tmp.type) && $tmp.type==2}style="display: none"{/if}>
+<div class="clearfix">
+	<div class="left_form">{$lng.rss.parameters}</div>
+	<div class="right_form">
+		<table>
+		<tr><td>{$lng.listings.category}</td><td>{$lng.listings.package}</td></tr>
+		<tr>
+		<td><select name="category[]" id="category" multiple="multiple" size=6 class="mselect">
+		{foreach from=$categories item=v name=cat}
+		<option value="{$v.id}" {if isset($tmp.param.category_id) && $tmp.param.category_id && in_array($v.id, $tmp.param.category_id)}selected="selected"{/if}>{$v.name}</option>
+		{/foreach}
+		</select></td>
+
+		<td><select name="package[]" id="package" multiple="multiple" size=6 class="mselect">
+		{foreach from=$packages item=v}
+		<option value="{$v.id}" {if isset($tmp.param.package_id) && $tmp.param.package_id && in_array($v.id, $tmp.param.package_id)}selected="selected"{/if}>{$v.name}</option>
+		{/foreach}
+		</select></td>
+	</tr></table>
+
+	</div>
+</div>
+</div> {* end div_listings *}
+
+<div id="div_users" {if !isset($tmp.type) || $tmp.type==1}style="display: none"{/if}>
+<div class="clearfix">
+	<div class="left_form">{$lng.rss.parameters}</div>
+	<div class="right_form">
+		<table>
+		<tr><td>{$lng.panel.user_groups}</td><td>{$lng.general.order_by}</td><td>{$lng.general.order_way}</td></tr>
+		<tr>
+		<td valign="top"><select name="group[]" id="group" multiple="multiple" size=3 class="mselect">
+			{foreach from = $groups item = v}
+			<option value="{$v.id}" {if isset($tmp.param.group) && $tmp.param.group && in_array($v.id, $tmp.param.group)}selected="selected"{/if}>{$v.name}</option>
+			{/foreach}
+			<option value="-1" {if isset($tmp.param.store) && $tmp.param.store[0]==1}selected="selected"{/if}>{$lng.stats.users_with_store}</option>
+		</select></td>
+
+		<td valign="top"><select name="order_by">
+			<option value="registration_date" {if isset($tmp.param.order_by) && $tmp.param.order_by[0]=="registration_date"}selected="selected"{/if}>{$lng.users.order_by_date}</option>
+			<option value="username" {if isset($tmp.param.order_by) && $tmp.param.order_by[0]=="username"}selected="selected"{/if}>{$lng.users.order_by_username}</option>
+			<option value="{$settings.contact_name_field}" {if isset($tmp.param.order_by) && $tmp.param.order_by[0]==$settings.contact_name_field}selected="selected"{/if}>{$lng.users.order_by_contact_name}</option>
+			<option value="listings" {if isset($tmp.param.order_by) && $tmp.param.order_by[0]=="listings"}selected="selected"{/if}>{$lng.users.order_by_listings}</option>
+			<option value="group" {if isset($tmp.param.order_by) && $tmp.param.order_by=="group"}selected="selected"{/if}>{$lng.users.order_by_group}</option>
+		</select></td>
+		<td valign="top"><select name="order_way">
+			<option value="desc" {if isset($tmp.param.order_way) && $tmp.param.order_way[0]=="desc"}selected="selected"{/if}>{$lng.general.desc}</option>
+			<option value="asc" {if isset($tmp.param.order_way) && $tmp.param.order_way[0]=="asc"}selected="selected"{/if}>{$lng.general.asc}</option>
+		</select>
+		</td>
+	</tr></table>
+
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.rss.show_fields}</div>
+	<div class="right_form">
+		<select id="show_fields_box" name="show_fields_box" multiple="multiple" size="6" class="mselect">
+		{foreach from = $fields item = v}
+		<option value="{$v.caption}" {if isset($tmp.array_show_fields) && in_array($v.caption, $tmp.array_show_fields)}selected="selected"{/if}>{$v.name}</option>
+		{/foreach}
+		</select>
+		<input type="hidden" id="show_fields" name="show_fields" value="" />
+		<div class="lfloat information">{$lng.settings.info.comboselect}</div>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.rss.logo_field}</div>
+	<div class="right_form">
+		<select id="logo_field" name="logo_field" class="mselect" size="6" style="width: 100px;">
+		{foreach from = $logo_fields item = v}
+		<option value="{$v.caption}" {if isset($tmp.logo_field) && $v.caption== $tmp.logo_field}selected="selected"{/if}>{$v.name}</option>
+		{/foreach}
+		</select>
+	</div>
+</div>
+
+</div> {* end div_users *}
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.rss.info.no_items}" />&nbsp;{$lng.rss.no_items}</div>
+	<div class="right_form"><input type="text" name="no_items" size=5 value="{if isset($tmp.no_items)}{$tmp.no_items}{else}100{/if}" />&nbsp;{$lng.settings.info_days_unlimited}</div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{else}onclick="getMultiple(document.addrss.show_fields_box_right, document.addrss.show_fields);";{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{if isset($id) && $id}{$lng.general.submit}{else}{$lng.general.add}{/if}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+
+</form>
+</div>
+
+{literal}
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+$('input[type=radio][name=type]').change(function() {
+        if (this.value == '1') {
+            $("#div_listings").show();
+            $("#div_users").hide();
+        }
+        else if (this.value == '2') {
+            $("#div_listings").hide();
+            $("#div_users").show();
+        }
+    });
+});
+
+$(function(){
+	$('#show_fields_box').comboselect({ sort: 'none', addbtn: '+',  rembtn: '-' });
+});
+
+	</script>
+{/literal}
+
+{include file="footer.html"}

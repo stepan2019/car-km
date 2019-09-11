@@ -1,0 +1,74 @@
+{include file="header.html"}
+
+<div class="page_title">{$lng.panel.banners} > {$lng.panel.banners_settings}</div>
+
+<div class="p30">
+
+<div class="buttonwrapper">
+<div class="button3-left mr10">
+	<a href="{$live_site}/templates/{$appearance.template}/chart/index.html" target="_blank"><span class="button3-right">{$lng.banners.view_chart}</span></a>
+</div>
+
+{if $appearance.enable_impressions_count==1}
+<div class="button4-left">
+	<a href="{$live_site}/admin/banners_settings.php?disable_impressions=1"><span class="button4-right">{$lng.banners.disable_impressions_count}</span></a>
+</div>
+{else}
+<div class="button3-left">
+	<a href="{$live_site}/admin/banners_settings.php?enable_impressions=1"><span class="button3-right">{$lng.banners.enable_impressions_count}</span></a>
+</div>
+{/if}
+
+<div class="button4-left">
+	<a href="{$live_site}/admin/banners_settings.php?disable_unused=1"><span class="button4-right">{$lng.banners.disable_unused}</span></a>
+</div>
+
+</div>
+
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th width="400" class="hleft">{$lng.banners.position}</td>
+	<th>{$lng.banners.display_banners}</th>
+	<th>{$lng.banners.total_banners}</th>
+	<th width="50" colspan="2" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$array_banners item=v}
+<tr class="{if !$v.active}inactive{/if}">
+	<td>{$v.name}</td>
+	<td>
+		<span>{$v.no_banners}</span>
+		<span>
+		<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onMoveUp({$v.id}, 'banner_categ'){/if}"><img src="{$template_path}images/up.png" class="tooltip icon" title="{$lng.banners.increase_no}" alt=""></a>
+		</span>
+
+		<span>{if $v.order_down>0}
+		<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onMoveDown({$v.id}, 'banner_categ'){/if}"><img src="{$template_path}images/down.png" class="tooltip icon" title="{$lng.banners.decrease_no}" alt=""></a>
+		{else}
+		<img src="{$template_path}images/down-off.png">
+		{/if}</span>
+	</td>
+	<td>{$v.total_banners}</td>
+	<td width=20>
+	<div id="div_active{$v.id}">
+	{if $v.active==0}
+		<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onEnable('{$v.id}', 'banner_categ', '');{/if}">
+		<img id="active{$v.id}" src="{$template_path}images/enable.png" class="tooltip icon" title="{$lng.general.enable}" alt="">
+		</a>
+	{else}
+		<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDisable('{$v.id}','banner_categ','');{/if}">
+		<img id="active{$v.id}" src="{$template_path}images/disable.png" class="tooltip icon" title="{$lng.general.disable}" alt="">
+		</a>
+	{/if}
+	</div>
+	</td>
+</tr>
+{/foreach}
+</table>
+
+</form>
+</div> {* end p30 *}
+
+
+{include file="footer.html"}

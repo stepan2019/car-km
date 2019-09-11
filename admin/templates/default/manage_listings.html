@@ -1,0 +1,556 @@
+{include file="header.html"}
+{include file="data/fancybox.html"}
+{include file="data/ui.html"}
+
+<div class="page_title">{$lng.panel.listings} > {$lng.panel.manage_listings}</div>
+
+<div class="p30">
+<form name="browse" id="browse" method="post" action="manage_listings.php">
+
+<div class="lfloat" style="width: 600px;">
+
+<div class="lfloat mr10">
+	{if !$is_mod || $mod_sections.listings.add==1}
+	<a href="new_listing.php"><img src="{$template_path}images/add.png" class="tooltip icon" title="{$lng.general.add}" alt="{$lng.general.add}"></a>
+	{/if}
+	{if !$is_mod || $mod_sections.listings.delete==1}
+	<input type="image" value="delete_selected" name="delete_selected" src="{$template_path}images/delete_all.png" title="{$lng.general.delete_all}" class="tooltip icon" onclick="{if $demo}alert('{$lng.general.errors.demo}'); return false;{else}return myConfirm('{$lng.listings.confirm_delete_all|addslashes}'){/if}" style="border: 0px;">
+	{/if}
+	{if !$is_mod || $mod_sections.listings.edit==1}
+	<input type="image" value="activate_selected" name="activate_selected" src="{$template_path}images/activate_all.png" title="{$lng.general.activate_all}" class="tooltip icon" onclick="return myConfirm('{$lng.listings.confirm_activate_all|addslashes}')" style="border: 0px;">
+
+	<input type="image" value="deactivate_selected" name="deactivate_selected" src="{$template_path}images/deactivate_all.png" title="{$lng.general.deactivate_all}" class="tooltip icon" onclick="{if $demo}alert('{$lng.general.errors.demo}'); return false;{else}return myConfirm('{$lng.listings.confirm_deactivate_all|addslashes}'){/if}" style="border: 0px;">
+	{/if}
+	
+	
+	{if $ads_settings.enable_sold}
+	<input type="image" value="sold_selected" name="sold_selected" id="sold_selected" src="{$template_path}images/mm-sold.png" style="border: 0px;" class="tooltip icon" onclick="{if $demo}alert('{$lng.general.errors.demo}'); return false;{/if}" title="{$lng.listings.mark_sold}"/>
+	{/if}
+
+	{if $ads_settings.enable_rented}
+	<input type="image" value="rented_selected" name="rented_selected" id="rented_selected" src="{$template_path}images/mm-rented.png" style="border: 0px;" class="tooltip icon" onclick="{if $demo}alert('{$lng.general.errors.demo}'); return false;{/if}" title="{$lng.listings.mark_rented}"/>
+	{/if}
+
+	
+</div>
+
+<div class="lfloat">
+		<select name="show" onChange="doSel(this);">
+
+		<option value="location.href='{$pages_link|replace:'##page##':1}&show=all'" {if $show=="all"} selected="selected" {/if}>{$lng.listings.all}</option>
+
+		{if $ads_settings.pending_edited}
+		<option value="location.href='{$pages_link|replace:'##page##':1}&show=pe'" {if $show=="pe"} selected="selected" {/if}>{$lng.listings.pending_edited}</option>
+		{/if}
+
+		<option value="location.href='{$pages_link|replace:'##page##':1}&show=active'" {if $show=="active"} selected="selected" {/if}>{$lng.listings.active_listings}</option>
+		<option value="location.href='{$pages_link|replace:'##page##':1}&show=inactive'" {if $show=="inactive"} selected="selected" {/if}>{$lng.listings.inactive_listings}</option>
+		<option value="location.href='{$pages_link|replace:'##page##':1}&show=pending'" {if $show=="pending"} selected="selected" {/if}>{$lng.listings.pending_listings}</option>
+		{if $ads_settings.enable_featured}<option value="location.href='{$pages_link|replace:'##page##':1}&show=featured'" {if $show=="featured"} selected="selected" {/if}>{$lng.listings.featured_listings}</option>{/if}
+		{if $ads_settings.enable_highlited}<option value="location.href='{$pages_link|replace:'##page##':1}&show=highlited'" {if $show=="highlited"} selected="selected" {/if}>{$lng.listings.highlited_listings}</option>{/if}
+		{if $ads_settings.enable_priorities}<option value="location.href='{$pages_link|replace:'##page##':1}&show=priorities'" {if $show=="priorities"} selected="selected" {/if}>{$lng.listings.priorities_listings}</option>{/if}
+		
+		{if $ads_settings.enable_urgent}<option value="location.href='{$pages_link|replace:'##page##':1}&show=urgent'" {if $show=="urgent"} selected="selected" {/if}>{$lng.listings.urgent_listings}</option>{/if}
+		{if $ads_settings.enable_video}<option value="location.href='{$pages_link|replace:'##page##':1}&show=video'" {if $show=="video"} selected="selected" {/if}>{$lng.listings.video_listings}</option>{/if}
+		{if $ads_settings.enable_url}<option value="location.href='{$pages_link|replace:'##page##':1}&show=url'" {if $show=="url"} selected="selected" {/if}>{$lng.listings.url_listings}</option>{/if}
+		<option value="location.href='{$pages_link|replace:'##page##':1}&show=expired'" {if $show=="expired"} selected="selected" {/if}>{$lng.listings.expired_listings}</option>
+		{if $ads_settings.enable_sold}<option value="location.href='{$pages_link|replace:'##page##':1}&show=sold'" {if $show=="sold"} selected="selected" {/if}>{$lng.listings.sold_listings}</option>{/if}
+		{if $ads_settings.enable_rented}<option value="location.href='{$pages_link|replace:'##page##':1}&show=rented'" {if $show=="rented"} selected="selected" {/if}>{$lng.listings.rented_listings}</option>{/if}
+		{if $ads_settings.enable_auctions}<option value="location.href='{$pages_link|replace:'##page##':1}&show=auctions'" {if $show=="auctions"} selected="selected" {/if}>{$lng.listings.listings_with_auctions}</option>{/if}
+
+		</select>
+
+		<select name="order" onChange="doSel(this);">
+
+		<option value="location.href='{$order_by_link|replace:'##order##':'date_added'}'" {if $order=='date_added'}selected="selected"{/if}>
+		{$lng.listings.order_by_date}</option>
+		<option value="location.href='{$order_by_link|replace:'##order##':'price'}'" {if $order=='price'}selected="selected"{/if}>
+		{$lng.listings.order_by_price}</option>
+		<option value="location.href='{$order_by_link|replace:'##order##':'title'}'" {if $order=='title'}selected="selected"{/if}>
+		{$lng.listings.order_by_title}</option>
+		<option value="location.href='{$order_by_link|replace:'##order##':'viewed'}'" {if $order=='viewed'}selected="selected"{/if}>
+		{$lng.listings.order_by_views}</option>
+
+		</select>
+
+		<select name="order_way" onChange="doSel(this);">
+
+		<option value="location.href='{$order_way_link|replace:'##order_way##':'desc'}'" {if $order_way=='desc'}selected="selected"{/if}>{$lng.general.desc}</option>
+		<option value="location.href='{$order_way_link|replace:'##order_way##':'asc'}'" {if $order_way=='asc'}selected="selected"{/if}>{$lng.general.asc}</option>
+
+		</select>
+
+</div>
+
+<div class="buttonwrapper lfloat ml10"><div class="button3-left">
+
+	<a href="javascript:;" id="add_search"><span class="button3-right">{$lng.general.search}&nbsp;<img src="{$template_path}images/gray-down-arrow.png" /></span></a>
+
+	<a href="javascript:;" id="remove_search"><span class="button3-right">{$lng.general.search}&nbsp;<img src="{$template_path}images/gray-up-arrow.png" /></span></a>
+
+</div></div>
+
+</div>{* lfloat *}
+
+<div class="rfloat">
+{include file="paginator.html"}
+</div>
+
+<div class="clearfix"></div>
+
+<div id="search_box" {*style="display: none;"*}>
+
+<input type="hidden" name="page" value = "{$page}" />
+<input type="hidden" name="show" value = "{$show}" />
+<input type="hidden" name="order" value = "{$order}" />
+<input type="hidden" name="order_way" value = "{$order_way}" />
+<input type="hidden" name="no_per_page" value = "{$no_per_page}" />
+
+<input type="text" name="id" size="6" class="defaultText" title="{$lng.listings.id}" value="{if isset($post_array.id)}{$post_array.id}{/if}"/>
+
+<input type="text" name="keyword" size="15" class="defaultText" title="{$lng.search.keyword}" value="{if isset($post_array.keyword)}{$post_array.keyword}{/if}" />
+
+{if $settings.enable_username}
+<input type="text" name="username" size="20" class="defaultText" title="{$lng.users.username}" value="{if isset($post_array.username)}{$post_array.username}{/if}" />
+{/if}
+
+<input type="text" name="email" size="20" class="defaultText" title="{$lng.users.email}" value="{if isset($post_array.email)}{$post_array.email}{/if}" />
+
+<input type="text" name="ip" size="20" class="defaultText" title="{$lng.search.ip}" value="{if isset($post_array.ip)}{$post_array.ip}{/if}" />
+
+<select name="category_id">
+	<option value="">{$lng.listings.category}</option>
+{foreach from=$categories item=v}
+	<option value="{$v.id}" {if isset($post_array.category_id) && $post_array.category_id==$v.id}selected="selected"{/if}{if $v.parent} class="opt_parent"{/if}>{$v.str}{$v.name}</option>
+{/foreach}
+</select>
+
+<select name="package_id">
+	<option value="">{$lng.listings.package}</option>
+{foreach from=$plans item=v}
+	<option value="{$v.id}" {if isset($post_array.package_id) && $post_array.package_id==$v.id}selected="selected"{/if}>{$v.name}</option>
+{/foreach}
+</select>
+
+<input name="date_from_vis" id="date_from_vis" type="text" size="10" class="defaultText" title="{$lng.subscriptions.date_start}"/>
+<input name="date_from" id="date_from" type="hidden"/>
+
+<input name="date_to_vis" id="date_to_vis" type="text" size="10" class="defaultText" title="{$lng.subscriptions.date_end}" />
+<input name="date_to" id="date_to" type="hidden" />
+
+<div class="buttons"><strong><input type="submit" name="Search" value="{$lng.general.search}" /></strong></div>
+
+
+</div> {* end search box *}
+
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th width="30" class="hleft"><input type="checkbox" class="noborder" name="check_all" id="check_all" /></th>
+	<th width="30">{$lng.listings.id}</th>
+	<th width= "80">{* picture *}</th>
+	<th class="laligned" style="padding-left: 10px;">{$lng.listings.ad_information}</th>
+	<th>{$lng.listings.posted_by}</th>
+	<th width="200">{$lng.listings.date}</th>
+	<th width="40">{$lng.listings.views}</th>
+	<th width="40"></th>
+	<th width="80" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$listings_array item=v}
+<tr class="{if !$v.active}inactive{/if}{if $v.pending} pending{/if}">
+	<td {if $ads_settings.enable_auctions && isset($v.auction) && $v.auction}rowspan="2"{/if}><input type="checkbox" name="ad{$v.id}" id="ad{$v.id}" /></td>
+	<td {if $ads_settings.enable_auctions && isset( $v.auction) && $v.auction}rowspan="2"{/if}>#{$v.id}</td>
+	<td class="nop" {if $ads_settings.enable_auctions && isset($v.auction) && $v.auction}rowspan="2"{/if}><a href="{if $seo_settings.enable_mod_rewrite}{seo->makeDetailsLink p1=$v.id p2=$v.title p3='' p4=$v.category_id p5=$v.slug}{else}{$live_site}/details.php?id={$v.id}{/if}"><img src="{$live_site}/{$v.image}" alt="" /></a></td>
+	<td class="laligned">
+		<div><a href="{if $seo_settings.enable_mod_rewrite}{seo->makeDetailsLink p1=$v.id p2=$v.title}{else}{$live_site}/details.php?id={$v.id}{/if}" target="_blank">{$v.title|wordwrap:40:" ":true}</a></div>
+		{if $data_set=="cars"}<div>{if isset($v.make)}{$v.make} {/if}{if isset($v.model)}{$v.model}{/if}</div>{/if}
+		<div>{$lng.listings.category}: {if isset($v.category)}{$v.category}{/if}</div>
+		<div>{$lng.listings.package}: {if isset($v.package)}{$v.package}{/if}</div>
+
+		{if $ads_settings.enable_price}
+		
+		{if in_array("price_extra",$modules_array) && isset($pe_settings[$v.fieldset])}
+	
+		{include file="modules/price_extra/manage_listings.html"}
+	
+		{else}
+
+		{if $v.price>=0}<div>{$lng.listings.price}: {$v.price_curr}</div>{/if}
+ 
+		{/if}
+			
+		{/if} {* end if enable price *}
+
+		
+		
+		
+		{if isset($v.code) && $v.code}{$lng.coupons.coupon}: <div class="sc1">{$v.code}</div>{/if}
+	</td>
+	<td>{if $v.user_id}<a href="javascript:;" class="usrinfo sc1 underline" id="info{$v.user_id}">{/if}{if $settings.enable_username}{$v.username}{else}{$v.email}{/if}{if !$v.user_id}<br/>{$v.ip}{/if}{if $v.user_id}</a>{/if}</td>
+	<td>{$lng.listings.added_on}: {$v.date_nice}
+	{if $v.expired}<br /><span class="sc2">{$lng.listings.expired_on}:{$v.date_expires_nice}</span>
+	{elseif $v.date_expires && $v.date_expires!="0000-00-00 00:00:00"}<br />{$lng.listings.expires_on}:<br />{$v.date_expires_nice}
+	{else}<br />{$lng.listings.expires_on}: {$lng.general.never}
+	{/if}</td>
+	<td>{$v.viewed}</td>
+
+	<td class="laligned">
+
+		{if $v.active}
+		<div class="small-btn activebutton icon">{$lng.listings.active}</div>
+		{elseif !$v.user_approved}
+		<div class="small-btn inactivebutton icon">{$lng.listings.not_approved}</div>
+		{else}
+		<div class="small-btn inactivebutton icon">{$lng.listings.inactive}</div>
+		{/if}
+
+		{if $v.pending || $v.pending_actions|@count}
+		{if !$is_mod || $mod_sections.listings.edit==1}
+		{if $v.pending_actions|@count>0}
+		<a href="javascript:;" class="invoice" id="inv{$v.id}">
+		{else}
+		<a href="javascript:;" onclick="onAccept('{$v.id}');">
+		{/if}
+		{/if}
+		<div class="small-btn pendingbutton icon tooltip"  title="{$v.pending_info}">{$lng.listings.pending}</div>
+		{if !$is_mod || $mod_sections.listings.edit==1}
+		</a>
+		{/if}
+		{/if}
+
+		{if $ads_settings.pending_edited && $v.pending_edited}
+		<a href="review_pending_edited.php?id={$v.id}" target="_blank">
+		<div class="small-btn pebutton icon tooltip"  title="{$lng.listings.pending_edited}">{$lng.listings.pe}</div>
+		</a>
+		{/if}
+
+		{if $v.expired}
+		{if !$is_mod || $mod_sections.listings.edit==1}
+		<a href="javascript:;" onclick="onRenew('{$v.id}', '{$lng.listings.confirm_renew|addslashes}')">
+		{/if}
+		<div class="small-btn expiredbutton icon tooltip" title="{$lng.listings.renew}">{$lng.listings.expired}</div>
+		{if !$is_mod || $mod_sections.listings.edit==1}
+		</a>
+		{/if}
+		{/if}
+		{if $ads_settings.enable_sold && $v.sold}
+		<div class="small-btn soldbutton icon">{$lng.listings.sold}</div>
+		{/if}
+
+		{if $ads_settings.enable_rented && $v.rented}
+		<div class="small-btn rentedbutton icon">{$lng.listings.rented}</div>
+		{/if}
+
+		{if $ads_settings.enable_featured && $v.featured}
+		<div class="small-btn optionsbutton icon">{$lng.listings.featured}{if isset($v.featured_no_days) && $v.featured_no_days}&nbsp;{$v.featured_no_days}&nbsp;{$lng.days}{/if}</div>
+		{/if}
+
+		{if $ads_settings.enable_highlited &&  $v.highlited}
+		<div class="small-btn optionsbutton icon">{$lng.listings.highlited}</div>
+		{/if}
+
+		{if $ads_settings.enable_priorities &&  isset($v.priority_name) && $v.priority_name}
+		<div class="small-btn optionsbutton icon">{$v.priority_name}</div>
+		{/if}
+
+		{if $ads_settings.enable_urgent && $v.urgent}
+		<div class="small-btn optionsbutton icon">{$lng.packages.urgent}</div>
+		{/if}
+
+		{if $ads_settings.enable_video && isset($v.enable_video) && $v.enable_video}
+		<div class="small-btn optionsbutton icon">{$lng.listings.short_video}</div>
+		{/if}
+
+		{if $ads_settings.enable_url && isset($v.enable_url) && $v.enable_url}
+		<div class="small-btn optionsbutton icon">{$lng.packages.url}</div>
+		{/if}
+
+		{if $v.priority==100}
+		<div class="small-btn optionsbutton icon">{$lng.listings.bumped}</div>
+		{/if}
+		
+	</td>
+
+	<td class="laligned">
+
+		<a href="javascript:;" class="mailto" id="mail{$v.id}"><img src="{$template_path}images/mail.png" class="tooltip icon" title="{$lng.general.mail}"></a>
+
+		{if !$is_mod || $mod_sections.listings.edit==1}
+		<span align=center><a href="edit_listing.php?id={$v.id}"><img src="{$template_path}images/edit.png" class="tooltip icon" title="{$lng.general.edit}"></a></span>
+
+		<span align="center"><a href="edit_photos.php?id={$v.id}">
+		<img src="{$template_path}images/edit_photos.png" class="tooltip icon" title="{$lng.listings.edit_photos}">
+		</a></span>
+		{/if}
+
+		{if !$is_mod || $mod_sections.listings.delete==1}
+		<a href="javascript:;" onclick="onDelete('{$v.id}','{$lng.listings.confirm_delete|addslashes}', 'listing');"><img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}"></a>
+		{/if}
+
+		{if !$is_mod || $mod_sections.listings.edit==1}
+		<span id="div_active{$v.id}">
+		{if $v.active==0}
+		<a href="javascript:;" onclick="onEnable('{$v.id}','listing', '');"><img id="active{$v.id}" src="{$template_path}images/enable.png" class="tooltip icon" title="{$lng.general.enable}"></a>
+		{else}
+		<a href="javascript:;" onclick="onDisable('{$v.id}','listing','');"><img id="active{$v.id}" src="{$template_path}images/disable.png" class="tooltip icon" title="{$lng.general.disable}"></a>
+		{/if}
+		</span>
+
+		<a href="javascript:;" class="adsettings" id="sett{$v.id}"><img src="{$template_path}images/edit_options.png" class="tooltip icon" title="{$lng.listings.modify_ad_settings}"></a>
+
+		{if $ads_settings.enable_sold}
+		<span id="div_sold{$v.id}">
+		{if $v.sold==0}
+		<a href="javascript:;" onclick="onSold('{$v.id}','listing');"><img id="sold{$v.id}" src="{$template_path}images/mark_sold.png" class="tooltip icon" title="{$lng.listings.mark_sold}"></a>
+		{else}
+		<a href="javascript:;" onclick="onUnsold('{$v.id}','listing');"><img id="unsold{$v.id}" src="{$template_path}images/mark_unsold.png" class="tooltip icon" title="{$lng.listings.mark_unsold}"></a>
+		{/if}
+		</span>
+		{/if}
+
+		{if $ads_settings.enable_rented}
+		<span id="div_rented{$v.id}">
+		{if $v.rented==0}
+		<a href="javascript:;" onclick="onRented('{$v.id}','listing');"><img id="rented{$v.id}" src="{$template_path}images/mark_rented.png" class="tooltip icon" title="{$lng.listings.mark_rented}"></a>
+		{else}
+		<a href="javascript:;" onclick="onUnrented('{$v.id}','listing');"><img id="unrented{$v.id}" src="{$template_path}images/mark_unrented.png" class="tooltip icon" title="{$lng.listings.mark_unrented}"></a>
+		{/if}
+		</span>
+		{/if}
+
+		{if $v.expired}
+		<a href="javascript:;" onclick="onRenew('{$v.id}', '{$lng.listings.confirm_renew|addslashes}')"><img src="{$template_path}images/renew.png" class="tooltip icon" title="{$lng.listings.renew}"></a>
+		{/if}
+
+		<span id="div_block{$v.id}">
+		<a {if $v.user_id}class="block" id="blk{$v.user_id}"{else}class="lblock" id="blk{$v.id}"{/if}>
+			<img src="{$template_path}images/block.png" class="tooltip icon" title="{$lng.users.block_unblock}" alt="">
+		</a>
+		</span>
+		{/if} {* end if !$is_mod || $mod_sections.listings.edit==1 *}
+
+</tr>
+
+{if $ads_settings.enable_auctions && $v.auction}
+<tr><td colspan="6" class="laligned">
+
+
+
+	<div class="lfloat">
+
+	<b>{$lng.auction.auction}</b> | 
+
+	</div> 
+
+
+
+	<div class="lfloat">
+
+	{if $v.auction.active}
+
+	<div class="small-btn activebutton icon">{$lng.listings.active}</div>
+	{else}
+
+	<div class="small-btn inactivebutton icon">{$lng.listings.inactive}</div>
+	{/if}
+
+	</div>
+
+
+
+	<div class="lfloat">
+
+	{$lng.auction.placed_on}: {$v.auction.date_nice} | {$lng.auction.auction_start_price} <b>{$v.auction.starting_price}</b> | {$lng.auction.no_bids} {$v.auction.no_bids} {if $v.auction.no_bids>0}| {$lng.auction.max_bid} <b>{$v.auction.max_bid}</b>{/if}
+
+	</div>
+
+
+</td></tr>
+
+{/if}
+
+
+{/foreach}
+
+{if $total==0}
+	<tr><td colspan="9">{$lng.listings.no_listings}</td></tr>
+{/if}
+</table>
+</form>
+
+{if $total}<div class="rfloat mt20">{include file="paginator.html"}</div>{/if}
+
+<div class="mt20">
+	{$lng.general.show}
+	<select name="no_per_page_sel" onchange="doSel(this);">
+		{section name=pg loop=60 start=10 step=10}
+		<option value="location.href='{$crt_page_link}&no_per_page={$smarty.section.pg.index}'" {if $no_per_page==$smarty.section.pg.index} selected="selected" {/if}>{$smarty.section.pg.index}</option>
+		{/section}
+	</select>
+	{$lng.general.on_a_page}
+</div>
+
+</div> {* end p30 *}
+
+
+<script type="text/javascript">
+{literal}
+
+$(document).ready(function() {
+
+
+	$("input").keypress(function(e)
+	{
+       		// if the key pressed is the enter key
+       		if (e.which == 13)
+       		{
+
+			// delay action so the autocomplete list to fill
+			setTimeout(function() { $("#search").submit();}, 200);
+
+			return false;
+       		}
+	});
+	$("#add_search").hide();
+	//$("#search_box").hide();
+	$("#add_search").click(function()
+	{
+		$("#remove_search").show();
+		$("#add_search").hide();
+		$("#search_box").slideDown('fast').show();
+			
+	});
+
+	$("#remove_search").click(function()
+	{
+		$("#add_search").show();
+		$("#remove_search").hide();
+		$("#search_box").hide().slideUp('fast');
+	});
+
+	$("#check_all").click(function()
+	{
+
+		if ($('#check_all').is(':checked')) checkAll(document);
+		else uncheckAll(document);
+
+	});
+
+
+$("a.invoice").click(function(event){
+	var listing_id = jQuery(this).attr("id").substr(3);
+	$.fancybox({
+		'width'         		: 630,
+		'height'        		: 650,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'margin'		: '0',
+		'padding'		: '0',
+		'titleShow'		: false,
+		'type'			: 'iframe',
+		'href'			: '{/literal}{$live_site}/admin/selective_invoice_accept.php?id='+listing_id+'&type=ad{literal}',
+		'onClosed': function(){ location.reload(true); }
+	});
+});
+
+$("a.adsettings").click(function(event){
+	var listing_id = jQuery(this).attr("id").substr(4);
+	$.fancybox({
+		'width'         		: 630,
+		'height'        		: 650,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'margin'		: '0',
+		'padding'		: '0',
+		'titleShow'		: false,
+		'type'			: 'iframe',
+		'href'			: '{/literal}{$live_site}{literal}/admin/edit_ad_settings.php?id='+listing_id,
+		'onClosed': function(){ location.reload(true); }
+	});
+});
+
+$("a.mailto").click(function(event){
+	var listing_id = jQuery(this).attr("id").substr(4);
+	$.fancybox({
+		'width'         		: 630,
+		'height'        		: 650,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'margin'		: '0',
+		'padding'		: '0',
+		'titleShow'		: false,
+		'type'			: 'iframe',
+		'href'			: '{/literal}{$live_site}{literal}/admin/mailto.php?aid='+listing_id,
+		'onClosed': function(){ location.reload(false); }
+	});
+});
+
+$("a.block").click(function(event){
+	var user_id = jQuery(this).attr("id").substr(3);
+	$.fancybox({
+		'width'         		: 630,
+		'height'        		: 650,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'margin'		: '0',
+		'padding'		: '0',
+		'titleShow'		: false,
+		'type'			: 'iframe',
+		'href'			: '{/literal}{$live_site}{literal}/admin/block_item.php?id='+user_id
+	});
+});
+
+$("a.lblock").click(function(event){
+	var listing_id = jQuery(this).attr("id").substr(3);
+	$.fancybox({
+		'width'         		: 630,
+		'height'        		: 650,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'margin'		: '0',
+		'padding'		: '0',
+		'titleShow'		: false,
+		'type'			: 'iframe',
+		'href'			: '{/literal}{$live_site}{literal}/admin/block_item.php?listing_id='+listing_id
+	});
+});
+
+$("a.usrinfo").click(function(event){
+	var user_id = jQuery(this).attr("id").substr(4);
+	$.fancybox({
+		'width'         		: 730,
+		'height'        		: 700,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'margin'		: '0',
+		'padding'		: '0',
+		'titleShow'		: false,
+		'type'			: 'iframe',
+		'href'			: '{/literal}{$live_site}{literal}/admin/include/info_user.php?id='+user_id
+	});
+});
+
+}); // end document ready
+
+
+	$(function() {
+		$('#date_from_vis').datepicker({
+			dateFormat: "M dd yy",
+			changeMonth: true,
+			changeYear: true,
+			altField: '#date_from', altFormat: 'yy-mm-dd'
+		});
+
+		$('#date_to_vis').datepicker({
+			dateFormat: "M dd yy",
+			changeMonth: true,
+			changeYear: true,
+			altField: '#date_to', altFormat: 'yy-mm-dd'
+		});
+	});
+
+{/literal}
+</script>
+
+{include file="footer.html"}

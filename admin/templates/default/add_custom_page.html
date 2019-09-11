@@ -1,0 +1,189 @@
+{include file="header.html"}
+
+<div class="page_title">{$lng.panel.tools} > <a href="manage_custom_pages.php">{$lng.panel.custom_pages}</a> > {if !isset($id) || !$id}{$lng.custom_pages.add_custom_page}{else}{$lng.custom_pages.edit_custom_page}{/if}</div>
+
+<div class="p30">
+<form name="cp" method="post" action="{$self}{if isset($id) && $id}?id={$id}{/if}" enctype="multipart/form-data">
+
+<div class="form_container">
+
+{if $error}<div class="error">{$error}</div>{/if}
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_pages.title}<span class="mandatory">*</span></div>
+	<div class="right_form"><input type="text" size=30 name="title_{$v.id}" {if $v.default}id="cp_title"{/if} value="{if isset($tmp.title[$v.id])}{$tmp.title[$v.id]}{/if}" /></div>
+</div>
+{/foreach}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.custom_pages.type}</div>
+	<div class="right_form"><input type="radio" name="type" checked="checked" onchange="onCPType(1)" onClick="onCPType(1)" value="1" {if isset($id) && $id==1}disabled="disabled"{/if} />&nbsp;&nbsp;{$lng.custom_pages.custom_content}
+	&nbsp;&nbsp;<input type="radio" name="type" value="2" onchange="onCPType(2)" onClick="onCPType(2)" {if isset($tmp.type) && $tmp.type==2}checked="checked"{/if} {if isset($id) && $id==1}disabled="disabled"{/if} />&nbsp;&nbsp;{$lng.custom_pages.external_link}
+	</div>
+</div>
+
+<div class="clearfix" id="div_slug">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.seo_settings.info.custom_page_slug}" />&nbsp;{$lng.seo_settings.slug}</div>
+	<div class="right_form"><input type="text" size="40" name="slug" id="slug" value="{if isset($slug) && $slug}{$slug}{/if}" />
+	<span class="ok hidden" id="slug_ok">{$lng.seo_settings.info.slug_ok}</span><span class="not-ok hidden" id="slug_error">{$lng.seo_settings.error.slug_exists}</span>
+	</div>
+</div>
+
+<div class="clearfix" id="div_external" style="display: none">
+	<div class="left_form">{$lng.custom_pages.external_link}</div>
+	<div class="right_form"><input type="text" size=50 name="hreflink" id="hreflink" value="{if isset($tmp.hreflink)}{$tmp.hreflink}{/if}" {if isset($id) && $id==1}disabled="disabled"{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.custom_pages.navlink}</div>
+	<div class="right_form">
+	<select name="navlink" id="navlink" onchange="onNavlink()"  {if isset($id) && $id==1}disabled="disabled"{/if}>
+		<option value="1" {if isset($tmp.navlink) && $tmp.navlink==1}selected="selected"{/if}>{$lng.custom_pages.main_navlink}</option>
+		<option value="2" {if isset($tmp.navlink) && $tmp.navlink==2}selected="selected"{/if}>{$lng.custom_pages.secondary_navlink}</option>
+		<option value="0" {if isset($tmp.navlink) && $tmp.navlink=='0' || (isset($id) && $id==1)}selected="selected"{/if}>{$lng.custom_pages.not_linked}</option>
+	</select>
+	</div>
+</div>
+
+<div class="clearfix" id="div_submenu" style="display: block">
+	<div class="left_form">{$lng.custom_pages.submenu}</div>
+	<div class="right_form">
+	<select name="parent_id" {if isset($id) && $id==1}disabled="disabled"{/if}>
+		<option value=""> - </option>
+		{foreach from=$navlinks item=v}
+		{if !isset($id) || ($v.id!=$id && $v.parent_id!=$id)}
+		<option value="{$v.id}" {if isset($tmp.parent_id) && $tmp.parent_id==$v.id}selected="selected"{/if}>{$v.str}{$v.title}</option>
+		{/if}
+		{/foreach}
+	</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.custom_pages.open_in_new_window}</div>
+	<div class="right_form"><input type="checkbox" class="noborder" name="blank" {if  isset($tmp.blank) && $tmp.blank==1 || !isset($id) || !$id}checked="checked"{/if} {if isset($id) && $id==1}disabled="disabled"{/if} /></div>
+</div>
+
+<div id="div_internal" style="display: block">
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.settings.page_title}</div>
+	<div class="right_form"><input type="text" name="page_title_{$v.id}" size="50" value="{if isset($tmp.page_title[$v.id])}{$tmp.page_title[$v.id]}{/if}"/></div>
+</div>
+{/foreach}
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_pages.meta_keywords}</div>
+	<div class="right_form"><textarea name="meta_keywords_{$v.id}" rows="2" cols="50">{if isset($tmp.meta_keywords[$v.id])}{$tmp.meta_keywords[$v.id]}{/if}</textarea></div>
+</div>
+{/foreach}
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.custom_pages.meta_description}</div>
+	<div class="right_form"><textarea name="meta_description_{$v.id}" rows="2" cols="50">{if isset($tmp.meta_description[$v.id])}{$tmp.meta_description[$v.id]}{/if}</textarea></div>
+</div>
+{/foreach}
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.noindex}</div>
+	<div class="right_form"><input type="checkbox" name="noindex" id="noindex" {if isset($tmp.noindex) && $tmp.noindex}checked="checked"{/if} />&nbsp;&nbsp;<span class="information1">{$lng.settings.info.noindex}</span></div>
+</div>
+
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.custom_pages.info.visible}" />&nbsp;{$lng.custom_pages.visible}</div>
+	<div class="right_form">
+		<input type="radio" name="choose_group" id="choose_group1" value="all" {if (!isset($id) || !$id) ||$tmp.groups==0}checked="checked"{/if} onchange="onChooseGroup(this.form)" onclick="onChooseGroup(this.form)" />&nbsp;{$lng.general.all}
+		&nbsp;&nbsp;<input type="radio" name="choose_group" id="choose_group2" value="choose" {if isset($tmp.groups) && $tmp.groups!=0}checked="checked"{/if} onchange="onChooseGroup(this.form)" onclick="onChooseGroup(this.form)"/>&nbsp;{$lng.custom_fields.choose_groups}
+	</div>
+</div>
+
+<div class="clearfix" id="div_groups" style="display: none">
+	<div class="left_form">&nbsp;</div>
+	<div class="right_form">
+	<select multiple="multiple" size=8 name="groups[]" id="groups" class="mselect">
+		{foreach from=$groups_list item=v}
+			<option value="{$v.id}">{$v.name}</option>
+		{/foreach}
+		{if $settings.nologin_enabled}<option value="1000">{$lng.packages.not_logged_in}</option>{/if}
+	</select>
+	</div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+
+</div> {* end form_container *}
+
+</form>
+</div>
+
+<script type="text/javascript">
+	var old_type={if isset($tmp.type) && $tmp.type}{$tmp.type}{else}1{/if};
+	onCPType(old_type);
+	var old_nav={if isset($tmp.navlink) &&  $tmp.navlink}{$tmp.navlink}{else}0{/if};
+	onNavlink(old_nav);
+	var old_group_val="{if isset($tmp.groups)}{$tmp.groups}{/if}";
+	if(old_group_val!="0") chooseGroup(document.forms["cp"], old_group_val);
+
+{if !isset($id) || !$id}
+jQuery(document).ready(function() {
+
+	$("#cp_title").focusout(function() {
+	
+		$.ajax({
+		type		: "GET",
+		cache		: false,
+		url		: "{$live_site}/admin/include/actions.php?object=slug&action=make&str="+$("#cp_title").val(),
+		data		: $(this).serializeArray(),
+		success: function(data) {
+
+				$("#slug").val(data);
+				
+				// if id
+				id_str='';
+				{if isset($id) && $id}
+				id_str='&id={$id}';
+				{/if}
+				
+				// check if slug exists
+				$.ajax({
+				type		: "GET",
+				cache		: false,
+				url		: "{$live_site}/admin/include/actions.php?object=slug&action=exists&slug="+data+id_str,
+				data		: $(this).serializeArray(),
+				success: function(data) {
+					if(data==1) {
+						$("#slug_ok").hide();
+						$("#slug_error").show();
+					}
+					else {
+						$("#slug_ok").show();
+						$("#slug_error").hide();
+					}
+				} // end success
+				
+				}); // end ajax
+				
+			} // end data
+		});// end ajax
+
+	});// end focustout
+
+}); // end document ready
+
+{/if}
+	
+</script>
+
+{include file="footer.html"}

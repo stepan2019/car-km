@@ -1,0 +1,158 @@
+{include file="header.html"}
+
+<div class="page_title">{$lng.panel.settings} > {$lng.settings.localization}</div>
+
+<div class="p30">
+<form name="settings" method="post" action="localization.php" enctype="multipart/form-data">
+
+<div class="form_container">
+
+{if isset($error) && $error != ""}<div class="error">{$error}</div>{/if}
+{if isset($successful) && $successful}<div class="info">{$lng.settings.settings_saved}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.default_timezone}</div>
+	<div class="right_form">
+		<select name="timezone">
+		{foreach from=$array_timezones item=v}
+		<option value="{$v}" {if $appearance_settings.timezone==$v} selected="selected" {/if}>{$v}</option>
+		{/foreach}
+		</select>
+		&nbsp;{$lng.settings.info.default_timezone}
+	</div>
+</div>
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.charset}</div>
+	<div class="right_form">
+		<select name="charset_{$v.id}">
+		<option value="-1">{$lng.settings.other}</option>
+		{foreach from=$array_charsets item=c}
+		<option value="{$c.id}" {if $appearance_settings.charset[$v.id]==$c.id} selected="selected" {/if}>{$c.name}</option>
+		{/foreach}
+		</select>&nbsp;	{$lng.settings.other_charset}&nbsp;
+		<input type="text" name="other_charset_{$v.id}" maxlength="30" size=15 value="{if $other}{$appearance_settings.charset[$v.id]}{/if}" />
+	</div>
+</div>
+{/foreach}
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.settings.short_date_format}</div>
+	<div class="right_form"><input type="text" maxlength="30" name="date_format_{$v.id}" size=20 value="{$appearance_settings.date_format[$v.id]}">&nbsp;{$lng.settings.info.short_date_format}</div>
+</div>
+{/foreach}
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.settings.long_date_format}</div>
+	<div class="right_form"><input type="text" maxlength="30" name="date_format_long_{$v.id}" size=20 value="{$appearance_settings.date_format_long[$v.id]}">&nbsp;{$lng.settings.info.long_date_format}</div>
+</div>
+{/foreach}
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}<img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.price_format}" />&nbsp;{$lng.settings.price_format}</div>
+	<div class="right_form">
+		{$lng.settings.decimals}&nbsp;<input type="text" size="5" name="price_format_decimals_{$v.id}" value="{$appearance_settings.price_format_decimals[$v.id]}"/>&nbsp;&nbsp;
+		{$lng.settings.decimals_point}&nbsp;<input type="text" size="5" name="price_format_point_{$v.id}" value="{$appearance_settings.price_format_point[$v.id]}" />&nbsp;&nbsp;
+		{$lng.settings.thousands_separator}&nbsp;<input type="text" size="5" name="price_format_separator_{$v.id}" value="{$appearance_settings.price_format_separator[$v.id]}" />
+	</div>
+</div>
+{/foreach}
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}<img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.number_format}" />&nbsp;{$lng.settings.number_format}</div>
+	<div class="right_form">
+		{$lng.settings.decimals}&nbsp;<input type="text" size="5" name="number_format_decimals_{$v.id}" value="{$appearance_settings.number_format_decimals[$v.id]}"/>&nbsp;&nbsp;
+		{$lng.settings.decimals_point}&nbsp;
+		<input type="text" size="5" name="number_format_point_{$v.id}" value="{$appearance_settings.number_format_point[$v.id]}"/>&nbsp;&nbsp;
+		{$lng.settings.thousands_separator}&nbsp;
+		<input type="text" size="5" name="number_format_separator_{$v.id}" value="{$appearance_settings.number_format_separator[$v.id]}"/>
+	</div>
+</div>
+{/foreach}
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}<img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.default_currency}" />&nbsp;{$lng.settings.default_currency}</div>
+	<div class="right_form">
+		<input type="text" maxlength="20" name="default_currency_{$v.id}" size=10 value="{$appearance_settings.default_currency[$v.id]}" />
+	</div>
+</div>
+{/foreach}
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.settings.currency_position}</div>
+	<div class="right_form">
+		<input type="radio" class="noborder" name="currency_pos_{$v.id}" value="0" {if $appearance_settings.currency_pos[$v.id]==0} checked="checked" {/if} />&nbsp;{$lng.settings.left}&nbsp;&nbsp;
+		<input type="radio" class="noborder" name="currency_pos_{$v.id}" value="1" {if $appearance_settings.currency_pos[$v.id]==1} checked="checked" {/if} />&nbsp;{$lng.settings.right}
+	</div>
+</div>
+{/foreach}
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.save_changes}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+
+<div class="form_subtitle_bg"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.listing_currencies}" />&nbsp;<div class="btn1"><strong>{$lng.settings.listing_currencies|replace:" ":"&nbsp;"}</strong></div></div>
+
+
+<div class="clearfix">
+	<div class="left_form">{$lng.lists.add_currency}</div>
+	<div class="right_form"><input type="text" name="name" />
+	<div class="buttons"{if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="add_currencies" value="{$lng.general.add}" /></span>
+	</div>
+	</div>
+	
+</div>
+
+
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th width="50" class="hleft">{$lng.general.order}</th>
+	<th>{$lng.lists.currency}</th>
+	<th width="60">{$lng.general.order}</th>
+	<th width="50" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$array_currencies item=v}
+<tr>
+	<td><div id="id{$v.order_no}">{$v.order_no}</div></td>
+	<td>{$v.currency}</td>
+	<td>
+		{if $v.order_no>1}
+		<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onMoveUp({$v.id}, 'currency'){/if}"><img src="{$template_path}images/up.png" class="tooltip icon" title="{$lng.general.move_up}" alt=""></a>
+		{else}
+		<img src="{$template_path}images/up-off.png">
+		{/if}</span>
+
+		<span>{if !isset($v.last) || $v.last==0}
+		<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onMoveDown({$v.id}, 'currency'){/if}"><img src="{$template_path}images/down.png" class="tooltip icon" title="{$lng.general.move_down}" alt=""></a>
+		{else}
+		<img src="{$template_path}images/down-off.png">
+		{/if}</span>
+	</td>
+	<td>
+		<span><a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDelete('{$v.id}','{$lng.custom_fields.confirm_delete|addslashes}','currency');{/if}"><img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt="" /></a></span>
+		<span>
+	</td>
+</tr>
+{/foreach}
+
+</table>
+
+</form>
+</div> {* p30 *}
+
+{include file="footer.html"}

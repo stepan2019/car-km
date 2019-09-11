@@ -1,0 +1,89 @@
+{include file="header.html"}
+
+
+<div class="page_title"><a href="{$live_site}/admin/modules.php">{$lng.panel.modules}</a> > {$lng_browse_location.browse_location}</div>
+
+<div class="p30">
+<form method="post" action="" enctype="multipart/form-data">
+
+<div class="form_container">
+
+{if isset($error) && $error}<div class="error">{$error}</div>{/if}
+{if isset($info) && $info}<div class="info">{$info}</div>{/if}
+
+{foreach from =$languages item=v}
+{capture name=some_content assign=field_name}title_{$v.id}{/capture}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng_browse_location.title}</div>
+	<div class="right_form"><input type="text" name="title_{$v.id}" value="{$bl_settings[$field_name]}" /></div>
+</div>
+{/foreach}
+
+<div class="clearfix">
+	<div class="left_form">{$lng_browse_location.no_rows}</div>
+	<div class="right_form"><input type="text" name="no_rows" size="4" value="{$bl_settings.no_rows}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_browse_location.type}</div>
+	<div class="right_form">
+		<input type="radio" name="type" value="single" {if $bl_settings.type=="single"}checked="checked"{/if} onclick="onSingle()" />&nbsp;{$lng_browse_location.single}&nbsp;&nbsp;
+		<input type="radio" name="type" value="double" {if $bl_settings.type=="double"}checked="checked"{/if} onClick="onDouble()" />&nbsp;{$lng_browse_location.double}
+	</div>
+</div>
+
+<div class="clearfix" id="div_single" {if $bl_settings.type!="single"}style="display: none"{/if}>
+	<div class="left_form">{$lng_browse_location.location_field}</div>
+	<div class="right_form">
+		<select name="location_field">
+			<option value=""></option>
+			{foreach from=$fields item=v}
+			<option value="{$v.id}" {if $bl_settings.field_id==$v.id}selected="selected"{/if}>{$v.name}</option>
+			{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="clearfix" id="div_double" {if $bl_settings.type!="double"}style="display: none"{/if}>
+	<div class="left_form">{$lng_browse_location.location_fields}</div>
+	<div class="right_form">
+		<select name="location_fields">
+			<option value=""></option>
+			{foreach from=$depending_fields item=v}
+			<option value="{$v.dep_id}" {if $bl_settings.field_id==$v.dep_id}selected="selected"{/if}>{$v.name}</option>
+			{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+{literal}
+<script type="text/javascript">
+
+function onSingle() {
+
+	document.getElementById("div_single").style.display="block";
+	document.getElementById("div_double").style.display="none";
+
+}
+
+function onDouble() {
+
+	document.getElementById("div_single").style.display="none";
+	document.getElementById("div_double").style.display="block";
+
+}
+</script>
+{/literal}
+
+{include file="footer.html"}

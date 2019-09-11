@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="{$appearance.charset}"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >
+<head>
+<title>{$lng.general.admin_panel}</title>
+<meta http-equiv="Content-Type" content="text/html; charset={$appearance.charset}">
+<link rel="stylesheet" type="text/css" href="{$template_path}style.css">
+</head>
+<body>
+<script type="text/javascript" src="{$live_site}/libs/jQuery/jquery.js"></script>
+
+{if isset($info) && $info}<div style="color: #b00000">{$info}</div>
+{else}
+
+<div style="padding: 10px;">
+<form method="post" action="{$live_site}/admin/disable_plan.php?id={$id}">
+
+
+<h1>{$lng.general.disable}: {$package.name}</h1><br>
+
+<input type="radio" name="action" value="delete" checked> &nbsp; &nbsp; {$lng.packages.disable_all_ads}<br>
+<input type="radio" name="action" value="move"> &nbsp; &nbsp; {$lng.packages.move_ads_to}<br><br>
+
+{foreach from=$packages_array item=v name=gr}
+{if $v.id!=$id}
+<input type="radio" name="move_to" value="{$v.id}" checked>&nbsp;&nbsp;{$v.name}&nbsp;&nbsp;
+{/if}
+{/foreach}
+
+
+<br /><br /><br />
+	<div class="buttons"{if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<strong><input type="submit" name="Submit" value="{$lng.general.submit}" /></strong>
+	</div>
+&nbsp;&nbsp;
+<br><br><br><br>
+</form>
+</div>
+{/if}
+
+</body>
+</html>

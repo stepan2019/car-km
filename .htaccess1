@@ -1,0 +1,23 @@
+php_value session.cookie_lifetime 1800
+php_value session.gc_maxlifetime 1800
+RewriteEngine On
+RewriteCond %{SERVER_PORT} 80
+RewriteRule ^(.*)$ https://car-km.com/$1 [R,L]
+
+
+
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^car-km\.com [NC]
+RewriteCond %{SERVER_PORT} 80
+RewriteRule ^(.*)$ https://www.car-km.com/$1 [R,L]
+
+RewriteCond %{HTTP_REFERER} !^http://car-km.com/.*$      [NC]
+RewriteCond %{HTTP_REFERER} !^http://car-km.com$      [NC]
+RewriteCond %{HTTP_REFERER} !^http://www.car-km.com/.*$      [NC]
+RewriteCond %{HTTP_REFERER} !^http://www.car-km.com$      [NC]
+RewriteCond %{HTTP_REFERER} !^https://car-km.com/.*$      [NC]
+RewriteCond %{HTTP_REFERER} !^https://car-km.com$      [NC]
+RewriteCond %{HTTP_REFERER} !^https://www.car-km.com/.*$      [NC]
+RewriteCond %{HTTP_REFERER} !^https://www.car-km.com$      [NC]
+RewriteRule .*\.(jpg|jpeg|gif|png|bmp)$ - [F,NC]
+#Session timeout

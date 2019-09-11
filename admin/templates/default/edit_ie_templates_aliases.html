@@ -1,0 +1,63 @@
+{include file="header.html"}
+
+<div class="page_title">
+<div class="lfloat" width="200">{$lng.panel.tools} > {$lng.panel.import_export} > <a href="ie_templates.php">{$lng.ie.templates}</a> > {$lng.ie.edit_aliases}</div>
+<div class="rfloat mt5">
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="import-export.php"><span class="tab2-right">{$lng.ie.export}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="import.php"><span class="tab2-right">{$lng.ie.import}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="scheduled_imports.php"><span class="tab2-right">{$lng.ie.scheduled_imports}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab1-left">
+	<a href="ie_templates.php"><span class="tab1-right">{$lng.ie.templates}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="ie_settings.php"><span class="tab2-right">{$lng.ie.settings}</span></a>
+	</div></div>
+
+</div>
+</div>
+
+<div class="p30">
+<form name="ie" method="post" action="{$self}?id={$id}" enctype="multipart/form-data">
+
+<div class="form_container">
+
+{if isset($error) && $error != ""} <div class="error">{$error}</div>{/if}
+
+{foreach from = $fields item = v }
+<div class="clearfix">
+	<div class="left_form">{$v.field}</div>
+	<div class="right_form">
+		<input type = "text" name = "{$v.field}" value = "{$v.alias}" size="40" />
+		&nbsp;&nbsp;
+		CDATA
+		&nbsp;&nbsp;
+		<input type = "checkbox" name="{$v.field}_cdata" {if $v.cdata}checked{/if} />
+	</div>
+</div>
+{/foreach}
+
+<div class="information">{$lng.ie.info.templates_alias}</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+{include file="footer.html"}

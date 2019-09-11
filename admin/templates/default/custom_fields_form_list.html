@@ -1,0 +1,167 @@
+{foreach from=$fields_array item=v}
+
+{if $v.type=="price" && $ads_settings.enable_price}
+
+{if in_array("price_extra", $modules_array) && (isset($pe_settings[$fieldset]) || isset($pe_settings[0]))}
+
+{if isset($pe_settings[$fieldset])}
+{include file="modules/price_extra/custom_fields_form_list.html"}
+{else}
+{include file="modules/price_extra/custom_fields_form_list.html" fieldset=0}
+{/if}
+
+{else}
+
+<div class="clearfix">
+	<div class="left_form">{$v.name}:</div>	
+	<div class="right_form">{if $values_array.price>=0}{$values_array.price_curr}{else}-{/if}</div>
+</div>
+
+{/if}
+
+{if $ads_settings.enable_auctions && isset($values_array.auction) && $values_array.auction.id}
+<div class="clearfix">
+	<div class="left_form">{$lng.auction.auction}:</div>	
+	<div class="right_form">{$lng.auction.auction_start_price}: {$values_array.auction.starting_price}</div>
+</div>
+{/if}
+
+{elseif $v.type=="image"}
+
+<div class="clearfix">
+	<div class="left_form">{$v.name}:</div>	
+	<div class="right_form">{if $values_array[$v.caption]}<a href="{$live_site}/uploads/{$v.caption}/{$values_array[$v.caption]}" class="imgfield"><img src="{$template_path}images/camera.png"></a>{else}-{/if}</div>
+</div>
+
+{elseif $v.type=="file"}
+
+<div class="clearfix">
+	<div class="left_form">{$v.name}:</div>	
+	<div class="right_form">{if $values_array[$v.caption]}
+<a href="{$live_site}/uploads/{$v.caption}/{$values_array[$v.caption]}"><img src="{$template_path}/images/download.png" class="tooltip mbm7" alt="" title="{$lng.general.download}"/></a>{else}-{/if}</div>
+</div>
+
+{elseif $v.type=="video"}
+
+<div class="clearfix">
+	<div class="left_form">{$v.name}:</div>	
+	<div class="right_form">{if isset($values_array[$v.caption]) && $values_array[$v.caption]}
+	<video controls width="350px">
+	<source src="{$live_site}/uploads/{$v.caption}/{$values_array[$v.caption]}" type="video/mp4">
+	Your browser does not support the video tag.
+	</video>
+	{else}-{/if}</div>
+</div>
+
+{elseif $v.type=="audio"}
+
+<div class="clearfix">
+	<div class="left_form">{$v.name}:</div>	
+	<div class="right_form">{if isset($values_array[$v.caption]) && $values_array[$v.caption]}
+	<audio controls>
+	<source src="{$live_site}/uploads/{$v.caption}/{$values_array[$v.caption]}" type="audio/mpeg">
+	Your browser does not support the audio element.
+	</audio>
+	{else}-{/if}</div>
+</div>
+
+{elseif $v.type=="multiselect"}
+
+<div class="clearfix">
+	<div class="left_form">{$v.name}:</div>	
+	<div class="right_form">{if $values_array[$v.caption]}{$values_array[$v.caption]|@implode:', '}{else}-{/if}</div>
+</div>
+
+{elseif $v.type=="google_maps"}
+
+<div class="clearfix">
+	<div class="left_form">{$v.name}:</div>
+	<div class="right_form">
+		{if $values_array[$v.caption]}
+		<input type="hidden" name="{$v.caption}" id="{$v.caption}" value="{$values_array[$v.caption]}">
+		<div id="gm_ro_{$v.caption}" style="width: 450px; height: 400px"></div>
+		{else}-
+		{/if}
+	</div>
+</div>
+
+{elseif $v.type=='checkbox_group'}
+
+<div class="clearfix">
+	<div class="left_form">{$v.name}:</div>	
+	<div class="right_form">
+
+	{foreach from=$v.extra_elements_array item=t name=check}
+		<div class="lfloat {if in_array($t.name, $values_array[$v.caption])}check_on{else}check_off{/if}" >
+		{if $v.prefix!=""} {$v.prefix} {/if}
+		{$t.name}
+		{if $v.postfix!=""} {$v.postfix} {/if}
+		</div>
+	{/foreach}
+
+	</div>
+</div>
+
+{elseif $v.type=="depending"}
+
+<div class="clearfix">
+	<div class="left_form">{$v.depending.name1}:</div>	
+	<div class="right_form">{if $values_array[$v.depending.caption1]}{$values_array[$v.depending.caption1]}{else}-{/if}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$v.depending.name2}:</div>	
+	<div class="right_form">{if $values_array[$v.depending.caption2]}{$values_array[$v.depending.caption2]}{else}-{/if}</div>
+</div>
+
+{if $v.depending.no>=3}
+
+<div class="clearfix">
+	<div class="left_form">{$v.depending.name3}:</div>	
+	<div class="right_form">{if $values_array[$v.depending.caption3]}{$values_array[$v.depending.caption3]}{else}-{/if}</div>
+</div>
+
+{/if}
+
+{if $v.depending.no>=4}
+
+<div class="clearfix">
+	<div class="left_form">{$v.depending.name4}:</div>	
+	<div class="right_form">{if $values_array[$v.depending.caption4]}{$values_array[$v.depending.caption4]}{else}-{/if}</div>
+</div>
+
+{/if}
+
+{if $v.depending.no>=5}
+
+<div class="clearfix">
+	<div class="left_form">{$v.depending.name5}:</div>	
+	<div class="right_form">{if $values_array[$v.depending.caption5]}{$values_array[$v.depending.caption5]}{else}-{/if}</div>
+</div>
+
+{/if}
+
+{elseif $v.type=="checkbox"}
+
+<div class="clearfix">
+	<div class="left_form">{$v.name}:</div>	
+	<div class="right_form">{if $values_array[$v.caption]==1 || $values_array[$v.caption]=='On'}{$lng.general.yes}{else}{$lng.general.no}{/if}</div>
+</div>
+
+{elseif $v.type=="youtube"}
+
+<div class="clearfix">
+	<div class="left_form">{$v.name}:</div>	
+	<div class="right_form">{if $values_array[$v.caption]}{$values_array[$v.caption]|regex_replace:'/ width="[0-9]+"/':' width="500"'|regex_replace:'/ height="[0-9]+"/':' height="388"'}{else}-{/if}</div>
+</div>
+
+{elseif $v.type!="terms" && $v.type!="password"}
+
+<div class="clearfix">
+	<div class="left_form">{$v.name}:</div>	
+	<div class="right_form">{if $values_array[$v.caption]}{if $v.type=="url"}<a href="{$values_array[$v.caption]}" target="_blank">{/if}{$values_array[$v.caption]}{if $v.type=="url"}</a>{/if}{else}-{/if}</div>
+</div>
+
+{/if}
+
+{/foreach}

@@ -1,0 +1,284 @@
+{include file="header.html"}
+{include file="data/fancybox.html"}
+{include file="data/ui.html"}
+
+<div class="page_title">{$lng.panel.orders} > {$lng.panel.order_history}</div>
+
+<div class="p30">
+<form name="search" id="search" method="post" action="order_history.php?no_per_page={$no_per_page}{if $page}&page={$page}{/if}">
+
+<div class="lfloat" style="width: 600px;">
+
+<div class="lfloat mr10">
+	{if !$is_mod || $mod_sections.orders.delete==1}
+	<input type="image" value="delete_selected" name="delete_selected" src="{$template_path}images/delete_all.png" title="{$lng.general.delete_all}" class="tooltip icon" onclick="{if $demo}alert('{$lng.general.errors.demo}'); return false;{else}return myConfirm('{$lng.order_history.confirm_delete_all|addslashes}'){/if}" style="border: 0px;">
+	{/if}
+</div>
+<div class="lfloat">
+	<select name="order" onchange="doSel(this);">
+
+		<option value="location.href='{$order_by_link|replace:'##order##':'date'}'" {if $order=='date'}selected="selected"{/if}>
+		{$lng.order_history.order_by_date}</option>
+
+		<option value="location.href='{$order_by_link|replace:'##order##':'amount'}'" {if $order=='amount'}selected="selected"{/if}>
+		{$lng.order_history.order_by_amount}</option>
+
+		<option value="location.href='{$order_by_link|replace:'##order##':'user_id'}'" {if $order=='user_id'}selected="selected"{/if}>
+		{$lng.order_history.order_by_user}</option>
+
+		<option value="location.href='{$order_by_link|replace:'##order##':'processor'}'" {if $order=='processor'}selected="selected"{/if}>
+		{$lng.order_history.order_by_processor}</option>
+
+	</select>
+
+	<select name="order_way" onchange="doSel(this);">
+		<option value="location.href='{$order_way_link|replace:'##order_way##':'desc'}'" {if $order_way=='desc'}selected="selected"{/if}>{$lng.general.desc}</option>
+		<option value="location.href='{$order_way_link|replace:'##order_way##':'asc'}'" {if $order_way=='asc'}selected="selected"{/if}>{$lng.general.asc}</option>
+	</select>
+
+</div>
+<div class="buttonwrapper lfloat ml10"><div class="button3-left">
+
+	<a href="javascript:;" id="add_search"><span class="button3-right">{$lng.general.search}&nbsp;<img src="{$template_path}images/gray-down-arrow.png" /></span></a>
+
+	<a href="javascript:;" id="remove_search"><span class="button3-right">{$lng.general.search}&nbsp;<img src="{$template_path}images/gray-up-arrow.png" /></span></a>
+
+</div></div>
+
+</div> {* lfloat *}
+
+<div class="rfloat">
+{include file="paginator.html"}
+</div>
+
+<div class="clearfix"></div>
+
+<div id="search_box" style="display: none;">
+
+<input type="hidden" name="page" value = "{$page}" />
+<input type="hidden" name="order" value = "{$order}" />
+<input type="hidden" name="order_way" value = "{$order_way}" />
+<input type="hidden" name="no_per_page" value = "{$no_per_page}" />
+
+<input type="text" name="id" size="6" class="defaultText" title="{$lng.listings.id}" value="{if isset($post_array.id)}{$post_array.id}{/if}"/>
+
+{if $settings.enable_username}
+<input type="text" name="username" size="20" class="defaultText" title="{$lng.users.username}" value="{if isset($post_array.username)}{$post_array.username}{/if}" />
+{/if}
+
+<input type="text" name="email" size="20" class="defaultText" title="{$lng.users.email}" value="{if isset($post_array.email)}{$post_array.email}{/if}" />
+
+<input type="text" name="amount_from" size="10" class="defaultText" title="{$lng.search.amount_from}" value="{if isset($post_array.amount_from)}{$post_array.amount_from}{/if}" />
+
+<input type="text" name="amount_to" size="10" class="defaultText" title="{$lng.search.amount_to}" value="{if isset($post_array.amount_to)}{$post_array.amount_to}{/if}" />
+
+<select name="processor">
+	<option value="">{$lng.order_history.processor}</option>
+{foreach from=$processors item=v}
+	<option value="{$v.processor_code}" {if isset($post_array.processor) && $post_array.processor==$v.processor_code}selected="selected"{/if}>{$v.processor_name|escape:"html"}</option>
+{/foreach}
+</select>
+
+<input name="date_from_vis" id="date_from_vis" type="text" size="15" class="defaultText" title="{$lng.search.date_from}"/>
+<input name="date_from" id="date_from" type="hidden"/>
+
+<input name="date_to_vis" id="date_to_vis" type="text" size="15" class="defaultText" title="{$lng.search.date_to}" />
+<input name="date_to" id="date_to" type="hidden" />
+
+<div class="buttons">
+	<strong><input type="submit" name="Search" value="{$lng.general.search}" /></strong>
+</div>
+
+</div>
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th width="30" class="hleft"><input type="checkbox" class="noborder" name="check_all" id="check_all" /></th>
+	<th width="30">{$lng.listings.id}</th>
+	<th>{$lng.order_history.processor}</th>
+	<th>{$lng.order_history.amount}</th>
+	<th>{$lng.order_history.user}</th>
+	<th>{$lng.general.status}</th>
+	<th>{$lng.order_history.details}</th>
+	<th>{$lng.order_history.date}</th>
+	<th width="70" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$actions_array item=v}
+<tr class="{if !$v.completed} inactive{/if}">
+	<td><input type="checkbox" class="noborder" name="act{$v.invoice}" id="act{$v.invoice}"></td>
+	<td>#{$v.invoice}</td>
+	<td>{$v.processor_title}</td>
+	<td>{$v.amount_nice}{if $v.tax}<br/><span class="sc4">{$lng.settings.tax}: {$v.tax_nice}</span>{/if}</td>
+	<td>{if $v.user_id}<a href="javascript:;" class="usrinfo" id="info{$v.user_id}">{if $settings.enable_username}{$v.username}{else}{$v.email}{/if}</a>{else}{$v.username}{/if}</td>
+	<td>
+		{if $v.completed}<div class="small-btn activebutton icon">{$lng.order_history.completed}</div>{else}<div class="small-btn inactivebutton icon">{$lng.order_history.not_completed}</div>{/if}
+	</td>
+	<td class="laligned">{$v.action_str}{if $v.invoice_id}{$lng.invoice.invoice}: <a href="{$live_site}/include/generate_invoice.php?id={$v.invoice_id}" class="blue">#{$v.invoice_id}</a>{/if}</td>
+	<td>{$v.date_nice}</td>
+	<td>
+
+		<a href="javascript:;" class="ordinfo" id="ord{$v.invoice}">
+		<img src="{$template_path}images/info.png" class="tooltip icon" title="{$lng.general.info}" alt="">
+		</a>
+
+		{if !$is_mod || $mod_sections.orders.delete==1}
+		<a href="javascript:;" onclick="onDelete('{$v.invoice}','{$lng.order_history.confirm_delete|addslashes}', 'order');">
+		<img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt="">
+		</a>
+		{/if}
+
+		{if !$is_mod || $mod_sections.orders.edit==1}
+		<span id="div_active{$v.invoice}">
+			{if $v.completed==0}
+			{if $v.pending_actions|@count>1}
+			<a href="javascript:;" class="invoice" id="inv{$v.invoice}">
+			<img id="active{$v.invoice}" src="{$template_path}images/enable.png" class="tooltip icon" title="{$lng.general.accept}" alt=""></a>
+			{else}
+			<a href="javascript:;" onclick="onEnable('{$v.invoice}', 'order', '');">
+			<img id="active{$v.invoice}" src="{$template_path}images/disable.png" class="tooltip icon" title="{$lng.general.enable}" alt=""></a>
+			{/if}
+			
+
+			{else}
+			<a href="javascript:;" onclick="onDisable('{$v.invoice}', 'order','');">
+			<img id="active{$v.invoice}" src="{$template_path}images/disable.png" class="tooltip icon" title="{$lng.general.disable}" alt=""></a>
+
+			{/if}
+		</span>
+		{/if}
+	</td>
+</tr>
+{/foreach}
+
+{if $no_actions==0}
+	<tr><td colspan="10">{$lng.order_history.no_actions}</td></tr>
+{/if}
+
+</table>
+</form>
+
+{if $no_actions}<div class="rfloat mt20">{include file="paginator.html"}</div>{/if}
+
+<div class="mt20">
+	{$lng.general.show}
+	<select name="no_per_page_sel" onchange="doSel(this);">
+		{section name=pg loop=60 start=10 step=10}
+		<option value="location.href='{$crt_page_link}&no_per_page={$smarty.section.pg.index}'" {if $no_per_page==$smarty.section.pg.index} selected="selected" {/if}>{$smarty.section.pg.index}</option>
+		{/section}
+	</select>
+	{$lng.general.on_a_page}
+</div>
+
+
+</div> {* p30 *}
+
+
+{literal}
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("input").keypress(function(e)
+		{
+        		// if the key pressed is the enter key
+        		if (e.which == 13)
+        		{
+
+				// delay action so the autocomplete list to fill
+				setTimeout(function() { $("#search").submit();}, 200);
+
+				return false;
+        		}
+		});
+		$("#remove_search").hide();
+		$("#search_box").hide();
+		$("#add_search").click(function()
+		{
+			$("#remove_search").show();
+			$("#add_search").hide();
+			$("#search_box").slideDown('fast').show();
+		});
+
+		$("#remove_search").click(function()
+		{
+			$("#add_search").show();
+			$("#remove_search").hide();
+			$("#search_box").hide().slideUp('fast');
+		});
+
+		$("#check_all").click(function()
+		{
+
+			if ($('#check_all').is(':checked')) checkAll(document);
+			else uncheckAll(document);
+
+		});
+
+
+$("a.invoice").click(function(event){
+	var invoice_id = jQuery(this).attr("id").substr(3);
+	$.fancybox({
+		'width'         		: 630,
+		'height'        		: 500,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'margin'		: '0',
+		'padding'		: '0',
+		'titleShow'		: false,
+		'type'			: 'iframe',
+		'href'			: '{/literal}{$live_site}/admin/selective_invoice_accept.php?id='+invoice_id+'&type=invoice{literal}',
+		'onClosed': function(){ location.reload(true); }
+	});
+});
+$("a.usrinfo").click(function(event){
+	var user_id = jQuery(this).attr("id").substr(4);
+	$.fancybox({
+		'width'         		: 730,
+		'height'        		: 700,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'margin'		: '0',
+		'padding'		: '0',
+		'titleShow'		: false,
+		'type'			: 'iframe',
+		'href'			: '{/literal}{$live_site}{literal}/admin/include/info_user.php?id='+user_id
+	});
+});
+
+$("a.ordinfo").click(function(event){
+	var ord_id = jQuery(this).attr("id").substr(3);
+	$.fancybox({
+		'width'         		: 730,
+		'height'        		: 700,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'margin'		: '0',
+		'padding'		: '0',
+		'titleShow'		: false,
+		'type'			: 'iframe',
+		'href'			: '{/literal}{$live_site}{literal}/admin/include/info_order.php?id='+ord_id
+	});
+});
+
+}); // end document ready
+
+	$(function() {
+		$('#date_from_vis').datepicker({
+			dateFormat: "M dd yy",
+			changeMonth: true,
+			changeYear: true,
+			altField: '#date_from', altFormat: 'yy-mm-dd'
+		});
+
+		$('#date_to_vis').datepicker({
+			dateFormat: "M dd yy",
+			changeMonth: true,
+			changeYear: true,
+			altField: '#date_to', altFormat: 'yy-mm-dd'
+		});
+	});
+
+
+{/literal}
+</script>
+
+{include file="footer.html"}

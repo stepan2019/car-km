@@ -1,0 +1,57 @@
+<div class="form_container">
+
+{if $error != ""}<div class="error">{$error}</div>{/if}
+{if $info != ""}<div class="info">{$info}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">Account number</div>
+	<div class="right_form"><input type="text" maxlength="6" size="10" name="account_no" id="account_no" value="{$processor_settings.account_no}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Subaccount number</div>
+	<div class="right_form"><input type="text" maxlength="4" size="10" name="subaccount_no" id="subaccount_no" value="{$processor_settings.account_no}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Form name</div>
+	<div class="right_form"><input type="text" maxlength="30" size="40" name="form_name" id="form_name" value="{$processor_settings.form_name}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.lists.currency}</div>
+	<div class="right_form">
+		<select name="currency" id="currency">
+		<option value="840" {if $processor_settings.currency==840} selected="selected" {/if}>USD</option>
+		<option value="978" {if $processor_settings.currency==978} selected="selected" {/if}>EUR</option>
+		<option value="036" {if $processor_settings.currency==036} selected="selected" {/if}>AUD</option>
+		<option value="124" {if $processor_settings.currency==124} selected="selected" {/if}>CAD</option>
+		<option value="826" {if $processor_settings.currency==826} selected="selected" {/if}>GBP</option>
+		<option value="392" {if $processor_settings.currency==392} selected="selected" {/if}>JPY</option>
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Salt</div>
+	<div class="right_form"><input type="text" size="40" name="salt" id="salt" value="{$processor_settings.salt}"></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Approval URL:</div>
+	<div class="right_form">{$live_site}/payment_return/ccbill.php?mode=success</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Denial URL:</div>
+	<div class="right_form">{$live_site}/payment_return/ccbill.php?mode=failed</div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit_ccbill" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}

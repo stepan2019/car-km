@@ -1,0 +1,188 @@
+{include file="header.html"}
+{include file="data/fancybox.html"}
+
+<div class="page_title">{$lng.panel.listings} > {$lng.panel.manage_packages}</div>
+
+<div class="p30">
+
+<div>
+<a href="add_package.php"><img src="{$template_path}images/add.png" class="tooltip icon" title="{$lng.general.add}" alt=""></a>
+<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDeleteAll('{$lng.packages.confirm_delete_all|addslashes}','pkg'){/if}"><img src="{$template_path}images/delete_all.png" class="tooltip icon" title="{$lng.general.delete_all}" alt=""></a>
+</div>
+
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th width="30" class="hleft"><input type="checkbox" class="noborder" name="check_all" id="check_all" /></th>
+	<th width="20">{$lng.general.id}</th>
+	<th width="60">{$lng.general.position}</th>
+	<th>{$lng.general.name}</th>
+	<th>{$lng.packages.amount}</th>
+	<th>{$lng.packages.groups}</th>
+{*	<th>{$lng.packages.details}</th>*}
+	<th>{$lng.general.description}</th>
+	<th width="40">{$lng.categories.ads_no}</th>
+	<th width="60">{$lng.general.order}</th>
+	<th width="70" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$array_packages item=v}
+<tr class="{if !$v.active} inactive{/if}">
+	<td class="nobborder"><input type="checkbox" class="noborder" name="chk{$v.id}" id="chk{$v.id}"></td>
+	<td class="nobborder">#{$v.id}</td>
+	<td class="nobborder"><div id="id{$v.id}">{$v.order_no}</div></td>
+	<td class="laligned nobborder">{$v.name}</td>
+	<td class="nobborder">{$v.price_curr}</td>
+	<td class="nobborder">{$v.groups_formatted}</td>
+{*	<td>
+	<b>{if $v.type=="ad"}{$lng.packages.ad_based}{else}{$lng.packages.subscription_based}{/if}</b><br>
+	<span class="inf"><b>{$lng.packages.words}</b></span>: {if $v.no_words==0}{$lng.general.unlimited}{else}{$v.no_words}{/if}<br>
+	<span class="inf"><b>{$lng.packages.days}</b></span>: {if $v.no_days==0}{$lng.general.unlimited}{else}{$v.no_days}{/if}<br>
+	<span class="inf"><b>{$lng.packages.pictures}</b></span>: {$v.no_pictures}<br>
+	<span class="inf"><b>{$lng.packages.ads}</b></span>: {if $v.no_ads==0}{$lng.general.unlimited}{else}{$v.no_ads}{/if}<br>
+	{if $v.no_ads!=1 && $v.type=="sub"}
+	<span class="inf"><b>{$lng.packages.subscription_time}:</b></span> 
+		{if $v.subscription_time}{$v.subscription_time}&nbsp;{$lng.packages.days}{/if}
+		{if !$v.subscription_time}{$lng.packages.unlimited}{/if}
+		<br>
+	{/if}
+	<span class="inf_orange"><b>
+	{if $v.featured}{$lng.packages.featured}<br>{/if}
+	{if $v.highlited}{$lng.packages.highlited}<br>{/if}
+	{if $v.priority}{$v.priority_name}<br>{/if}
+	{if $v.urgent}{$lng.packages.urgent}<br>{/if}
+	{if $v.video}{$lng.packages.video}<br>{/if}
+	{if $v.url}{$lng.packages.url}<br>{/if}
+	</b></span>
+	</td>*}
+	<td class="laligned nobborder">{$v.description}</td>
+	<td class="nobborder"><a class="sc1 underline" href="manage_listings.php?package_id={$v.id}">{$v.total_ads}</a></td>
+	<td class="nobborder">
+		{if $v.order_no>1}
+		<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onMoveUp({$v.id}, 'pkg'){/if}"><img src="{$template_path}images/up.png" class="tooltip icon" title="{$lng.general.move_up}" alt=""></a>
+		{else}
+		<img src="{$template_path}images/up-off.png" class="tooltip icon" title="{$lng.general.move_up}" alt="">
+		{/if}
+
+		{if $v.last==0}
+		<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onMoveDown({$v.id}, 'pkg'){/if}"><img src="{$template_path}images/down.png" class="tooltip icon" title="{$lng.general.move_down}" alt=""></a>
+		{else}
+		<img src="{$template_path}images/down-off.png" class="tooltip icon" title="{$lng.general.move_down}" alt="">
+		{/if}
+	</td>
+	<td class="nobborder">
+		<a href="edit_package.php?id={$v.id}">
+		<img src="{$template_path}images/edit.png" class="tooltip icon" title="{$lng.general.edit}" alt=""></a>
+
+		{if $array_packages|@count==1}
+		<img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt="" onClick="alert('{$lng.packages.cannot_delete_last_package}')">
+		{else}
+		{if $v.total_ads>0 && !$demo}
+		<a href="javascript:;" class="delplan" id="del{$v.id}">
+		{else}	
+		<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDelete('{$v.id}','{$lng.packages.confirm_delete|addslashes}','pkg');{/if}">
+		{/if}
+
+		<img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt=""></a>
+		{/if}
+		
+		<span id="div_active{$v.id}">
+		{if $v.active==0}
+			<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onEnable('{$v.id}', 'pkg', '');{/if}">
+			<img id="active{$v.id}" src="{$template_path}images/enable.png" class="tooltip icon" title="{$lng.general.enable}" alt="">
+			</a>
+		{else}
+			{*
+			{if $v.total_ads>0 && !$demo}
+			<a href="javascript:;" class="disableplan" id="disable{$v.id}">
+			{else}*}
+			<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDisable('{$v.id}', 'pkg', '');{/if}">
+			{*{/if}*}
+			<img id="active{$v.id}" src="{$template_path}images/disable.png" class="tooltip icon" title="{$lng.general.disable}" alt="">
+			</a>
+		{/if}
+		</span>	
+
+	</td>
+</tr>
+
+<tr>
+<td colspan="10" class="laligned sc1">
+	{if $v.type=="ad"}{$lng.packages.ad_based}{else}{$lng.packages.subscription_based}{/if}&nbsp;|&nbsp;
+	<i>{$lng.packages.words}</i>: {if $v.no_words==0}{$lng.general.unlimited}{else}{$v.no_words}{/if}&nbsp;|&nbsp;
+	<i>{$lng.packages.days}</i>: {if $v.no_days==0}{$lng.general.unlimited}{else}{$v.no_days}{/if}&nbsp;|&nbsp;
+	<i>{$lng.packages.pictures}</i>: {$v.no_pictures}&nbsp;|&nbsp;
+	<i>{$lng.packages.ads}</i>: {if $v.no_ads==0}{$lng.general.unlimited}{else}{$v.no_ads}{/if}
+	{if $v.no_ads!=1 && $v.type=="sub"}
+	&nbsp;|&nbsp;<i>{$lng.packages.subscription_time}:</i>
+		{if $v.subscription_time}{$v.subscription_time}&nbsp;{$lng.packages.days}{/if}
+		{if !$v.subscription_time}{$lng.packages.unlimited}{/if}
+		
+	{/if}
+	<span class="sc3">
+	{if $v.featured}&nbsp;|&nbsp;{$lng.packages.featured}{/if}
+	{if $v.highlited}&nbsp;|&nbsp;{$lng.packages.highlited}{/if}
+	{if $v.priority}&nbsp;|&nbsp;{$v.priority_name}{/if}
+	{if $v.urgent}&nbsp;|&nbsp;{$lng.packages.urgent}{/if}
+	{if $v.video}&nbsp;|&nbsp;{$lng.packages.video}{/if}
+	{if $v.url}&nbsp;|&nbsp;{$lng.packages.url}{/if}
+	</span>
+	</td>
+</tr>
+
+{/foreach}
+</table>
+
+</div> {* p30 *}
+
+
+<script type="text/javascript">
+{literal}
+
+$(document).ready(function() {
+
+$("a.delplan").click(function(event){
+	var pkg_id = jQuery(this).attr("id").substr(3);
+	$.fancybox({
+		'width'         		: 630,
+		'height'        		: 500,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'margin'		: '0',
+		'padding'		: '0',
+		'titleShow'		: false,
+		'type'			: 'iframe',
+		'href'			: '{/literal}{$live_site}{literal}/admin/delete_plan.php?id='+pkg_id,
+		'onClosed': function(){ location.reload(true); }
+	});
+});
+
+$("a.disableplan").click(function(event){
+	var pkg_id = jQuery(this).attr("id").substr(7);
+	$.fancybox({
+		'width'         		: 630,
+		'height'        		: 500,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'margin'		: '0',
+		'padding'		: '0',
+		'titleShow'		: false,
+		'type'			: 'iframe',
+		'href'			: '{/literal}{$live_site}{literal}/admin/disable_plan.php?id='+pkg_id,
+		'onClosed': function(){ location.reload(true); }
+	});
+});
+
+	$("#check_all").click(function()
+	{
+
+		if ($('#check_all').is(':checked')) checkAll(document);
+		else uncheckAll(document);
+
+	});
+
+});
+{/literal}
+</script>
+
+{include file="footer.html"}

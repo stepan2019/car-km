@@ -1,0 +1,75 @@
+{include file="header.html"}
+{include file="data/ui.html"}
+
+<div class="page_title">{$lng.panel.users} > <a href="subscriptions.php">{$lng.panel.users_subscriptions}</a> > {$lng.panel.add_subscription}</div>
+
+<div class="p30">
+<form name="address" method="post" action="{$self}{if isset($id) && $id}?id={$id}{/if}">
+
+<div class="form_container">
+
+{if isset($error) && $error}<div class="error">{$error}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.users.user}</div>
+	<div class="right_form">
+	{if $no_users<=100}
+	<select id="user" name="user">
+	<option value="">{$lng.listings.user}</option>
+	{foreach from=$users item=v}
+        	<option value="{$v.id}" {if isset($tmp.user_id) && $tmp.user_id==$v.id}selected{/if}>{$v.username}</option>
+	{/foreach}
+	</select>
+	{else}
+	{if $settings.enable_username}
+	<input type="text" name="username" id="username" />
+	{else}
+	<input type="text" name="email" id="email" />
+	{/if}
+	{/if}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.packages.package}</div>
+	<div class="right_form">
+	<select name="package">
+	{if !$subscriptions|@count}
+	<option value="">{$lng.subscriptions.no_subscriptions}</option>
+	{else}
+	{foreach from=$subscriptions item=v}
+	<option value="{$v.id}">{$v.name}</option>
+	{/foreach}
+	{/if}
+	</select>
+	</div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{if isset($id) && $id}{$lng.general.submit}{else}{$lng.general.add}{/if}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+
+</form>
+</div>
+
+<script type="text/javascript">
+{literal}
+        $(function() {
+                $( "#username" ).autocomplete({
+                        source: "{/literal}{$live_site}{literal}/admin/include/get_info.php?type=user_ac",
+                        minLength: 1
+                });
+                $( "#email" ).autocomplete({
+                        source: "{/literal}{$live_site}{literal}/admin/include/get_info.php?type=user_ac",
+                        minLength: 1
+                });
+        });
+{/literal}
+</script>
+
+{include file="footer.html"}

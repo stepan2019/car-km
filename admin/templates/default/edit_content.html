@@ -1,0 +1,135 @@
+{include file="header.html"}
+
+<script type="text/javascript" src="../libs/ckeditor/ckeditor.js"></script>
+
+<div class="page_title">{$lng.panel.tools} > <a href="manage_custom_pages.php">{$lng.panel.custom_pages}</a> > {$lng.custom_pages.edit_page_content} #{$id}</div>
+
+<div class="p30">
+<form name="cp" method="post" action="edit_content.php?id={$id}&lang_id={$lang_id}" enctype="multipart/form-data">
+
+<div class="form_container" style="padding-top: 0 !important;">
+
+{if $error != ""}<div class="error">{$error}</div>{/if}
+
+<div class="form_subtitle_bg">
+<div class="rfloat" style="margin: 8px 10px 0 0;">
+	<input name="lang_id" type="hidden" value="{$lang_id}">
+	{if $languages|@count>1}
+	<select name="lang" onchange="doSel(this);">
+	{foreach from=$languages item=v}
+	<option value="location.href='edit_content.php?id={$id}&lang_id={$v.id}'"{if $lang_id==$v.id} selected{/if}>{$v.name}</option>
+	{/foreach}
+	</select>
+	{/if}
+</div>
+</div>
+
+<div class="clearfix"></div>
+
+<div>
+<textarea id="content" name="content" rows="25" cols="60" class="ckeditor">{$content}</textarea>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+{*
+<script type="text/javascript">
+{literal}
+CKEDITOR.replace( 'content', {
+	height: 500,
+	filebrowserBrowseUrl : '{/literal}{$live_site}{literal}/libs/pdw/index.php?editor=ckeditor',
+
+	filebrowserImageBrowseUrl : '{/literal}{$live_site}{literal}/libs/pdw/index.php?editor=ckeditor',
+
+	filebrowserFlashBrowseUrl : '{/literal}{$live_site}{literal}/libs/pdw/index.php?editor=ckeditor'
+
+});
+{/literal}
+</script>
+*}
+
+<script type="text/javascript">
+{literal}
+
+CKEDITOR.replace( 'content', {
+	height: 500,
+	//filebrowserBrowseUrl : '{/literal}{$live_site}{literal}/libs/blueimp/server/php/index.php',
+//	filebrowserImageBrowseUrl : '{/literal}{$live_site}{literal}/libs/pdw/index.php?editor=ckeditor',
+//	filebrowserFlashBrowseUrl : '{/literal}{$live_site}{literal}/libs/pdw/index.php?editor=ckeditor'
+
+});
+
+CKEDITOR.plugins.add('fileUpload',
+{
+    init: function (editor) {
+        editor.addCommand( 'OpenDialog',new CKEDITOR.dialogCommand( 'OpenDialog' ) );
+        editor.ui.addButton('FileUpload',
+            {
+                label: 'Upload images',
+                command: 'OpenDialog',
+                icon: CKEDITOR.plugins.getPath('fileUpload') + 'icon.gif'
+            });
+        editor.contextMenu.addListener( function( element ){
+            return { 'My Dialog' : CKEDITOR.TRISTATE_OFF };
+        });
+        CKEDITOR.dialog.add( 'OpenDialog', function( api ){
+            var dialogDefinition =
+            {
+                title : 'Gestisci immagini',
+                minWidth : 700,
+                minHeight : 500,
+                contents : [
+                        {
+                            expand : true,
+                            padding : 0,
+                            elements :
+                            [
+                                {
+
+                                    type : 'html',
+                                    html : ' <iframe src="../../includes/fileUpload/index.php" style="width:100%;height:490px" />'
+                                }
+                            ]
+                        }
+                ],
+                buttons : []
+            };
+            return dialogDefinition;
+        } );
+
+    }
+});
+
+
+var editor, html = '';
+    function createEditor() {
+
+                if ( editor ) return;
+
+                var config = {};
+                editor = CKEDITOR.replace("editor", 
+                    { 
+                        extraPlugins : 'fileUpload',
+                    });
+    }
+
+
+function triggerUploadImages(url){
+                if(editor ){ 
+                    CKEDITOR.dialog.getCurrent().hide();
+                    editor.insertHtml('<img src='+url+' />');
+                }
+            }  
+{/literal}
+</script>
+
+{include file="footer.html"}

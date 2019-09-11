@@ -1,0 +1,118 @@
+{include file="header.html"}
+
+<div class="page_title"><a href="{$live_site}/admin/modules.php">{$lng.panel.modules}</a> > <a href="{$live_site}/admin/modules/social_networks/">{$lng_sn.social_networks}</a></div>
+
+<div class="p30">
+
+<div class="form_container" style="padding-top: 0px !important">
+
+<form method="post" action="fb_access_token_helper.php" name="helper" id="helper">
+
+<div class="error">{$error}</div>
+<div class="info">{$info}</div>
+<div class="warning">{$lng_sn.notice}</div>
+
+
+<div class="at">
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng_sn.access_token_helper|replace:" ":"&nbsp;"}</strong></div>{$lng_sn.info.access_token_helper}</div>
+
+<p class="p30">{$lng_sn.step1}:<br/><a class="blue" href="https://www.facebook.com/dialog/oauth?client_id={$sn_settings.fb_appid}&scope=manage_pages,publish_pages&redirect_uri={$live_site}/admin/modules/social_networks/get_fb_access_token.php" target="_blank">https://www.facebook.com/dialog/oauth?client_id={$sn_settings.fb_appid}&scope=manage_pages,publish_actions&redirect_uri={$live_site}/admin/modules/social_networks/get_fb_access_token.php</a></p>
+
+<p class="pdiv1">{$lng_sn.step1_1}</p>
+
+<p class="p30">{$lng_sn.step2}</p>
+
+<p class="pdiv1 mb20">{$lng_sn.step2_1}</p>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_sn.code}</div>
+	<div class="right_form"><textarea name="code" id="code" rows="4" cols="70"></textarea></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng_sn.get_fb_access_token}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+
+<p class="p30">{$lng_sn.step3}</p>
+
+
+<div class="clearfix">
+	<div class="left_form">{$lng_sn.pageid}</div>
+	<div class="right_form"><input type="text" name="pageid" id="pageid" size="30" value="{$sn_settings.fb_pageid}" /></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit_page" id="Submit_page" value="{$lng_sn.get_fb_page_access_token}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+
+</form>
+</div> {* end form_container *}
+</div> {* end p30 *}
+
+{literal}
+<script type="text/javascript">
+
+$(document).ready(function() {
+$(".info").hide();
+$(".error").hide();
+$(".warning").hide();
+
+ $("#Submit").click(function(event){
+
+	event.preventDefault();
+	$.post( "get_fb_access_token.php", $( "#helper" ).serialize(), function(responseText) {
+		var ret = JSON.parse(responseText);
+
+		if(ret.response==1) {
+			$(".info").html("<p>"+ret.info+"</p>");
+			$(".info").show();
+			if(ret.expires==1) $(".warning").show();
+			$('html,body').animate({scrollTop:$(".info").offset().top}, 'slow');
+			return;
+		}
+		// response = 0 -> there are errors
+		$(".info").hide();
+		$(".error").show();
+		$(".error").html("<p>"+ret.error+"</p>");
+		$('html,body').animate({scrollTop:$(".error").offset().top}, 'slow');
+
+	} );
+
+});// end on click
+
+ $("#Submit_page").click(function(event){
+
+	event.preventDefault();
+	$.post( "get_fb_access_token.php?page=1", $( "#helper" ).serialize(), function(responseText) {
+	//alert(responseText);
+		var ret = JSON.parse(responseText);
+
+		if(ret.response==1) {
+			$(".info").html("<p>"+ret.info+"</p>");
+			$(".info").show();
+			$('html,body').animate({scrollTop:$(".info").offset().top}, 'slow');
+			return;
+		}
+		// response = 0 -> there are errors
+		$(".info").hide();
+		$(".error").show();
+		$(".error").html("<p>"+ret.error+"</p>");
+		$('html,body').animate({scrollTop:$(".error").offset().top}, 'slow');
+
+	} );
+
+});// end on click
+
+}); // end document ready
+</script>
+{/literal}
+
+{include file="footer.html"}

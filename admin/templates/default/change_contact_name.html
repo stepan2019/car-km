@@ -1,0 +1,45 @@
+{include file="overlay_header.html"}
+
+<script type="text/javascript" src="{$live_site}/libs/jQuery/jquery.js"></script>
+
+{if isset($post) && $post}
+<script type="text/javascript">
+{literal}
+jQuery(document).ready(function() {
+	parent.$.fancybox.close();
+});
+{/literal}
+</script>
+{/if}
+
+<div class="overlay-top-bg">{$lng.settings.change_contact_name_field}</div>
+
+{if (isset($disable) && $disable) || (isset($delete) && $delete)}
+<div class="information">{$lng.settings.info.change_contact_name_field}</div>
+{/if}
+
+{if !isset($post) || !$post}
+<form name="change_contact_name" method="post" action="change_contact_name.php{if isset($disable) && $disable}?disable=1{elseif isset($delete) && $delete}?delete=1{/if}">
+
+<div class="form2 lpdiv100" style="height: 270px;">
+
+<ul>
+<li>
+	<label>New contact field</label>
+	<select name="new_contact_field">
+		{foreach from=$fields item=v}
+		{if $v.caption!=$settings.contact_name_field}<option value="{$v.caption}">{$v.name}</option>{/if}
+		{/foreach}
+	</select>
+</li>
+</ul>
+
+</div>
+
+<div class="overlay-bottom-bg">
+<div class="buttons"  {if $demo}onClick='alert("{$lng.general.errors.demo}");return false;'{/if}>
+	<strong><input type="submit" name="Submit" value="{$lng.general.save_changes}" /></strong>
+</div>
+</div>
+</form>
+{/if}

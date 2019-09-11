@@ -21,10 +21,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
-    <meta name="description" content="Registration of km, mileage registration,kilometer, km iraq cars, greece vehicle km, Car Km, Car mileage,Register your Vehicle,mileage register,iraq,kurdistan, mileage register, Register your vehicle,IRAQ cars, Greece car km, carpass km register, Car-km.com">
-    <meta name="author" content="https://seyare.net">
+    <meta name="description" content="Registration of km, mileage registration,kilometer, km greece cars, greece vehicle km, Car Km, Car mileage,Register your Vehicle,mileage register,Greece,Greece, mileage register, Register your vehicle,Greece cars, Greece car km, carpass km register, carpass.gr">
+    <meta name="author" content="https://www.pegasuswings.gr">
     <link rel="icon" href=" ">
-    <title>Car-KM  KM Registration Iraq</title>
+    <title>Car-KM  KM Registration Greece</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
@@ -35,12 +35,11 @@
     <link rel="stylesheet" href="css/nivo-lightbox.css">
     <link rel="stylesheet" href="css/nivo_themes/default/default.css">
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
-        integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/all.css" crossorigin="anonymous">
 </head>
 <body>
     <div id="fb-root"></div>
-    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/el_GR/sdk.js#xfbml=1&version=v3.3&appId=352556005433627&autoLogAppEvents=1"></script>
+<!--    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/el_GR/sdk.js#xfbml=1&version=v3.3&appId=352556005433627&autoLogAppEvents=1"></script>-->
     <!--<div class="loader loader-bg">-->
     <!--    <div class="loader-inner ball-clip-rotate-pulse">-->
     <!--        <div></div>-->

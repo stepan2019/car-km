@@ -1,0 +1,248 @@
+{include file="header.html"}
+{include file="data/ui.html"}
+
+<div class="page_title">{$lng.panel.users} > {$lng.panel.users_subscriptions}</div>
+
+<div class="p30">
+<form name="search" id="search" method="post" action="subscriptions.php">
+
+<div class="lfloat" style="width: 600px;">
+
+<div class="lfloat mr10">
+	{if !$is_mod || $mod_sections.subscriptions.add==1}
+	<a href="add_user_subscription.php"><img src="{$template_path}images/add.png" class="tooltip icon" title="{$lng.general.add}" alt=""></a>
+	{/if}
+	{if !$is_mod || $mod_sections.subscriptions.delete==1}
+	<input type="image" value="delete_selected" name="delete_selected" src="{$template_path}images/delete_all.png" onClick="{if $demo}alert('{$lng.general.errors.demo}'); return false;{else}return myConfirm('{$lng.subscriptions.confirm_delete_all|addslashes}'){/if}" style="border: 0px;" class="tooltip icon" title="{$lng.general.delete_all}" alt="">
+	{/if}
+</div>
+
+<div class="lfloat">
+	<select name="order" onchange="doSel(this);">
+
+	<option value="location.href='{$order_by_link|replace:'##order##':'date_start'}'" {if $order=='date_start'}selected="selected"{/if}>
+	{$lng.subscriptions.order_by_date_start}</option>
+
+	<option value="location.href='{$order_by_link|replace:'##order##':'date_end'}'" {if $order=='date_end'}selected="selected"{/if}>
+	{$lng.subscriptions.order_by_date_end}</option>
+	{if $settings.enable_username}
+	<option value="location.href='{$order_by_link|replace:'##order##':'username'}'" {if $order=='username'}selected="selected"{/if}>
+	{$lng.subscriptions.order_by_username}</option>
+	{/if}
+
+	<option value="location.href='{$order_by_link|replace:'##order##':'package_name'}'" {if $order=='package_name'}selected="selected"{/if}>
+	{$lng.subscriptions.order_by_package_name}</option>
+
+	<option value="location.href='{$order_by_link|replace:'##order##':'ads_left'}'" {if $order=='ads_left'}selected="selected"{/if}>
+	{$lng.subscriptions.order_by_ads_left}</option>
+
+	</select>
+
+	<select name="order_way" onchange="doSel(this);">
+
+	<option value="location.href='{$order_way_link|replace:'##order_way##':'desc'}'" {if $order_way=='desc'}selected="selected"{/if}>{$lng.general.desc}</option>
+	<option value="location.href='{$order_way_link|replace:'##order_way##':'asc'}'" {if $order_way=='asc'}selected="selected"{/if}>{$lng.general.asc}</option>
+
+	</select>
+
+</div>
+
+	<div class="buttonwrapper lfloat ml10"><div class="button3-left">
+
+	<a href="javascript:;" id="add_search"><span class="button3-right">{$lng.general.search}&nbsp;<img src="{$template_path}images/gray-down-arrow.png" /></span></a>
+
+	<a href="javascript:;" id="remove_search"><span class="button3-right">{$lng.general.search}&nbsp;<img src="{$template_path}images/gray-up-arrow.png" /></span></a>
+
+	</div></div>
+
+</div> {* lfloat *}
+
+<div class="rfloat">
+{include file="paginator.html"}
+</div>
+
+<div class="clearfix"></div>
+
+<div id="search_box" style="display: none;">
+
+<input type="hidden" name="page" value = "{$page}" />
+<input type="hidden" name="order" value = "{$order}" />
+<input type="hidden" name="order_way" value = "{$order_way}" />
+<input type="hidden" name="no_per_page" value = "{$no_per_page}" />
+
+<input type="text" name="id" size="6" class="defaultText" title="{$lng.listings.id}" value="{if isset($post_array.id)}{$post_array.id}{/if}"/>
+{if $settings.enable_username}
+<input type="text" name="username" size="20" class="defaultText" title="{$lng.users.username}" value="{if isset($post_array.username)}{$post_array.username}{/if}" />
+{/if}
+<input type="text" name="email" size="20" class="defaultText" title="{$lng.users.email}" value="{if isset($post_array.email)}{$post_array.email}{/if}" />
+
+<select name="package_id">
+	<option value="">{$lng.packages.package}</option>
+{foreach from=$plans item=v}
+	<option value="{$v.id}" {if isset($post_array.package_id) && $post_array.package_id==$v.id}selected="selected"{/if}>{$v.name|escape:"html"}</option>
+{/foreach}
+</select>
+
+<input name="date_from_vis" id="date_from_vis" type="text" size="10" class="defaultText" title="{$lng.search.date_from}"/>
+<input name="date_from" id="date_from" type="hidden"/>
+
+<input name="date_to_vis" id="date_to_vis" type="text" size="10" class="defaultText" title="{$lng.search.date_to}" />
+<input name="date_to" id="date_to" type="hidden" />
+
+<div class="buttons">
+	<strong><input type="submit" name="Search" value="{$lng.general.search}" /></strong>
+</div>
+
+</div>{* end search box *}
+
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+
+<tr id="theading">
+	<th width="30" class="hleft"><input type="checkbox" class="noborder" name="check_all" id="check_all" /></th>
+	<th>{$lng.users.id}</th>
+	<th>{$lng.users.user}</th>
+	<th>{$lng.subscriptions.package_name}</th>
+	<th></th>
+	<th>{$lng.subscriptions.remaining_ads}</th>
+	<th></th>
+	<th width="70" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$array_usr_pkg item=v}
+<tr class="{if !$v.active} inactive{/if}">
+	<td><input type="checkbox" class="noborder" name="usr_pkg{$v.id}" id="usr_pkg{$v.id}"></td>
+	<td>#{$v.id}</td>
+	<td>{if $settings.enable_username}{$v.username}{else}{$v.email}<br/>{$v[$settings.contact_name_field]}{/if}</td>
+	<td>{$v.package_name}</td>
+	<td>
+	{if $v.recurring}<span class="sc3">{$lng.subscriptions.recurring}</span><br/>{/if}
+	{$lng.subscriptions.date_start}: {$v.date_start_nice}<br>
+	{if $v.date_renew && $v.date_renew!="0000-00-00 00:00:00"}{$lng.subscriptions.date_renew}: {$v.date_renew_nice}<br>{/if}
+	{$lng.subscriptions.date_end}: {if $v.date_end && $v.date_end!="0000-00-00 00:00:00"}{$v.date_end_nice}{else}{$lng.general.never}{/if}
+	</td>
+	<td>{if isset($v.ads_left) && $v.ads_left==-1}{$lng.general.unlimited}{else}{$v.ads_left}{/if}</td>
+	<td>
+		{if $v.active}
+		<div class="small-btn activebutton icon">{$lng.listings.active}</div>
+		{else}
+		<div class="small-btn inactivebutton icon">{$lng.listings.inactive}</div>
+		{/if}
+
+		{if $v.pending}
+		{if !$is_mod || $mod_sections.subscriptions.edit==1}<a href="javascript:;" onclick="onEnable({$v.id}, 'usr_pkg', '')">{/if}
+		<div class="small-btn pendingbutton icon tooltip icon"  title="{$lng.general.accept}">{$lng.listings.pending}</div>
+		{if !$is_mod || $mod_sections.subscriptions.edit==1}</a>{/if}
+		{/if}
+
+		{if isset($v.type) && $v.type=="sub" && $v.expired}
+		<div class="small-btn expiredbutton icon">{$lng.listings.expired}</div>
+		{/if}
+	</td>
+	<td>
+		{if !$is_mod || $mod_sections.subscriptions.delete==1}
+		<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDelete('{$v.id}','{$lng.subscriptions.confirm_delete|addslashes}', 'usr_pkg');{/if}">
+		<img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt=""></a>
+		{/if}
+
+		{if !$is_mod || $mod_sections.subscriptions.edit==1}
+		<span id="div_active{$v.id}">
+		{if $v.active==0}
+			<a href="javascript:;" onclick="onEnable({$v.id}, 'usr_pkg', '')">
+			<img id="active{$v.id}" src="{$template_path}images/enable.png" class="tooltip icon" title="{$lng.general.enable}" alt="">
+			</a>
+		{else}
+			<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDisable('{$v.id}','usr_pkg','');{/if}">
+			<img id="active{$v.id}" src="{$template_path}images/disable.png" class="tooltip icon" title="{$lng.general.disable}" alt="">
+			</a>
+		{/if}
+		</span>
+		{/if}
+	</td>
+</tr>
+{/foreach}
+
+{if $total==0}
+	<tr><td colspan="8">{$lng.subscriptions.no_subscriptions}</td></tr>
+{/if}
+
+</table>
+</form>
+
+{if $total}<div class="rfloat mt20">{include file="paginator.html"}</div>{/if}
+
+<div class="mt20">
+	{$lng.general.show}
+	<select name="no_per_page_sel" onchange="doSel(this);">
+		{section name=pg loop=60 start=10 step=10}
+		<option value="location.href='{$crt_page_link}&no_per_page={$smarty.section.pg.index}'" {if $no_per_page==$smarty.section.pg.index} selected="selected" {/if}>{$smarty.section.pg.index}</option>
+		{/section}
+	</select>
+	{$lng.general.on_a_page}
+</div>
+
+
+</div> {* p30 *}
+
+
+{literal}
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("input").keypress(function(e)
+		{
+        		// if the key pressed is the enter key
+        		if (e.which == 13)
+        		{
+
+				// delay action so the autocomplete list to fill
+				setTimeout(function() { $("#search").submit();}, 200);
+
+				return false;
+        		}
+		});
+		$("#remove_search").hide();
+		$("#search_box").hide();
+		$("#add_search").click(function()
+		{
+			$("#remove_search").show();
+			$("#add_search").hide();
+			$("#search_box").slideDown('fast').show();
+		});
+
+		$("#remove_search").click(function()
+		{
+			$("#add_search").show();
+			$("#remove_search").hide();
+			$("#search_box").hide().slideUp('fast');
+		});
+
+		$("#check_all").click(function()
+		{
+
+			if ($('#check_all').is(':checked')) checkAll(document);
+			else uncheckAll(document);
+
+		});
+
+	});
+
+	$(function() {
+		$('#date_from_vis').datepicker({
+			dateFormat: "M dd yy",
+			changeMonth: true,
+			changeYear: true,
+			altField: '#date_from', altFormat: 'yy-mm-dd'
+		});
+
+		$('#date_to_vis').datepicker({
+			dateFormat: "M dd yy",
+			changeMonth: true,
+			changeYear: true,
+			altField: '#date_to', altFormat: 'yy-mm-dd'
+		});
+	});
+{/literal}
+</script>
+
+
+{include file="footer.html"}

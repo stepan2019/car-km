@@ -1,0 +1,106 @@
+{include file="header.html"}
+{include file="data/fancybox.html"}
+
+<div class="page_title">
+<div class="lfloat" width="200">{$lng.panel.tools} > {$lng.panel.import_export} > {$lng.ie.scheduled_imports}</div>
+<div class="rfloat mt5">
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="import-export.php"><span class="tab2-right">{$lng.ie.export}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="import.php"><span class="tab2-right">{$lng.ie.import}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab1-left">
+	<a href="scheduled_imports.php"><span class="tab1-right">{$lng.ie.scheduled_imports}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="ie_templates.php"><span class="tab2-right">{$lng.ie.templates}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="ie_settings.php"><span class="tab2-right">{$lng.ie.settings}</span></a>
+	</div></div>
+
+</div>
+</div>
+
+
+<div class="p30">
+<form name="search" id="search" method="post" action="manage_saved_searches.php">
+
+<div>
+<a href="add_scheduled_import.php"><img src="{$template_path}images/add.png" class="tooltip icon" title="{$lng.general.add}" alt=""></a>
+</div>
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th width="30" class="hleft"><input type="checkbox" class="noborder" name="check_all" id="check_all" /></th>
+	<th width="20">{$lng.general.id}</th>
+	<th>{$lng.general.name}</th>
+	<th>{$lng.settings.username}</th>
+	<th>{$lng.ie.cron_config}</th>
+	<th width="70" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$scheduled_imports item=v}
+<tr>
+	<td><input type="checkbox" class="noborder" name="chk{$v.id}" id="chk{$v.id}"></td>
+	<td>#{$v.id}</td>
+	<td>{$v.name}</td>
+	<td>{$v.username}</td>
+	<td>php {$abs_path}/include/tasks/auto_import.php?id={$v.id}&key={$v.key}</td>
+	<td>
+		<a href="edit_scheduled_import.php?id={$v.id}">
+		<img src="{$template_path}images/edit.png" class="tooltip icon" title="{$lng.general.edit}" alt=""></a>
+
+		<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDelete('{$v.id}','{$lng.settings.confirm_delete|addslashes}','sch');{/if}">
+		<img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt=""></a>
+
+		{if $v.active==0}
+			<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onEnable('{$v.id}','sch');{/if}">
+			<img id="active{$v.id}" src="{$template_path}images/enable.png" class="tooltip icon" title="{$lng.general.enable}" alt="">
+			</a>
+		{else}
+			<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDisable('{$v.id}','sch');{/if}">
+			<img id="active{$v.id}" src="{$template_path}images/disable.png" class="tooltip icon" title="{$lng.general.disable}" alt="">
+			</a>
+		{/if}
+
+	</td>
+</tr>
+{/foreach}
+
+{if $scheduled_imports|@count==0}
+	<tr><td colspan="6">{$lng.no_items}</td></tr>
+{/if}
+
+</table>
+
+</form>
+</div> {* p30 *}
+
+
+<script type="text/javascript">
+{literal}
+
+$(document).ready(function() {
+
+
+	$("#check_all").click(function()
+	{
+
+		if ($('#check_all').is(':checked')) checkAll(document);
+		else uncheckAll(document);
+
+	});
+
+}); // end document ready
+
+{/literal}
+</script>
+
+{include file="footer.html"}

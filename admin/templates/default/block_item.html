@@ -1,0 +1,102 @@
+{include file="overlay_header.html"}
+
+<script type="text/javascript" src="{$live_site}/js/common.min.js"></script>
+<script type="text/javascript" src="{$live_site}/libs/jQuery/jquery.js"></script>
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/jquery.form.js"></script>
+
+{include file="data/ui.html"}
+
+<div class="wait"></div>
+
+<div class="overlay-top-bg"></div>
+
+<form method="post" name="block_item" id="block_item" action="{$live_site}/admin/block_item.php?post=1{if $id}&id={$id}{else}&listing_id={$listing_id}{/if}">
+
+<div class="info" style="display: none"></div>
+
+<div class="form2 lpdiv100" style="height: 520px;">
+
+<ul>
+{if isset($id) && $id}
+<li>
+	<label>{$lng.users.user}: #{$id}</label>
+</li>
+{/if}
+
+<li>
+	<label><input type="checkbox" name="ip" id="ip" {if $ip_blocked} checked="checked"{/if} />&nbsp;{$lng.users.block_ip}: {$ip}&nbsp;{if $ip_blocked}<span class="sc2">[{$lng.security.blocked}]</span>{/if}{if $ip_whitelisted}<span class="sc4">&nbsp;[{$lng.users.whitelisted}]</span>{/if}</label>
+</li>
+
+<li>
+	<label><input type="checkbox" name="email" id="email" {if $email_blocked}checked="checked"{/if}/>&nbsp;{$lng.users.block_email}: {$email}&nbsp;{if $email_blocked}<span class="sc2">[{$lng.security.blocked}]</span>{/if}{if $email_whitelisted}<span class="sc4">&nbsp;[{$lng.users.whitelisted}]</span>{/if}</label>
+</li>
+
+{foreach from=$array_phones item=v}
+{if $v.val}
+<li>
+	<label><input type="checkbox" name="{$v.caption}" id="{$v.caption}" {if $v.blocked}checked="checked"{/if}/>&nbsp;{$lng.users.block}&nbsp;{$v.name}: {$v.val}&nbsp;{if $v.blocked}<span class="sc2">[{$lng.security.blocked}]</span>{/if}{if $v.whitelisted}<span class="sc4">&nbsp;[{$lng.users.whitelisted}]</span>{/if}</label>
+</li>
+{/if}
+{/foreach}
+
+<li>
+	<label><a href="javascript:;" class="small sc1" onClick="checkAll(document)">{$lng.listings.check_all}</a> | <a href="javascript:;" class="small sc1" onClick="uncheckAll(document)">{$lng.listings.uncheck_all}</a><label>
+</li>
+
+</ul>
+
+</div> {* end form2 *}
+
+<div class="overlay-bottom-bg">
+<div class="buttons" onClick='{if $demo}alert("{$lng.general.errors.demo}");return false;{/if}'>
+	<span  class="negative"><input type="submit" name="Block" value="{$lng.users.block}"/></span>&nbsp;
+	<span  class="positive"><input type="submit" name="Unblock" value="{$lng.general.unblock}" /></span>
+	<span  class="positive"><input type="submit" name="Whitelist" value="{$lng.users.whitelist}" /></span>
+</div>
+
+</div>
+
+</form>
+
+<script type="text/javascript">
+{literal}
+
+jQuery(document).ready(function() {
+
+	$(".info").hide();
+
+var options = { 
+
+	beforeSerialize: function(jqForm, options){ $("body").addClass("loading") },
+        beforeSubmit:  function(formData, jqForm, options) {var queryString = $.param(formData);  return true;  }, 
+        success:       successResponse 
+ 
+   }; 
+
+function successResponse(responseText, statusText, xhr, $form)  { 
+
+//alert(responseText);
+			var ret = JSON.parse(responseText);
+
+			$("body").removeClass("loading");
+
+			if(ret.response==1) {
+
+				$(".info").html("<p>"+ret.info+"</p>");
+				$(".info").show();
+				$(".form2").slideUp();
+				$(".overlay-bottom-bg").hide();
+				return;
+
+			}
+
+} 
+
+ $('#block_item').ajaxForm(options);
+
+});
+
+{/literal}
+</script>
+
+{include file="overlay_footer.html"}

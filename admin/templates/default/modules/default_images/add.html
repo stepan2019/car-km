@@ -1,0 +1,67 @@
+{include file="header.html"}
+
+<div class="page_title"><a href="{$live_site}/admin/modules.php">{$lng.panel.modules}</a> > <a href="{$live_site}/admin/modules/default_images">{$lng_default_images.default_images}</a> > {$lng.general.add}</div>
+
+<div class="p30">
+
+<form method="post" action="" enctype="multipart/form-data">
+
+<div class="form_container nomargin">
+
+{if isset($error) && $error}<div class="error">{$error}</div>{/if}
+{if isset($info) && $info}<div class="info">{$info}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.categories.category}</div>
+	<div class="right_form">
+		<select name="category" id="category">
+			<option value="">{$lng.listings.category}</option>
+		{foreach from=$categories item=v}
+			<option value="{$v.id}" {if $v.parent} class="opt_parent"{/if}>{$v.str}{$v.name}</option>
+		{/foreach}
+		</select>
+
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_default_images.default_thmb}</div>
+	<div class="right_form"><input type="file" name="thmb" id="thmb" />&nbsp;{$thmb_recommended_size}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_default_images.default_big_thmb}</div>
+	<div class="right_form"><input type="file" name="big_thmb" id="big_thmb" />&nbsp;{$big_thmb_recommended_size}</div>
+</div>
+
+{if $mobile_settings.enable_mobile_templates}
+<div class="clearfix">
+	<div class="left_form">{$lng_default_images.default_thmb_mobile}</div>
+	<div class="right_form"><input type="file" name="mobile_thmb" id="mobile_thmb" />&nbsp;{$mobile_thmb_recommended_size}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_default_images.default_big_thmb_mobile}</div>
+	<div class="right_form"><input type="file" name="mobile_big_thmb" id="mobile_big_thmb" />&nbsp;{$mobile_big_thmb_recommended_size}</div>
+</div>
+{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng_default_images.apply_subcategories}</div>
+	<div class="right_form"><input type="checkbox" name="apply_subcategories" id="apply_subcategories" /></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+
+
+</div> {* p30 *}
+
+{include file="footer.html"}

@@ -6,7 +6,11 @@
     if(!@$_SESSION['user']) {
          header("location:/user/login.php");
     }
-    
+    include "../include/include.php";
+
+    global $crt_lang_code;
+
+
     $result = $config->getInformationContent();
     $information = $result->fetch_assoc();
 
@@ -17,7 +21,7 @@
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="<?php echo $crt_lang_code;?>">
 <head>
 	<meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -36,8 +40,11 @@
     <link href="../css/nivo-lightbox.css" rel="stylesheet">
     <link href="../css/nivo_themes/default/default.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
-        integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/all.css" crossorigin="anonymous">
+    <script>
+        exdate = new Date();
+        exdate.setDate(exdate.getDate() + 365);
+    </script>
 </head>
 <body>
 
@@ -47,7 +54,7 @@
 
     <div class="swiper-container main-slider" id="myCarousel">
         <div class="swiper-wrapper">
-            <div class="swiper-slide slider-bg-position" style="background:url('../img/banner1.jpg'); display: block;" data-hash="slide1">
+            <div class="swiper-slide slider-bg-position" data-hash="slide1">
             <?php 
                 if($type == "user") {
                     include "profile_user.php";

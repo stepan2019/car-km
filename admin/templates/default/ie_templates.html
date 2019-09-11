@@ -1,0 +1,178 @@
+{include file="header.html"}
+{include file="data/fancybox.html"}
+
+<link rel="stylesheet" type="text/css" href="{$live_site}/libs/jQuery/plugins/css/jquery.comboselect.css" />
+{literal}
+<!--[if IE]>
+<style type="text/css">
+select.csleft, select.csright {
+	width: 100px;
+}
+</style>
+<![endif]-->
+{/literal}
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/jquery.selso.js"></script>	
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/jquery.comboselect.js"></script>
+<script type="text/javascript">
+{literal}
+
+		$(function(){
+			$('#myselect').comboselect({ sort: 'none', addbtn: '+',  rembtn: '-' });
+		});
+{/literal}
+
+</script>
+
+
+<div class="page_title">
+<div class="lfloat" width="200">{$lng.panel.tools} > {$lng.panel.import_export} > {$lng.ie.templates}</div>
+<div class="rfloat mt5">
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="import-export.php"><span class="tab2-right">{$lng.ie.export}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="import.php"><span class="tab2-right">{$lng.ie.import}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="scheduled_imports.php"><span class="tab2-right">{$lng.ie.scheduled_imports}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab1-left">
+	<a href="ie_templates.php"><span class="tab1-right">{$lng.ie.templates}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="ie_settings.php"><span class="tab2-right">{$lng.ie.settings}</span></a>
+	</div></div>
+
+</div>
+</div>
+
+<div class="p30">
+<form name="ie" method="post" action="{$self}" enctype="multipart/form-data">
+
+<div class="form_container" style="padding-top: 0px !important;">
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.ie.add_template|replace:" ":"&nbsp;"}</strong></div></div>
+
+{if $error != ""} <div class="error">{$error}</div>{/if}
+
+<input type="hidden" id="import_ad_fields" name="import_ad_fields" value="{$import_ad_fields}" />
+<input type="hidden" id="import_user_fields" name="import_user_fields" value="{$import_user_fields}" />
+<input type="hidden" id="export_ad_fields" name="export_ad_fields" value="{$export_ad_fields}" />
+<input type="hidden" id="export_user_fields" name="export_user_fields" value="{$export_user_fields}" />
+
+<div class="clearfix">
+	<div class="left_form">{$lng.general.type}</div>
+	<div class="right_form">
+		<input type="radio" name="type" value="ad" checked="checked" onClick="changeFields()" />&nbsp;{$lng.ie.ad}&nbsp;&nbsp;
+		<input type="radio" name="type" value="user" onClick="changeFields()" />&nbsp;{$lng.ie.user}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.general.name}</div>
+	<div class="right_form"><input name="name" id="name" type="text" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.purpose}</div>
+	<div class="right_form">
+		<select name="purpose" id="purpose" onchange="changeFields()">
+			<option value="import">{$lng.ie.import}</option>
+			<option value="export">{$lng.ie.export}</option>
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.available_fields}</div>
+	<div class="right_form">
+		<select id="myselect" name="myselect" multiple="multiple" size="6" class="mselect">
+			{foreach from = $fields item = v}
+			<option value="{$v}">{$v}</option>
+			{/foreach}
+		</select>
+		<input type="hidden" id="fields" name="fields" value="" />
+	</div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" onclick='{if $demo}alert("{$lng.general.errors.demo}");return false;{else}return checkAddTemplate("{$lng.ie.errors.enter_template_name}", "{$lng.ie.errors.enter_template_fields}");{/if}'>
+		<span class="positive"><input type="submit" name="Add" value="{$lng.general.add}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.ie.templates|replace:" ":"&nbsp;"}</strong></div></div>
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th width="100" class="hleft">{$lng.general.name}</th>
+	<th width="100">{$lng.ie.type}</th>
+	<th width="100">{$lng.ie.purpose}</th>
+	<th>{$lng.ie.fields}</th>
+	<th width="70" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$array_templates item=v}
+<tr>
+	<td>{$v.name}</td>
+	<td>{$v.type}</td>
+	<td>{if $v.purpose=="import"}{$lng.ie.import}{else}{$lng.ie.export}{/if}</td>
+	<td>{$v.fields|replace:",":", "}</td>
+	<td>
+		<a href="edit_ie_templates_aliases.php?id={$v.id}"><img src="{$template_path}images/edit-aliases.png" class="tooltip icon" title="{$lng.ie.edit_aliases}" alt=""></a>
+
+		<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDelete('{$v.id}','{$lng.ie.confirm_delete|addslashes}','ie_template');{/if}"><img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt=""></a>
+
+		<a href="javascript:;" class="template" id="tmpl{$v.id}">
+		<img src="{$template_path}images/info.png" class="tooltip icon" title="{$lng.ie.view_templates}" alt="">
+		</a>
+
+	</td>
+</tr>
+{/foreach}
+
+{if !$array_templates|@count}
+<tr><td colspan="5">{$lng.ie.no_templates}</td>
+</tr>
+{/if}
+
+</table>
+
+</form>
+</div> {* p30 *}
+
+
+<script type="text/javascript">
+{literal}
+
+$(document).ready(function() {
+
+$("a.template").click(function(event){
+	var tmpl_id = jQuery(this).attr("id").substr(4);
+	$.fancybox({
+		'width'         		: 630,
+		'height'        		: 500,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'margin'		: '0',
+		'padding'		: '0',
+		'titleShow'		: false,
+		'type'			: 'iframe',
+		'href'			: '{/literal}{$live_site}{literal}/admin/xml_template.php?id='+tmpl_id,
+		'onClosed': function(){ location.reload(true); }
+	});
+});
+
+});
+{/literal}
+</script>
+
+{include file="footer.html"}

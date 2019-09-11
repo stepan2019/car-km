@@ -1,0 +1,59 @@
+
+<div class="form_container">
+
+{if $error != ""}<div class="error">{$error}</div>{/if}
+{if $info != ""}<div class="info">{$info}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.hipay_member_account}</div>
+	<div class="right_form"><input type="text" maxlength="100" size="40" name="member_account" id="member_account" value="{$processor_settings.member_account}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.hipay_merchant_password}</div>
+	<div class="right_form"><input type="password" maxlength="50" size="40" name="merchant_password" id="merchant_password" value="{$processor_settings.merchant_password}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.hipay_website_id}</div>
+	<div class="right_form"><input type="text" maxlength="10" size="10" name="website_id" id="website_id" value="{$processor_settings.website_id}"></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.hipay_notification_email}</div>
+	<div class="right_form"><input type="text" maxlength="100" size="40" name="notification_email" id="notification_email" value="{$processor_settings.notification_email}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.hipay_category}</div>
+	<div class="right_form"><input type="text" maxlength="10" size="10" name="category" id="category" value="{$processor_settings.category}">&nbsp;{if $processor_settings.website_id}<a target="_blank" href="https://test-payment.hipay.com/order/list-categories/id/{$processor_settings.website_id}">Click here to get the category id.</a>{/if}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.hipay_currency}</div>
+	<div class="right_form">
+		<select name="currency" id="currency">
+			<option value="EUR" {if $processor_settings.currency==EUR} selected="selected" {/if}>EUR</option>
+			<option value="USD" {if $processor_settings.currency==USD} selected="selected" {/if}>USD</option>
+			<option value="CAN" {if $processor_settings.currency==CAN} selected="selected" {/if}>CAN</option>
+			<option value="AUD" {if $processor_settings.currency==AUD} selected="selected" {/if}>AUD</option>
+			<option value="CHF" {if $processor_settings.currency==CHF} selected="selected" {/if}>SHF</option>
+			<option value="SEK" {if $processor_settings.currency==SEK} selected="selected" {/if}>SEK</option>
+			<option value="GBP" {if $processor_settings.currency==GBP} selected="selected" {/if}>GBP</option>
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.hipay_locale}</div>
+	<div class="right_form"><input type="text" size="10" name="locale" id="locale" value="{$processor_settings.locale}" /></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit_hipay" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}

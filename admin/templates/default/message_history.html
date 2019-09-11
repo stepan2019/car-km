@@ -1,0 +1,26 @@
+{include file="header.html"}
+
+<div class="page_title">{$lng.panel.users} > <a href="messages.php">{$lng.useraccount.messages}</a> > {$lng.messages.message_history} #{$id}</div>
+
+<div class="p30">
+
+	{foreach from=$messages_array item=v}
+	<div class="mb20">
+
+		<span class="sc1">{$lng.messages.from}: <span class="underline">{if isset($v.from) && $v.from}{$v.username}{else}{$v.from_email}{/if}</span> {$lng.messages.to}: <span class="underline">{if isset($v.to) && $v.to}{$v.to_username}{else}{$v.from_email}{/if}</span> {$lng.messages.on}: {$v.date_nice}</span>
+
+		<p>{$v.message}</p>
+
+		{if isset($v.ad_id) && $v.ad_id}<div class="small">{$lng.messages.started_for_listing}: <a href="{if $seo_settings.enable_mod_rewrite}{seo->makeDetailsLink p1=$v.ad_id p2=$v.title}{else}{$live_site}/details.php?id={$v.ad_id}{/if}" class="sc1"  target="_blank">{$v.title}</a></div>{/if}
+
+	</div>
+
+	{/foreach}
+
+	<div class="buttonwrapper rfloat"><div class="button1-left">
+	<a href="messages.php"><span class="button1-right">{$lng.general.back}</span></a>
+	</div></div>
+
+</div>{* end p30 *}
+
+{include file="footer.html"}

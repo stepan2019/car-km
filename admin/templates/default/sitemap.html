@@ -1,0 +1,154 @@
+{include file="header.html"}
+
+<div class="page_title">{$lng.panel.tools} > {$lng.panel.google_sitemap}</div>
+
+<div class="p30">
+<form name="sitemap" method="post" action="sitemap.php" enctype="multipart/form-data">
+
+<div class="form_container" style="padding-top: 0px !important">
+
+{if $error}<div class="error">{$error}</div>{/if}
+{if $info}<div class="info">{$info}</div>{/if}
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.sitemap.sitemap_general|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.general.enable}</div>
+	<div class="right_form"><input type="checkbox" name="enabled" {if $sitemap_settings.enabled==1} checked {/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.sitemap.priority}</div>
+	<div class="right_form"><input type="text" size="10" name="priority" value="{$sitemap_settings.priority}" />&nbsp;&nbsp;<span class="information">{$lng.sitemap.info.priority}</span></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.sitemap.changefreq}</div>
+	<div class="right_form">
+		<select name="changefreq">
+			{foreach from = $freq key=k item=v}
+				<option value="{$k}" {if $sitemap_settings.changefreq==$k}selected{/if}>{$v}</option>
+			{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">&nbsp;</div>
+	<div class="right_form">{$sitemap_link}</div>
+</div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.sitemap.sitemap_categories|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.general.enable}</div>
+	<div class="right_form"><input type="checkbox" name="write_categories" {if $sitemap_settings.write_categories==1} checked {/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.sitemap.priority}</div>
+	<div class="right_form"><input type="text" size="10" name="categories_priority" value="{$sitemap_settings.categories_priority}" />&nbsp;&nbsp;<span class="information">{$lng.sitemap.info.priority}</span></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.sitemap.changefreq}</div>
+	<div class="right_form">
+		<select name="categories_changefreq">
+			{foreach from = $freq key=k item=v}
+				<option value="{$k}" {if $sitemap_settings.categories_changefreq==$k}selected{/if}>{$v}</option>
+			{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.sitemap.sitemap_listings|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.general.enable}</div>
+	<div class="right_form"><input type="checkbox" name="write_listings" {if $sitemap_settings.write_listings==1} checked {/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.sitemap.priority}</div>
+	<div class="right_form"><input type="text" size="10" name="listings_priority" value="{$sitemap_settings.listings_priority}" />&nbsp;&nbsp;<span class="information">{$lng.sitemap.info.priority}</span></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.sitemap.changefreq}</div>
+	<div class="right_form">
+		<select name="listings_changefreq">
+			{foreach from = $freq key=k item=v}
+				<option value="{$k}" {if $sitemap_settings.listings_changefreq==$k}selected{/if}>{$v}</option>
+			{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.sitemap.listings_no}</div>
+	<div class="right_form"><input type="text" size="10" name="listings_no" value="{$sitemap_settings.listings_no}" /></div>
+</div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.sitemap.sitemap_custom_pages|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.general.enable}</div>
+	<div class="right_form"><input type="checkbox" name="write_custom_pages" {if $sitemap_settings.write_custom_pages==1} checked {/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.sitemap.priority}</div>
+	<div class="right_form"><input type="text" size="10" name="cp_priority" value="{$sitemap_settings.cp_priority}" />&nbsp;&nbsp;<span class="information">{$lng.sitemap.info.priority}</span></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.sitemap.changefreq}</div>
+	<div class="right_form">
+		<select name="cp_changefreq">
+			{foreach from = $freq key=k item=v}
+				<option value="{$k}" {if $sitemap_settings.cp_changefreq==$k}selected{/if}>{$v}</option>
+			{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.sitemap.extra_entries|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.sitemap.info.extra_entries}</div>
+	<div class="right_form"><textarea rows="5" cols="90" name="extra_entries" />{$sitemap_settings.extra_entries}</textarea></div>
+</div>
+
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.sitemap.auto_generate|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.sitemap.changefreq}</div>
+	<div class="right_form">
+		<select name="auto_write_freq">
+			{foreach from = $auto_freq key=k item=v}
+				<option value="{$k}" {if $sitemap_settings.auto_write_freq==$k}selected{/if}>{$v}</option>
+			{/foreach}
+		</select>
+	</div>
+</div>
+
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.save_changes}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+<div style="padding: 20px; background: #dee6ea;" class="center">
+	<div class="buttons" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Generate" value="{$lng.sitemap.generate_now}" /></span>
+	</div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+{include file="footer.html"}

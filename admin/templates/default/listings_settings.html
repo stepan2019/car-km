@@ -1,0 +1,596 @@
+{include file="header.html"}
+{include file="data/fancybox.html"}
+
+<link rel="stylesheet" type="text/css" href="{$live_site}/libs/jQuery/plugins/css/jquery.comboselect.css" />
+{literal}
+<!--[if IE]>
+<style type="text/css">
+select.csleft, select.csright {
+	width: 100px;
+}
+</style>
+<![endif]-->
+{/literal}
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/jquery.selso.js"></script>
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/jquery.comboselect.js"></script>
+
+<div class="page_title">{$lng.panel.settings} > {$lng.settings.listings_settings}</div>
+
+<div class="p30">
+<form name="settings" id="settings" method="post" action="listings_settings.php" enctype="multipart/form-data">
+
+<div class="form_container">
+
+{if $error != ""}<div class="error">{$error}</div>{/if}
+{if $successful}<div class="info">{$lng.settings.settings_saved}</div>{/if}
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.settings.listings_display_settings|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.enable_sold}" />&nbsp;{$lng.settings.enable_sold}</div>
+	<div class="right_form"><input type="checkbox"  name="enable_sold" {if $ads_settings.enable_sold==1} checked="checked" {/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.hide_contact_when_sold}" />&nbsp;{$lng.settings.hide_contact_when_sold}</div>
+	<div class="right_form"><input type="checkbox" name="hide_contact_when_sold" {if $ads_settings.hide_contact_when_sold==1} checked="checked" {/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.enable_rented}" />&nbsp;{$lng.settings.enable_rented}</div>
+	<div class="right_form"><input type="checkbox" name="enable_rented" {if $ads_settings.enable_rented==1} checked="checked" {/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.hide_contact_when_rented}" />&nbsp;{$lng.settings.hide_contact_when_rented}</div>
+	<div class="right_form"><input type="checkbox" name="hide_contact_when_rented" {if $ads_settings.hide_contact_when_rented==1} checked="checked" {/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.hide_contact_when_not_logged}</div>
+	<div class="right_form"><input type="checkbox" name="hide_contact_when_not_logged" {if $ads_settings.hide_contact_when_not_logged==1} checked="checked" {/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.show_stock_no}" />&nbsp;{$lng.settings.show_stock_no}</div>
+	<div class="right_form"><input type="checkbox" name="enable_stock" {if $ads_settings.enable_stock==1} checked="checked" {/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.show_more_link}" />&nbsp;{$lng.settings.show_more_link}</div>
+	<div class="right_form"><input type="checkbox" name="show_more_link" {if $ads_settings.show_more_link==1} checked="checked" {/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.show_ad_date_for_everybody}</div>
+	<div class="right_form"><input type="checkbox" name="show_ad_date_for_everybody" {if $ads_settings.show_ad_date_for_everybody==1} checked="checked" {/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.date_time_ago_format}" />&nbsp;{$lng.settings.date_time_ago_format}</div>
+	<div class="right_form">
+		<input type="checkbox" name="date_time_ago_format" {if $ads_settings.date_time_ago_format==1} checked="checked" {/if}>&nbsp;
+		{$lng.settings.date_time_ago_days}&nbsp;<input type="text" maxlength="3" name="date_time_ago_days" size=3 value="{$ads_settings.date_time_ago_days}">&nbsp;{$lng.settings.days_old}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.days_recent}" />&nbsp;{$lng.settings.days_recent}</div>
+	<div class="right_form"><input type="text" maxlength="5" name="days_recent" size=6 value="{$ads_settings.days_recent}"/>&nbsp;{$lng.settings.days}&nbsp; {$lng.settings.info_days_unlimited}</div>
+</div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.settings.submit_form_settings|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.enable_badwords}</div>
+	<div class="right_form">
+
+		<input type="checkbox" id="badwords_check" name="badwords_check" onchange="onBadwordsSettings()" onClick="onBadwordsSettings()" {if $ads_settings.badwords_check==1} checked="checked" {/if}/>&nbsp;&nbsp;
+		{if $ads_settings.badwords_check==1}
+		<div style="display: block" id="div_badwords">
+		{else }
+		<div style="display: none" id="div_badwords">
+		{/if}
+			<input type="radio" name="badwords_check_type" value="1" {if $ads_settings.badwords_check_type==1} checked="checked" {/if}/>&nbsp;{$lng.settings.badwords_block}&nbsp;&nbsp;
+			<input type="radio" name="badwords_check_type" value="0" {if $ads_settings.badwords_check_type==0} checked="checked" {/if}/>&nbsp;{$lng.settings.badwords_replace}
+		</div>
+
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.add_meta_with_listings}" />&nbsp;{$lng.settings.add_meta_with_listings}</div>
+	<div class="right_form"><input type="checkbox" class="noborder" name="add_meta_with_listings" {if $ads_settings.add_meta_with_listings}checked="checked"{/if}/></div>
+</div>
+
+{if $languages|@count>1}
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.translate_title_description}" />&nbsp;{$lng.settings.translate_title_description}</div>
+	<div class="right_form"><input type="checkbox" name="translate_title_description" {if $ads_settings.translate_title_description}checked="checked"{/if}/></div>
+</div>
+{/if}
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.pending_edited}" />&nbsp;{$lng.settings.pending_edited}</div>
+	<div class="right_form"><input type="checkbox" name="pending_edited" {if $ads_settings.pending_edited}checked="checked"{/if}/></div>
+</div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.settings.auctions|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.enable_auctions}</div>
+
+	<div class="right_form"><input type="checkbox" class="noborder" name="enable_auctions" {if $ads_settings.enable_auctions==1} checked="checked" {/if} /></div>
+</div>
+
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.notify_when_new_bid}</div>
+	<div class="right_form"><input type="checkbox" class="noborder" name="notify_when_new_bid" {if $ads_settings.notify_when_new_bid==1} checked="checked" {/if} /></div>
+
+</div>
+
+
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.settings.latest_ads|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.enable_latest}" />&nbsp;{$lng.settings.enable_latest}</div>
+	<div class="right_form"><input type="checkbox" name="enable_latest" {if $ads_settings.enable_latest==1} checked="checked" {/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.no_latest}" />&nbsp;{$lng.settings.no_latest}</div>
+	<div class="right_form"><input type="text" name="no_latest" maxlength="4" size="4" value="{$ads_settings.no_latest}"/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.no_latest_on_row}" />&nbsp;{$lng.settings.no_latest_on_row}</div>
+	<div class="right_form"><input type="text" name="no_latest_on_row" maxlength="4" size="4" value="{$ads_settings.no_latest_on_row}"/></div>
+</div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.settings.images|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.image_dimensions}" />&nbsp;{$lng.settings.image_dimensions}</div>
+	<div class="right_form">
+		{$lng.settings.width}&nbsp;<input type="text" name="pic_max_width" maxlength="10" size="4" value="{$ads_settings.pic_max_width}"/>&nbsp;px&nbsp;&nbsp;
+		{$lng.settings.height}&nbsp;<input type="text" name="pic_max_height" maxlength="10" size="4" value="{$ads_settings.pic_max_height}"/>&nbsp;px&nbsp;&nbsp;
+		{$lng.settings.size}&nbsp;<input type="text" name="pic_max_size" maxlength="10" size="6" value="{$ads_settings.pic_max_size}"/>&nbsp;Kb
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.image_resizing}" />&nbsp;{$lng.settings.image_resizing}</div>
+	<div class="right_form">
+		<input type="checkbox" name="resize_image" {if $ads_settings.resize_image}checked{/if}/>&nbsp;{$lng.settings.resize_image}&nbsp;&nbsp;
+		{$lng.settings.resize_width}&nbsp;<input type="text" name="resize_width" maxlength="4" size="4" value="{$ads_settings.resize_width}"/>&nbsp;px&nbsp;&nbsp;
+		{$lng.settings.resize_height}&nbsp;<input type="text" name="resize_height" maxlength="4" size="4" value="{$ads_settings.resize_height}"/>&nbsp;px
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.small_thumb_dimmensions}</div>
+	<div class="right_form">
+		{$lng.settings.width}&nbsp;<input type="text" name="thmb_width" size="5" maxlength="3" value="{$ads_settings.thmb_width}"/>&nbsp;&nbsp;
+		{$lng.settings.height}&nbsp;<input type="text" name="thmb_height" size="5" maxlength="3" value="{$ads_settings.thmb_height}"/>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.medium_thumb_dimmensions}</div>
+	<div class="right_form">
+		{$lng.settings.width}&nbsp;<input type="text" name="med_thmb_width" size="5" maxlength="3" value="{$ads_settings.med_thmb_width}"/>&nbsp;&nbsp;
+		{$lng.settings.height}&nbsp;<input type="text" name="med_thmb_height" size="5" maxlength="3" value="{$ads_settings.med_thmb_height}"/>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.big_thumb_dimmensions}</div>
+	<div class="right_form">
+		{$lng.settings.width}&nbsp;<input type="text" name="big_thmb_width" size="5" maxlength="3" value="{$ads_settings.big_thmb_width}"/>&nbsp;&nbsp;
+		{$lng.settings.height}&nbsp;<input type="text" name="big_thmb_height" size="5" maxlength="3" value="{$ads_settings.big_thmb_height}"/>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.default_small_image}" />&nbsp;{$lng.settings.default_small_image}</div>
+	<div class="right_form">
+		<input type="file" name="nopic" />&nbsp;&nbsp;
+		{if $ads_settings.nopic!=""}
+		<a href="{$live_site}/images/{$ads_settings.nopic}" class="imgfield">
+		<img src="{$template_path}images/camera.png"/></a>
+		{else}
+		<img src="{$template_path}images/camera_off.png"/>
+		{/if}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.default_medium_image}" />&nbsp;{$lng.settings.default_medium_image}</div>
+	<div class="right_form">
+		<input type="file" name="med_nopic"/>&nbsp;&nbsp;
+		{if $ads_settings.med_nopic!=""}
+		<a href="{$live_site}/images/{$ads_settings.med_nopic}" class="imgfield">
+		<img src="{$template_path}images/camera.png"/></a>
+		{else}
+		<img src="{$template_path}images/camera_off.png"/>
+		{/if}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.default_big_image}" />&nbsp;{$lng.settings.default_big_image}</div>
+	<div class="right_form">
+		<input type="file" name="big_nopic"/>&nbsp;&nbsp;
+		{if $ads_settings.big_nopic!=""}
+		<a href="{$live_site}/images/{$ads_settings.big_nopic}" class="imgfield">
+		<img src="{$template_path}images/camera.png"/></a>
+		{else}
+		<img src="{$template_path}images/camera_off.png"/>
+		{/if}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.watermark}" />&nbsp;{$lng.settings.watermark}</div>
+	<div class="right_form">
+		<input type="file" name="watermark" />&nbsp;&nbsp;
+		{if $ads_settings.watermark!=""}
+		<a href="{$live_site}/images/{$ads_settings.watermark}" class="imgfield">
+		<img src="{$template_path}images/camera.png"></a>
+		{else}
+		<img src="{$template_path}images/camera_off.png">
+		{/if}
+		{if $ads_settings.watermark!=""}&nbsp;&nbsp;<a href="listings_settings.php?delete=watermark"><img src="{$template_path}images/delete.png" class="tooltip" title="{$lng.general.delete}" alt="" /></a>{/if}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.watermark_position}</div>
+	<div class="right_form">
+		<input type="radio" name="watermark_position" value="tl" {if $ads_settings.watermark_position=='tl'} checked="checked" {/if}/>&nbsp;{$lng.settings.top_left}&nbsp;&nbsp;
+		<input type="radio" name="watermark_position" value="tr" {if $ads_settings.watermark_position=='tr'} checked="checked" {/if}/>&nbsp;{$lng.settings.top_right}&nbsp;&nbsp;
+		<input type="radio" name="watermark_position" value="bl" {if $ads_settings.watermark_position=='bl'} checked="checked" {/if}/>&nbsp;{$lng.settings.bottom_left}&nbsp;&nbsp;
+		<input type="radio" name="watermark_position" value="br" {if $ads_settings.watermark_position=='br'} checked="checked" {/if}/>&nbsp;{$lng.settings.bottom_right}&nbsp;&nbsp;
+		<input type="radio" name="watermark_position" value="c" {if $ads_settings.watermark_position=='c'} checked="checked" {/if}/>&nbsp;{$lng.settings.center}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.watermark_transparency}</div>
+	<div class="right_form"><input type="text" name="watermark_transparency" value="{$ads_settings.watermark_transparency}" size="5"/>%</div>
+</div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.settings.html_options|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.description_editor}" />&nbsp;{$lng.settings.description_editor}</div>
+	<div class="right_form"><input type="checkbox" name="description_editor" {if $ads_settings.description_editor==1} checked="checked" {/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.allowed_html}" />&nbsp;{$lng.settings.allowed_html}</div>
+	<div class="right_form">
+		<select id="allowed_html_box" name="allowed_html_box[]" multiple="multiple" size="6" class="mselect">
+		{foreach from = $html_tags item = v}
+		<option value="{$v}" {if in_array($v, $ads_settings.array_allowed_html)}selected="selected"{/if}>&lt;{$v}&gt;</option>
+		{/foreach}
+		</select>
+		<input type="hidden" id="allowed_html" name="allowed_html" value="" />
+		<div class="lfloat information">{$lng.settings.info.comboselect}</div>
+	</div>
+</div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.settings.search_settings|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.search_in_fields}" />&nbsp;{$lng.settings.search_in_fields}</div>
+	<div class="right_form">
+		<select id="search_in_fields_box" name="search_in_fields_box" multiple="multiple" size="6" class="mselect">
+		<option value="category_name" {if in_array("category_name", $ads_settings.array_search_in_fields)}selected="selected"{/if}>{$lng.categories.category}</option>
+		{foreach from = $fields item = v}
+		<option value="{$v.caption}" {if in_array($v.caption, $ads_settings.array_search_in_fields)}selected="selected"{/if}>{$v.name}</option>
+		{/foreach}
+		</select>
+		<input type="hidden" id="search_in_fields" name="search_in_fields" value="" />
+		<div class="lfloat information">{$lng.settings.info.comboselect}</div>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.count_refine_results}" />&nbsp;{$lng.settings.count_refine_results}</div>
+	<div class="right_form"><input type="checkbox" name="count_refine_results" {if $ads_settings.count_refine_results==1} checked="checked" {/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.search_type}" />&nbsp;{$lng.settings.search_type}</div>
+	<div class="right_form">
+		<input type="radio" name="search_type" value="exact" {if $ads_settings.search_type=='exact'} checked="checked" {/if}/>&nbsp;{$lng.settings.exact_search}<br/>
+		<input type="radio" name="search_type" value="partial" {if $ads_settings.search_type=='partial'} checked="checked" {/if}/>&nbsp;{$lng.settings.partial_search}<br/>
+		<input type="radio" name="search_type" value="all" {if $ads_settings.search_type=='all'} checked="checked" {/if} />&nbsp;{$lng.settings.all_words}<br/>
+		<input type="radio" name="search_type" value="any" {if $ads_settings.search_type=='any'} checked="checked" {/if} />&nbsp;{$lng.settings.any_words}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.default_search_view}</div>
+	<div class="right_form">
+		<input type="radio" name="default_search_view" value="0" {if $ads_settings.default_search_view==0} checked="checked" {/if}/>&nbsp;{$lng.settings.list_view}&nbsp;&nbsp;
+		<input type="radio" name="default_search_view" value="1" {if $ads_settings.default_search_view==1} checked="checked" {/if} />&nbsp;{$lng.settings.gallery_view}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.enable_map_search}" />&nbsp;{$lng.settings.enable_map_search}</div>
+	<div class="right_form"><input type="checkbox" name="enable_map_search" {if $ads_settings.enable_map_search==1} checked="checked" {/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.map_visible}" />&nbsp;{$lng.settings.map_visible}</div>
+	<div class="right_form"><input type="checkbox" name="map_visible" {if $ads_settings.map_visible==1} checked="checked" {/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.search_location_fields}" />&nbsp;{$lng.settings.search_location_fields}</div>
+	<div class="right_form">
+		<div class="clearfix">
+		<select id="search_location_fields_box" name="search_location_fields_box" multiple="multiple" size="6" class="mselect">
+		{foreach from = $fields item = v}
+		<option value="{$v.caption}" {if in_array($v.caption, $ads_settings.array_search_location_fields)}selected="selected"{/if}>{$v.name}</option>
+		{/foreach}
+		</select>
+		<input type="hidden" id="search_location_fields" name="search_location_fields" value="" />
+		</div>
+
+		<div class="information mb10">{$lng.settings.info.comboselect}</div>
+		<div class="information">{$lng.settings.important.search_location_fields}</div>
+
+
+	</div>
+</div>
+
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png" class="tooltip icon" title="{$lng.settings.info.enable_location_autosuggest}" />&nbsp;{$lng.settings.enable_location_autosuggest}</div>
+	<div class="right_form"><input type="checkbox" name="enable_location_autosuggest" {if $ads_settings.enable_location_autosuggest==1} checked="checked" {/if} onchange="checkDistanceSearch(this.form)"/></div>
+</div>
+
+<div id="div_location_autosuggest">
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.address_components}" />&nbsp;{$lng.settings.address_components}</div>
+	<div class="right_form">
+	
+	 <fieldset class="bordered">
+		<legend>{$lng.settings.ac.country}</legend>
+		{$lng.settings.ac.field}: 
+		<select id="la_country" name="la_country">
+		<option value="">{$lng.general.none}</option>
+		{foreach from = $fields item = v}
+		<option value="{$v.caption}" {if isset($ads_settings.address_components.country.field) && $ads_settings.address_components.country.field==$v.caption}selected{/if}>{$v.name}</option>
+		{/foreach}
+		</select>
+		&nbsp;
+		{$lng.settings.ac.type}: 
+		<select name="la_country_type" id="la_country_type">
+			<option value="long_name" {if isset($ads_settings.address_components.country.type) && $ads_settings.address_components.country.type=="long_name"}selected{/if}>{$lng.settings.ac.long_name}</option>
+			<option value="short_name" {if isset($ads_settings.address_components.country.type) && $ads_settings.address_components.country.type=="short_name"}selected{/if}>{$lng.settings.ac.short_name}</option>
+		</select>
+		
+	</fieldset>
+	
+	 <fieldset class="bordered">
+		<legend>{$lng.settings.ac.administrative_area_level_1}</legend>
+		{$lng.settings.ac.field}: 
+		<select id="la_administrative_area_level_1" name="la_administrative_area_level_1">
+		<option value="">{$lng.general.none}</option>
+		{foreach from = $fields item = v}
+		<option value="{$v.caption}" {if isset($ads_settings.address_components.administrative_area_level_1.field) && $ads_settings.address_components.administrative_area_level_1.field==$v.caption}selected{/if}>{$v.name}</option>
+		{/foreach}
+		</select>
+		&nbsp;
+		{$lng.settings.ac.type}: 
+		<select name="la_administrative_area_level_1_type" id="la_administrative_area_level_1_type">
+			<option value="long_name" {if isset($ads_settings.address_components.administrative_area_level_1.type) && $ads_settings.address_components.administrative_area_level_1.type=="long_name"}selected{/if}>{$lng.settings.ac.long_name}</option>
+			<option value="short_name" {if isset($ads_settings.address_components.administrative_area_level_1.type) && $ads_settings.address_components.administrative_area_level_1.type=="short_name"}selected{/if}>{$lng.settings.ac.short_name}</option>
+		</select>
+		
+	</fieldset>
+
+	 <fieldset class="bordered">
+		<legend>{$lng.settings.ac.administrative_area_level_2}</legend>
+		{$lng.settings.ac.field}: 
+		<select id="la_administrative_area_level_2" name="la_administrative_area_level_2">
+		<option value="">{$lng.general.none}</option>
+		{foreach from = $fields item = v}
+		<option value="{$v.caption}" {if isset($ads_settings.address_components.administrative_area_level_2) && $ads_settings.address_components.administrative_area_level_2.field==$v.caption}selected{/if}>{$v.name}</option>
+		{/foreach}
+		</select>
+		&nbsp;
+		{$lng.settings.ac.type}: 
+		<select name="la_administrative_area_level_2_type" id="la_administrative_area_level_2_type">
+			<option value="long_name" {if isset($ads_settings.address_components.administrative_area_level_2) && $ads_settings.address_components.administrative_area_level_2.type=="long_name"}selected{/if}>{$lng.settings.ac.long_name}</option>			<option value="short_name" {if isset($ads_settings.address_components.administrative_area_level_2) &&  $ads_settings.address_components.administrative_area_level_2.type=="short_name"}selected{/if}>{$lng.settings.ac.short_name}</option>
+
+		</select>
+		
+	</fieldset>
+
+	 <fieldset class="bordered">
+		<legend>{$lng.settings.ac.locality}</legend>
+		{$lng.settings.ac.field}: 
+		<select id="la_locality" name="la_locality">
+		<option value="">{$lng.general.none}</option>
+		{foreach from = $fields item = v}
+		<option value="{$v.caption}" {if $ads_settings.address_components.locality.field==$v.caption}selected{/if}>{$v.name}</option>
+		{/foreach}
+		</select>
+		&nbsp;
+		{$lng.settings.ac.type}: 
+		<select name="la_locality_type" id="la_locality_type">
+			<option value="long_name" {if $ads_settings.address_components.locality.type=="long_name"}selected{/if}>{$lng.settings.ac.long_name}</option>
+			<option value="short_name" {if $ads_settings.address_components.locality.type=="short_name"}selected{/if}>{$lng.settings.ac.short_name}</option>
+		</select>
+		
+	</fieldset>
+
+	 <fieldset class="bordered">
+		<legend>{$lng.settings.ac.postal_code}</legend>
+		{$lng.settings.ac.field}: 
+		<select id="la_postal_code" name="la_postal_code">
+		<option value="">{$lng.general.none}</option>
+		{foreach from = $fields item = v}
+		<option value="{$v.caption}" {if $ads_settings.address_components.postal_code.field==$v.caption}selected{/if}>{$v.name}</option>
+		{/foreach}
+		</select>
+		&nbsp;
+		{$lng.settings.ac.type}: 
+		<select name="la_postal_code_type" id="la_postal_code_type">
+			<option value="long_name" {if $ads_settings.address_components.postal_code.type=="long_name"}selected{/if}>{$lng.settings.ac.long_name}</option>
+			<option value="short_name" {if $ads_settings.address_components.postal_code.type=="short_name"}selected{/if}>{$lng.settings.ac.short_name}</option>
+		</select>
+		
+	</fieldset>
+
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.limit_location_autosuggest}" />&nbsp;{$lng.settings.limit_location_autosuggest}</div>
+	<div class="right_form"><input type="text" name="limit_location_autosuggest" value="{$ads_settings.limit_location_autosuggest}"/>&nbsp;{$lng.settings.info2.limit_location_autosuggest}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.gm_api_lang}" />&nbsp;{$lng.settings.gm_api_lang}</div>
+	<div class="right_form"><input type="text" name="gm_api_lang" value="{$ads_settings.gm_api_lang}"/>&nbsp;{$lng.settings.info2.gm_api_lang}</div>
+</div>
+
+</div> {* end div_location_autosuggest *}
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.enable_distance_search}" />&nbsp;{$lng.settings.enable_distance_search}</div>
+	<div class="right_form"><input type="checkbox" name="enable_distance_search" id="enable_distance_search" {if $ads_settings.enable_distance_search==1} checked="checked" {/if} onChange="checkDistanceSearch(this.form)"/></div>
+</div>
+
+<div id="div_distance_search">
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.ds_measuring_unit}</div>
+	<div class="right_form">
+		<select name="ds_measuring_unit">
+			<option value="Km" {if $ads_settings.ds_measuring_unit=="Km"}selected="selected"{/if}>Km</option>
+			<option value="miles" {if $ads_settings.ds_measuring_unit=="miles"}selected="selected"{/if}>miles</option>
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.ds_distances_list}" />&nbsp;{$lng.settings.ds_distances_list}</div>
+	<div class="right_form"><textarea name="ds_distances_list" rows="6" cols="20"/>{$ads_settings.ds_distances_list_formatted}</textarea></div>
+</div>
+
+</div>
+
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.saved_searches}" />&nbsp;{$lng.settings.saved_searches_enabled}</div>
+	<div class="right_form"><input type="checkbox" name="saved_searches_enabled" {if $ads_settings.saved_searches_enabled==1} checked="checked" {/if}/></div>
+</div>
+
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.settings.location|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.location_fields}" />&nbsp;{$lng.settings.location_fields}</div>
+	<div class="right_form">
+		<select id="location_fields_box" name="location_fields_box" multiple="multiple" size="6" class="mselect">
+		{foreach from = $fields item = v}
+		<option value="{$v.caption}" {if in_array($v.caption, $ads_settings.array_location_fields)}selected="selected"{/if}>{$v.name}</option>
+		{/foreach}
+		</select>
+		<input type="hidden" id="location_fields" name="location_fields" value="" />
+		<div class="lfloat information">{$lng.settings.info.comboselect}</div>
+	</div>
+</div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.settings.email_alerts|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.alerts.info.email_alerts}" />&nbsp;{$lng.alerts.enable}</div>
+	<div class="right_form"><input type="checkbox" name="alerts_enabled" {if $ads_settings.alerts_enabled==1} checked="checked" {/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.alerts.info.ask_advanced_key}" />&nbsp;{$lng.alerts.ask_advanced_key}</div>
+	<div class="right_form"><input type="checkbox" name="alerts_ask_adv_key" {if $ads_settings.alerts_ask_adv_key==1} checked="checked" {/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.alerts.info.require_login}" />&nbsp;{$lng.alerts.require_login}</div>
+	<div class="right_form"><input type="checkbox" name="alerts_require_login" {if $ads_settings.alerts_require_login==1} checked="checked" {/if}/></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.alerts.info.alerts_activation}" />&nbsp;{$lng.alerts.alerts_activation}</div>
+	<div class="right_form">
+		<input type="radio" name="alerts_activation" value="1" {if $ads_settings.alerts_activation==1}checked{/if} />&nbsp;{$lng.alerts.activation_always}&nbsp;&nbsp;
+		<input type="radio" name="alerts_activation" value="2" {if $ads_settings.alerts_activation==2}checked{/if} />&nbsp;{$lng.alerts.when_not_logged_in}&nbsp;&nbsp;
+		<input type="radio" name="alerts_activation" value="0" {if $ads_settings.alerts_activation==0}checked{/if} />&nbsp;{$lng.alerts.activation_never}&nbsp;&nbsp;
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.alerts.info.delete_after}" />&nbsp;{$lng.alerts.delete_after}</div>
+	<div class="right_form"><input type="text" size="10" name="alerts_days_delete" value="{$ads_settings.alerts_days_delete}" />{$lng.settings.days}</div>
+</div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.settings.search_by_account_type|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.search_by_account_type}" />&nbsp;{$lng.settings.search_by_account_type}</div>
+	<div class="right_form">
+		<input type="checkbox" name="search_by_account_type" {if $ads_settings.search_by_account_type==1} checked="checked" {/if}/>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.prof_groups}" />&nbsp;{$lng.settings.prof_groups}</div>
+	<div class="right_form">
+		<select id="prof_groups_box" name="prof_groups_box" multiple="multiple" size="6" class="mselect">
+		{foreach from = $groups_list item = v}
+		<option value="{$v.id}" {if in_array($v.id, $ads_settings.array_prof_groups)}selected="selected"{/if}>{$v.name}</option>
+		{/foreach}
+		</select>
+		<input type="hidden" id="prof_groups" name="prof_groups" value="" />
+		<div class="lfloat information">{$lng.settings.info.comboselect}</div>
+	</div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" onClick='{if $demo}alert("{$lng.general.errors.demo}");return false;{else}return checkAdsSettings("{$lng.settings.error.search_in_fields|addslashes}");{/if}'>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.save_changes}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+{literal}
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("a.imgfield").fancybox();
+		checkDistanceSearch(document.forms["settings"]);
+	});
+
+	$(function(){
+		$('#allowed_html_box').comboselect({ sort: 'none', addbtn: '+',  rembtn: '-' });
+		$('#search_in_fields_box').comboselect({ sort: 'none', addbtn: '+',  rembtn: '-' });
+		$('#location_fields_box').comboselect({ sort: 'none', addbtn: '+',  rembtn: '-' });
+		$('#search_location_fields_box').comboselect({ sort: 'none', addbtn: '+',  rembtn: '-' });
+		$('#prof_groups_box').comboselect({ sort: 'none', addbtn: '+',  rembtn: '-' });
+	});
+
+</script>
+{/literal}
+
+{include file="footer.html"}

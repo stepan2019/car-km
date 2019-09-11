@@ -1,0 +1,34 @@
+{include file="header.html"}
+
+<div class="page_title"><a href="{$live_site}/admin/modules.php">{$lng.panel.modules}</a> > {$lng_pedigree.pedigree}</div>
+
+<div class="p30">
+<form name="pedigree" method="post" action="">
+
+<div class="form_container">
+
+{if isset($error) && $error != ""}<div class="error">{$error}</div>{/if}
+{if isset($info) && $info != ""}<div class="info">{$info}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng_pedigree.sire_field}</div>
+	<div class="right_form"><input type="text" name="sire_field" size="30" value="{$pg_settings.sire_field}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_pedigree.dam_field}</div>
+	<div class="right_form"><input type="text" name="dam_field" size="30" value="{$pg_settings.dam_field}" /></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat">
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+{include file="footer.html"}

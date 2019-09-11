@@ -1,0 +1,328 @@
+{include file="header.html"}
+{include file="data/ui.html"}
+
+<div class="page_title">
+<div class="lfloat" width="200">{$lng.panel.tools} > {$lng.panel.import_export}</div>
+<div class="rfloat mt5">
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab1-left">
+	<a href="import-export.php"><span class="tab1-right">{$lng.ie.export}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="import.php"><span class="tab2-right">{$lng.ie.import}</span></a>
+	</div></div>
+
+	{if $is_admin}
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="scheduled_imports.php"><span class="tab2-right">{$lng.ie.scheduled_imports}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="ie_templates.php"><span class="tab2-right">{$lng.ie.templates}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="ie_settings.php"><span class="tab2-right">{$lng.ie.settings}</span></a>
+	</div></div>
+	{/if}
+
+</div>
+</div>
+
+<div class="p30">
+<form name="ie" method="post" action="{$self}" enctype="multipart/form-data">
+
+<div class="form_container" style="padding-top: 0px !important;">
+
+{if $error != ""}<div class="error">{$error}</div>{/if}
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.ie.csv_export|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.general.type}</div>
+	<div class="right_form">
+		<input type="radio" name="csv_export_type" value="ad" checked="checked" onClick="changeTemplates('{$ad_templates}', '{$lng.ie.all_fields}', 'ad', 'csv')" />&nbsp;{$lng.ie.ad}&nbsp;&nbsp;
+	 	<input type="radio" name="csv_export_type" value="user" onClick="changeTemplates('{$user_templates}', '{$lng.ie.all_fields}', 'user', 'csv')" />&nbsp;{$lng.ie.user}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.show_field_names}</div>
+	<div class="right_form"><input type="checkbox" name="show_field_names" checked="checked" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.template}</div>
+	<div class="right_form">
+		<select name="csv_template">
+			<option value="all">{$lng.ie.all_fields}</option>
+			{foreach from = $templates item=v}
+				<option value="{$v.id}">{$v.name}</option>
+			{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="clearfix" id="csv_ad_additional">
+	<div class="left_form">&nbsp;</div>
+	<div class="right_form">
+
+			<select name="csv_plan">
+			<option value="">{$lng.packages.plan}</option>
+			{foreach from = $plans item = v}
+			<option value="{$v.id}">{$v.name}</option>
+			{/foreach}
+			</select>
+			&nbsp;
+			<select name="csv_category">
+			<option value="">{$lng.categories.category}</option>
+			{foreach from = $categories item = v}
+			<option value="{$v.id}">{$v.name}</option>
+			{/foreach}
+			</select>
+			&nbsp;
+
+			{if $no_users<=100}
+			<select name="csv_user">
+			<option value="">{$lng.users.user}</option>
+			{foreach from = $users item = v}
+			<option value="{$v.username}">{$v.username}</option>
+			{/foreach}
+			</select>
+			{else}
+			{$lng.users.user}:&nbsp;<input type="text" name="csv_user" id="csv_user" />
+			{/if}
+
+			&nbsp;
+			<select name="csv_ad_order_by">
+			<option value="">{$lng.general.order_by}</option>
+			<option value="date_added">{$lng.listings.order_by_date}</option>
+			{if $ads_settings.enable_price}<option value="price">{$lng.listings.order_by_price}</option>{/if}
+			<option value="title">{$lng.listings.order_by_title}</option>
+			<option value="viewed">{$lng.listings.order_by_views}</option>
+			</select>
+			&nbsp;
+
+			<select name="csv_ad_order_way">
+			<option value="">{$lng.general.order_way}</option>
+			<option value="asc">{$lng.general.asc}</option>
+			<option value="desc">{$lng.general.desc}</option>
+			</select>
+
+
+	</div>
+</div>
+
+<div class="clearfix" id="csv_user_additional" style="display: none;">
+	<div class="left_form">&nbsp;</div>
+	<div class="right_form">
+		<select name="csv_group">
+			<option value="">{$lng.users.group}</option>
+			{foreach from = $groups item = v}
+			<option value="{$v.id}">{$v.name}</option>
+			{/foreach}
+		</select>
+		&nbsp;
+
+		<select name="csv_user_order_by">
+			<option value="">{$lng.general.order_by}</option>
+			<option value="registration_date">{$lng.users.order_by_date}</option>
+			<option value="username">{$lng.users.order_by_username}</option>
+			<option value="{$settings.contact_name_field}">{$lng.users.order_by_contact_name}</option>
+			<option value="listings">{$lng.users.order_by_listings}</option>
+			<option value="group">{$lng.users.order_by_group}</option>
+		</select>
+		&nbsp;
+
+		<select name="csv_user_order_way">
+			<option value="">{$lng.general.order_way}</option>
+			<option value="asc">{$lng.general.asc}</option>
+			<option value="desc">{$lng.general.desc}</option>
+		</select>
+
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.date_start}</div>
+	<div class="right_form"><input name="csv_date_start" id="csv_date_start" size="15" type="text" value="" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.date_end}</div>
+	<div class="right_form"><input name="csv_date_end" id="csv_date_end" size="15" type="text" value="" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.latest}</div>
+	<div class="right_form"><input name="csv_last" type="text" size="4" /></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat"  {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="CSV_export" value="{$lng.ie.export}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.ie.xml_export|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.general.type}</div>
+	<div class="right_form">
+		<input type="radio" name="xml_export_type" value="ad" checked="checked" onClick="changeTemplates('{$ad_templates}', '{$lng.ie.all_fields}', 'ad', 'xml')">&nbsp;{$lng.ie.ad}&nbsp;&nbsp;
+	 	<input type="radio" name="xml_export_type" value="user" onClick="changeTemplates('{$user_templates}', '{$lng.ie.all_fields}', 'user', 'xml')">&nbsp;{$lng.ie.user}
+
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.template}</div>
+	<div class="right_form">
+		<select name="xml_template">
+			<option value="all">{$lng.ie.all_fields}</option>
+			{foreach from = $templates item=v}
+				<option value="{$v.id}">{$v.name}</option>
+			{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="clearfix" id="xml_ad_additional">
+	<div class="left_form">&nbsp;</div>
+	<div class="right_form">
+		<select name="xml_plan">
+			<option value="">{$lng.packages.plan}</option>
+			{foreach from = $plans item = v}
+			<option value="{$v.id}">{$v.name}</option>
+			{/foreach}
+		</select>
+		&nbsp;
+		<select name="xml_category">
+			<option value="">{$lng.categories.category}</option>
+			{foreach from = $categories item = v}
+			<option value="{$v.id}">{$v.name}</option>
+			{/foreach}
+		</select>
+		&nbsp;
+		{if $no_users<=100}
+		<select name="xml_user">
+			<option value="">{$lng.users.user}</option>
+			{foreach from = $users item = v}
+			<option value="{$v.username}">{$v.username}</option>
+			{/foreach}
+		</select>
+		{else}
+		{$lng.users.user}:&nbsp;<input type="text" name="xml_user" id="xml_user" />
+		{/if}
+		&nbsp;
+		<select name="xml_ad_order_by">
+			<option value="">{$lng.general.order_by}</option>
+			<option value="date_added">{$lng.listings.order_by_date}</option>
+			{if $ads_settings.enable_price}<option value="price">{$lng.listings.order_by_price}</option>{/if}
+			<option value="title">{$lng.listings.order_by_title}</option>
+			<option value="viewed">{$lng.listings.order_by_views}</option>
+		</select>
+		&nbsp;
+		<select name="xml_ad_order_way">
+			<option value="">{$lng.general.order_way}</option>
+			<option value="asc">{$lng.general.asc}</option>
+			<option value="desc">{$lng.general.desc}</option>
+		</select>
+	</div>
+</div>
+
+<div class="clearfix" id="xml_user_additional" style="display: none;">
+	<div class="left_form">&nbsp;</div>
+	<div class="right_form">
+		<select name="xml_group">
+			<option value="">{$lng.users.group}</option>
+			{foreach from = $groups item = v}
+			<option value="{$v.id}">{$v.name}</option>
+			{/foreach}
+		</select>
+		&nbsp;
+		<select name="xml_user_order_by">
+			<option value="">{$lng.general.order_by}</option>
+			<option value="registration_date">{$lng.users.order_by_date}</option>
+			<option value="username">{$lng.users.order_by_username}</option>
+			<option value="{$settings.contact_name_field}">{$lng.users.order_by_contact_name}</option>
+			<option value="listings">{$lng.users.order_by_listings}</option>
+			<option value="group">{$lng.users.order_by_group}</option>
+		</select>
+		&nbsp;
+		<select name="xml_user_order_way">
+			<option value="">{$lng.general.order_way}</option>
+			<option value="asc">{$lng.general.asc}</option>
+			<option value="desc">{$lng.general.desc}</option>
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.date_start}</div>
+	<div class="right_form"><input name="xml_date_start" id="xml_date_start" size="15" type="text" value="" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.date_end}</div>
+	<div class="right_form"><input name="xml_date_end" id="xml_date_end" size="15" type="text" value="" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.latest}</div>
+	<div class="right_form"><input name="xml_last" type="text" size="4" /></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat"  {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="XML_export" value="{$lng.ie.export}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+<script type="text/javascript">
+	{literal}
+	$(function() {
+		$('#csv_date_start').datepicker({
+			dateFormat: "yy-mm-dd",
+			changeMonth: true,
+			changeYear: true
+		});
+
+		$('#csv_date_end').datepicker({
+			dateFormat: "yy-mm-dd",
+			changeMonth: true,
+			changeYear: true
+		});
+
+		$('#xml_date_start').datepicker({
+			dateFormat: "yy-mm-dd",
+			changeMonth: true,
+			changeYear: true
+		});
+
+		$('#xml_date_end').datepicker({
+			dateFormat: "yy-mm-dd",
+			changeMonth: true,
+			changeYear: true
+		});
+
+                $( "#csv_user" ).autocomplete({
+                        source: "{/literal}{$live_site}{literal}/admin/include/get_info.php?type=user_ac",
+                        minLength: 1
+                });
+                $( "#xml_user" ).autocomplete({
+                        source: "{/literal}{$live_site}{literal}/admin/include/get_info.php?type=user_ac",
+                        minLength: 1
+                });
+        });
+{/literal}
+</script>
+
+{include file="footer.html"}

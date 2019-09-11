@@ -1,0 +1,92 @@
+<div class="form_container">
+
+{if isset($error) && $error != ""}<div class="error">{$error}</div>{/if}
+{if isset($info) && $info != ""}<div class="info">{$info}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">Public Key</div>
+	<div class="right_form"><input type="text" maxlength="200" size="40" name="tpay_public_key" id="tpay_public_key" value="{$processor_settings.tpay_public_key}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Private Key</div>
+	<div class="right_form"><input type="text" size="40" name="tpay_private_key" id="tpay_private_key" value="{$processor_settings.tpay_private_key}" /></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit_tpay" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>Products</strong></div>&nbsp;<img id="add_prod" src="{$template_path}images/add.png" style="margin-bottom: -7px;" /></div>
+
+{if isset($product_error) && $product_error != ""}<div class="error">{$product_error}</div>{/if}
+
+<div id="add_product" {if !isset($product_error) || !$product_error}style="display: none;"{/if}>
+
+<div class="clearfix">
+	<div class="left_form">Catalog</div>
+	<div class="right_form"><input type="text" name="catalog" value="{if isset($tmp.catalog)}{$tmp.catalog}{/if}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Product id</div>
+	<div class="right_form"><input type="text" name="product_id" value="{if isset($tmp.product_id)}{$tmp.product_id}{/if}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.listings.price}</div>
+	<div class="right_form"><input type="text" name="price" value="{if isset($tmp.price)}{$tmp.price}{/if}" /></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Add" value="{$lng.general.add}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end add_product *}
+
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th width="20%" class="hleft">Catalog</th>
+	<th width="20%">Product id</th>
+	<th width="20%">{$lng.listings.price}</th>
+	<th width="10%" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$processor_settings.products item=v}
+<tr>
+	<td>{$v.catalog}</td>
+	<td>{$v.product_id}</td>
+	<td>{$v.price}</td>
+	<td><a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDelete('{$v.id}','{$lng.settings.confirm_delete|addslashes}','tpay');{/if}"><img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt=""></a></td>
+</tr>
+{/foreach}
+
+{if $processor_settings.products|@count==0}
+<tr><td colspan="4">{$lng.no_items}</td></tr>
+{/if}
+
+</table>
+
+<script type="text/javascript">
+{literal}
+$(document).ready(function() {
+
+	$("#add_prod").click(function() {
+		if($("#add_product").is(":visible")==false) $("#add_product").show();
+		else $("#add_product").hide();
+	});
+
+});
+{/literal}
+</script>
+
+<br/><br/><br/>
+</td></tr>
+</table>

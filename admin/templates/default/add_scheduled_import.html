@@ -1,0 +1,220 @@
+{include file="header.html"}
+
+<div class="page_title">{$lng.panel.tools} > {$lng.panel.import_export} > <a href="scheduled_imports.php">{$lng.ie.scheduled_imports}</a> > {if !isset($id) || !$id}{$lng.ie.create_scheduled_import}{else}{$lng.ie.edit_scheduled_import}{/if}</div>
+
+<div class="p30">
+<form name="add_pkg" method="post" action="{$self}{if isset($id) && $id}?id={$id}{/if}">
+
+<div class="form_container">
+
+{if isset($error) &&  $error}<div class="error">{$error}</div>{/if}
+
+
+<div class="clearfix">
+	<div class="left_form">{$lng.general.name}<span class="mandatory"> *</span></div>
+	<div class="right_form"><input type="text" name="name" size="30" value="{if isset($simport.name)}{$simport.name}{/if}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.type}</div>
+	<div class="right_form">
+		<select name="type" id="type">
+				<option value="xml" {if isset($simport.type) && $simport.type=='xml'}selected="selected"{/if}>{$lng.ie.xml}</option>
+				<option value="csv" {if isset($simport.type) && $simport.type=='csv'}selected="selected"{/if}>{$lng.ie.csv}</option>
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.template}<span class="mandatory"> *</span></div>
+	<div class="right_form">
+		<select name="template" id="template">
+		<option value="">{$lng.general.none}</option>
+		{foreach from = $templates item=v}
+			<option value="{$v.id}" {if isset($simport.template) && $simport.template==$v.id}selected="selected"{/if}>{$v.name}</option>
+		{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.access_type}</div>
+	<div class="right_form">
+		<input type="radio" name="access_type" id="access_type_url" value="url" {if (isset($simport.access_type) && $simport.access_type=='url') || (!isset($id) || !$id && (!isset($simport.access_type) || !$simport.access_type))}checked='checked'{/if} />&nbsp;&nbsp;{$lng.ie.url}&nbsp;&nbsp;&nbsp;
+		<input type="radio" name="access_type" id="access_type_ftp" value="ftp" {if isset($simport.access_type) && $simport.access_type=='ftp'}checked='checked'{/if} />&nbsp;&nbsp;{$lng.ie.ftp}
+	</div>
+</div>
+
+<div class="clearfix" id="div_url">
+	<div class="left_form">{$lng.ie.url}<span class="mandatory"> *</span></div>
+	<div class="right_form"><input type="text" name="url" size="60" value="{if isset($simport.url)}{$simport.url}{/if}" /></div>
+</div>
+
+<div id="div_ftp">
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.ftp_server}<span class="mandatory"> *</span></div>
+	<div class="right_form"><input type="text" name="ftp_server" size="60" value="{if isset($simport.ftp_server)}{$simport.ftp_server}{/if}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.ftp_login}<span class="mandatory"> *</span></div>
+	<div class="right_form"><input type="text" name="ftp_login" size="60" value="{if isset($ftp_login)}{$simport.ftp_login}{/if}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.ftp_password}<span class="mandatory"> *</span></div>
+	<div class="right_form"><input type="text" name="ftp_password" size="60" value="{if isset($simport.ftp_password)}{$simport.ftp_password}{/if}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.ftp_filename}<span class="mandatory"> *</span></div>
+	<div class="right_form"><input type="text" name="ftp_filename" size="60" value="{if isset($simport.ftp_filename)}{$simport.ftp_filename}{/if}" /></div>
+</div>
+
+</div> {* end div_ftp *}
+
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.username}<span class="mandatory"> *</span></div>
+	<div class="right_form">
+		{if $no_users<=100}
+		<select name="user_id">
+			<option value="">{$lng.users.user}</option>
+			{foreach from = $users item = v}
+			<option value="{$v.id}" {if isset($simport.user_id) && $simport.user_id==$v.id}selected="selected"{/if}>{$v.username}</option>
+			{/foreach}
+		</select>
+		{else}
+		<input type="text" name="username" id="username" value="{if isset($simport.username)}{$simport.username}{/if}" />
+		{/if}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.default_category}</div>
+	<div class="right_form">
+		<select name="category_id">
+			<option value="">{$lng.general.none}</option>
+			{foreach from = $categories item = v}
+	        	{if $v.parent==1}
+        		<optgroup label="{$v.str}{$v.name}">
+        		{else}
+	        	<option value="{$v.id}" {if isset($simport.category_id) && $simport.category_id==$v.id}selected="selected"{/if}>{$v.str}{$v.name}</option>
+        		{/if}
+			{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.ie.default_plan}</div>
+	<div class="right_form">
+		<select name="package_id">
+			<option value="">{$lng.general.none}</option>
+			{foreach from = $plans item = v}
+			<option value="{$v.id}" {if isset($simport.package_id) && $simport.package_id==$v.id}selected="selected"{/if}>{$v.name}</option>
+			{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.ie.info.use_id_as_unique_field}" />&nbsp;{$lng.ie.use_id_as_unique_field}</div>
+	<div class="right_form"><input type="checkbox" name="use_id_as_unique_field" id="use_id_as_unique_field" {if isset($simport.use_id_as_unique_field) && $simport.use_id_as_unique_field}checked="checked"{/if} /></div>
+</div>
+
+<div id="div_unique">
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.ie.info.delete_inexisting}" />&nbsp;{$lng.ie.delete_inexisting}</div>
+	<div class="right_form"><input type="checkbox" name="delete_inexisting" id="delete_inexisting" {if isset($simport.delete_inexisting) && $simport.delete_inexisting==1}checked="checked"{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.ie.info.only_download_inexisting}" />&nbsp;{$lng.ie.only_download_inexisting}</div>
+	<div class="right_form"><input type="checkbox" name="only_download_inexisting" id="only_download_inexisting" {if isset($simport.only_download_inexisting) && $simport.only_download_inexisting==1}checked="checked"{/if} /></div>
+</div>
+
+</div> {* end div_unique *}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.general.active}</div>
+	<div class="right_form"><input type="checkbox" name="active" {if (isset($simport.active) && $simport.active==1) || !isset($id) || !$id}checked="checked"{/if} /></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+
+</form>
+</div>
+
+
+<script type="text/javascript">
+
+var access_type = "{if isset($simport.access_type)}{$simport.access_type}{/if}";
+if(!access_type) access_type = "url";
+
+var unique = "{if isset($simport.use_id_as_unique_field)}{$simport.use_id_as_unique_field}{/if}";
+if (!unique) unique = 0;
+
+{literal}
+
+$(document).ready(function() {
+
+	/*if($("#type").val()=='xml') $("#template").attr('disabled', 'disabled');
+	else $("#template").removeAttr('disabled');
+
+	$("#type").change(function(){
+
+		if($("#type").val()=='xml') $("#template").attr('disabled', 'disabled');
+		else $("#template").removeAttr('disabled');
+
+	});
+	*/
+	$("#only_download_inexisting").change(function() {
+		if($("#only_download_inexisting").attr('checked')==true)
+			$("#delete_inexisting").attr('checked', false);
+
+	});
+
+	$("#delete_inexisting").change(function() {
+		if($("#delete_inexisting").attr('checked')==true)
+			$("#only_download_inexisting").attr('checked', false);
+
+	});
+
+	if(access_type=="url") { $("#div_ftp").hide(); $("#div_url").show(); }
+	else { $("#div_url").hide(); $("#div_ftp").show(); }
+
+	$("input[name=access_type]").change(function() {
+
+		var myRadio = $('input[name=access_type]');
+		var checkedValue = myRadio.filter(':checked').val();
+
+		if(checkedValue=="url") { $("#div_ftp").hide(); $("#div_url").show(); }
+		else { $("#div_url").hide(); $("#div_ftp").show(); }
+
+	});
+
+	if(unique) $("#div_unique").show();
+	else $("#div_unique").hide(); 
+
+	$("#use_id_as_unique_field").change(function() {
+		if($("#use_id_as_unique_field").attr('checked')==true) $("#div_unique").show();
+		else $("#div_unique").hide(); 
+
+	});
+
+
+});
+
+{/literal}
+</script>
+
+{include file="footer.html"}

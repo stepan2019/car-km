@@ -1,0 +1,95 @@
+{include file="header.html"}
+
+<div class="page_title">
+<div class="lfloat" width="200"><a href="{$live_site}/admin/modules.php">{$lng.panel.modules}</a> > <a href="{$live_site}/admin/modules/news/index.php">{$lng_news.news}</a> > {$lng_news.settings}</div>
+<div class="rfloat mt5">
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="{$live_site}/admin/modules/news/index.php"><span class="tab2-right">{$lng_news.news}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab1-left">
+	<a href="{$live_site}/admin/modules/news/settings.php"><span class="tab1-right">{$lng_news.settings}</span></a>
+	</div></div>
+
+</div>
+</div>
+
+<div class="p30">
+<form name="settings" method="post" action="" enctype="multipart/form-data">
+<div class="form_container">
+
+{if isset($error) && $error}<div class="error">{$error}</div>{/if}
+{if isset($info) && $info}<div class="info">{$info}</div>{/if}
+
+{foreach from =$languages item=v}
+{capture name=some_content assign=field_name}title_{$v.id}{/capture}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng_news.title}</div>
+	<div class="right_form"><input type="text" name="title_{$v.id}" value="{$news_settings[$field_name]}" /></div>
+</div>
+{/foreach}
+
+{*
+{foreach from =$languages item=v}
+{capture name=some_content assign=field_name}navbar_title_{$v.id}{/capture}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng_news.navbar_title}</div>
+	<div class="right_form"><input type="text" name="navbar_title_{$v.id}" value="{$news_settings[$field_name]}" /></div>
+</div>
+{/foreach}
+*}
+
+<div class="clearfix">
+	<div class="left_form">{$lng_news.news_on_first_page}</div>
+	<div class="right_form"><input type="text" size="10" name="news_on_first_page" value="{$news_settings.news_on_first_page}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_news.news_on_each_page}</div>
+	<div class="right_form"><input type="text" size="10" name="news_on_each_page" value="{$news_settings.news_on_each_page}" /></div>
+</div>
+
+{*
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng_news.info.auto_scroll}" />&nbsp;{$lng_news.auto_scroll}</div>
+	<div class="right_form"><input type="checkbox" class="noborder" name="use_scroll" {if $news_settings.auto_scroll==1}checked="checked"{/if} /></div>
+</div>
+*}
+
+{foreach from =$languages item=v}
+
+{capture name=title_field assign=title_field}page_title_{$v.id}{/capture}
+{capture name=meta_keywords_field assign=meta_keywords_field}meta_keywords_{$v.id}{/capture}
+{capture name=meta_description_field assign=meta_description_field}meta_description_{$v.id}{/capture}
+
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.settings.page_title}</div>
+	<div class="right_form"><input type="text" name="page_title_{$v.id}" size="50" value="{if isset($news_settings[$title_field])}{$news_settings[$title_field]}{/if}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.settings.meta_keywords}</div>
+	<div class="right_form"><textarea name="meta_keywords_{$v.id}" rows="3" cols="50" />{if isset($news_settings[$meta_keywords_field])}{$news_settings[$meta_keywords_field]}{/if}</textarea></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.settings.meta_description}</div>
+	<div class="right_form"><textarea name="meta_description_{$v.id}" rows="3" cols="50" />{if isset($news_settings[$meta_description_field])}{$news_settings[$meta_description_field]}{/if}</textarea></div>
+</div>
+
+{/foreach}
+
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+{include file="footer.html"}

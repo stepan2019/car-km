@@ -1,0 +1,49 @@
+<div class="paginator">
+<ul>
+<li>{$lng.general.total}: {$total_items} {$lng.general.items}</li>
+<li>&nbsp;<font color="#a0a0a0">|</font>&nbsp;</li>
+
+<li>{$lng.general.page} {$page} {$lng.general.of} {$no_pages}</li>
+<li><a href="{if $page > 1}{$pages_link|replace:'##page##':$prev_page}{else}#{/if}" class="prevnext {if $no_pages <= 1 || $page <= 1}disablelink{/if}">{$lng.general.previous_page}</a></li>
+
+{if $no_pages <= 10}
+
+{section name=loop start=1 loop=$no_pages+1 step=1}
+<li><a href="{$pages_link|replace:'##page##':$smarty.section.loop.index}"{if $page==$smarty.section.loop.index} class="currentpage"{/if}>{$smarty.section.loop.index}</a></li>
+{/section}
+
+{else}
+
+{* start 2 pages *}
+{section name=loop start=1 loop=3 step=1}
+<li><a href="{$pages_link|replace:'##page##':$smarty.section.loop.index}"{if $page==$smarty.section.loop.index} class="currentpage"{/if}>{$smarty.section.loop.index}</a></li>
+{/section}
+
+{if $page>5}
+...
+{/if}
+
+{* middle range *}
+{section name=loop start=$page-2 loop=$page+3 step=1}
+{if $smarty.section.loop.index < $no_pages-1 && $smarty.section.loop.index>2}
+<li><a href="{$pages_link|replace:'##page##':$smarty.section.loop.index}"{if $page==$smarty.section.loop.index} class="currentpage"{/if}>{$smarty.section.loop.index}</a></li>
+{/if}
+{/section}
+
+
+{if $no_pages>$page+4}
+...
+{/if}
+
+{* end 2 pages *}
+
+{section name=loop start=$no_pages-1 loop=$no_pages+1 step=1}
+<li><a href="{$pages_link|replace:'##page##':$smarty.section.loop.index}"{if $page==$smarty.section.loop.index} class="currentpage"{/if}>{$smarty.section.loop.index}</a></li>
+{/section}
+
+{/if}
+
+<li><a href="{if $page < $no_pages}{$pages_link|replace:'##page##':$next_page}{else}#{/if}" class="prevnext {if $page >= $no_pages}disablelink{/if}">{$lng.general.next_page}</a></li>
+
+</ul>
+</div>

@@ -1,0 +1,142 @@
+{include file="header.html"}
+
+<div class="page_title"><a href="{$live_site}/admin/modules.php">{$lng.panel.modules}</a> > <a href="{$live_site}/admin/modules/meta_extension/index.php">{$lng_meta_extension.meta_extension}</a> > {$lng.general.add}</div>
+
+<div class="p30">
+<form method="post" action="" enctype="multipart/form-data">
+
+<div class="form_container">
+
+{if isset($error) && $error}<div class="error">{$error}</div>{/if}
+{if isset($info) && $info}<div class="info">{$info}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.page_title}</div>
+	<div class="right_form"><input type="text" name="title" size="40" value="{if isset($tmp.title)}{$tmp.title}{/if}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.meta_keywords}</div>
+	<div class="right_form"><input type="text" name="meta_keywords" size="40" value="{if isset($tmp.meta_keywords)}{$tmp.meta_keywords}{/if}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.meta_description}</div>
+	<div class="right_form"><input type="text" name="meta_description" size="40" value="{if isset($tmp.meta_description)}{$tmp.meta_description}{/if}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.categories.category}</div>
+	<div class="right_form">
+		<select name="category">
+			<option value="">{$lng_meta_extension.any}</option>
+			{foreach from = $categories item = v}
+			<option value="{$v.id}" {if isset($tmp.search_terms_array.category) && $tmp.search_terms_array.category==$v.id}selected="selected"{/if}>{$v.str}{$v.name}</option>
+			{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_meta_extension.keyword}</div>
+	<div class="right_form">
+		<input type="radio" name="choose_word" value="0" {if !isset({$tmp.search_terms_array[$keyword_name]}) ||  !{$tmp.search_terms_array[$keyword_name]}}checked="checked"{/if} />&nbsp;{$lng_meta_extension.any}&nbsp;
+		<input type="radio" name="choose_word" value="1" {if isset($tmp.search_terms_array[$keyword_name]) && $tmp.search_terms_array[$keyword_name]}checked="checked"{/if} />&nbsp;{$lng_meta_extension.value}&nbsp;
+		<input type="text" name="word" size="30" value="{if isset($tmp.search_terms_array[$keyword_name])}{$tmp.search_terms_array[$keyword_name]}{/if}" onclick="this.form.choose_word[1].checked=1" />
+	</div>
+</div>
+
+
+{foreach from = $fields item = v}
+{if $v.type!="image" && $v.type!="file" && $v.type!="google_maps" && $v.type!="youtube" && $v.type!="checkbox_group" &&  $v.type!="radio_group"}
+
+<div class="clearfix">
+
+	{if $v.type=="select" || $v.type=="multiselect" || $v.type=="radio"}
+	<div class="left_form">{$v.name}</div>
+	<div class="right_form">
+		<select name="{$v.caption}">
+			<option value="">{$lng_meta_extension.any}</option>
+			{foreach from =$v.elements_array item=t}
+			<option value="{$t}" {if isset( $tmp.search_terms_array[$v.caption]) && $tmp.search_terms_array[$v.caption]==$t}selected="selected"{/if}>{$t}</option>
+			{/foreach}
+		</select>
+	</div>
+</div>
+
+	{elseif $v.type=="depending"}
+	<div class="left_form">{$v.depending.name1}</div>
+	<div class="right_form">
+		<input type="radio" name="choose_{$v.depending.caption1}" value="0" {if !isset($tmp.search_terms_array[$v.depending.caption1]) || !$tmp.search_terms_array[$v.depending.caption1]}checked="checked"{/if} />&nbsp;{$lng_meta_extension.any}&nbsp;
+		<input type="radio" name="choose_{$v.depending.caption1}" value="1" {if isset($tmp.search_terms_array[$v.depending.caption1]) && $tmp.search_terms_array[$v.depending.caption1]}checked="checked"{/if} />&nbsp;{$lng_meta_extension.value}&nbsp;
+		<input type="text" name="{$v.depending.caption1}" size="30" value="{if isset($tmp.search_terms_array[$v.depending.caption1])}{$tmp.search_terms_array[$v.depending.caption1]}{/if}" onclick="this.form.choose_{$v.depending.caption1}[1].checked=1" />
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$v.depending.name2}</div>
+	<div class="right_form">
+		<input type="radio" name="choose_{$v.depending.caption2}" value="0" {if !isset($tmp.search_terms_array[$v.depending.caption2]) || !$tmp.search_terms_array[$v.depending.caption2]}checked="checked"{/if} />&nbsp;{$lng_meta_extension.any}&nbsp;
+		<input type="radio" name="choose_{$v.depending.caption2}" value="1" {if isset($tmp.search_terms_array[$v.depending.caption2]) && $tmp.search_terms_array[$v.depending.caption2]}checked="checked"{/if} />&nbsp;{$lng_meta_extension.value}&nbsp;
+		<input type="text" name="{$v.depending.caption2}" size="30" value="{if isset($tmp.search_terms_array[$v.depending.caption2])}{$tmp.search_terms_array[$v.depending.caption2]}{/if}" onclick="this.form.choose_{$v.depending.caption2}[1].checked=1" />
+	</div>
+</div>
+		
+	{if $v.depending.no>2}
+<div class="clearfix">
+	<div class="left_form">{$v.depending.name3}</div>
+	<div class="right_form">
+		<input type="radio" name="choose_{$v.depending.caption3}" value="0" {if !isset($tmp.search_terms_array[$v.depending.caption3]) || !$tmp.search_terms_array[$v.depending.caption3]}checked="checked"{/if}/>&nbsp;{$lng_meta_extension.any}&nbsp;
+		<input type="radio" name="choose_{$v.depending.caption3}" value="1" {if isset($tmp.search_terms_array[$v.depending.caption3]) && $tmp.search_terms_array[$v.depending.caption3]}checked="checked"{/if}/>&nbsp;{$lng_meta_extension.value}&nbsp;
+		<input type="text" name="{$v.depending.caption3}" size="30" value="{if isset($tmp.search_terms_array[$v.depending.caption3])}{$tmp.search_terms_array[$v.depending.caption3]}{/if}" onclick="this.form.choose_{$v.depending.caption3}[1].checked=1"/>
+	</div>
+</div>
+	{/if}
+
+	{if $v.depending.no==4}
+<div class="clearfix">
+	<div class="left_form">{$v.depending.name4}</div>
+	<div class="right_form">
+		<input type="radio" name="choose_{$v.depending.caption4}" value="0" {if !isset($tmp.search_terms_array[$v.depending.caption4]) || !$tmp.search_terms_array[$v.depending.caption4]}checked="checked"{/if}/>&nbsp;{$lng_meta_extension.any}&nbsp;
+		<input type="radio" name="choose_{$v.depending.caption4}" value="1" {if isset($tmp.search_terms_array[$v.depending.caption4]) && $tmp.search_terms_array[$v.depending.caption4]}checked="checked"{/if}/>&nbsp;{$lng_meta_extension.value}&nbsp;
+		<input type="text" name="{$v.depending.caption4}" size="30" value="{if isset($tmp.search_terms_array[$v.depending.caption4])}{$tmp.search_terms_array[$v.depending.caption4]}{/if}" onclick="this.form.choose_{$v.depending.caption4}[1].checked=1"/>
+	</div>
+</div>
+	{/if}
+
+	{elseif $v.type=="checkbox"}
+
+	<div class="left_form">{$v.name}</div>
+	<div class="right_form">
+	<select name="{$v.caption}">
+		<option value="-1" selected="selected">{$lng_meta_extension.any}</option>
+		<option value="0" {if isset($tmp.search_terms_array[$v.caption]) && $tmp.search_terms_array[$v.caption]==0}selected="selected"{/if}/>{$lng_meta_extension.not_selected}</option>
+		<option value="1" {if isset($tmp.search_terms_array[$v.caption]) && $tmp.search_terms_array[$v.caption]==0}selected="selected"{/if}/>{$lng_meta_extension.selected}</option>
+	</select>
+	</div>
+</div>
+		{else}
+
+	<div class="left_form">{$v.name}</div>
+	<div class="right_form">
+		<input type="radio" name="choose_{$v.caption}" value="0" {if !isset($tmp.search_terms_array[$v.caption]) || !$tmp.search_terms_array[$v.caption]}checked="checked"{/if}/>&nbsp;{$lng_meta_extension.any}&nbsp;
+		<input type="radio" name="choose_{$v.caption}" value="1" {if isset($tmp.search_terms_array[$v.caption]) && $tmp.search_terms_array[$v.caption]}checked="checked"{/if}/>&nbsp;{$lng_meta_extension.value}&nbsp;
+		<input type="text" name="{$v.caption}" size="30" value="{if isset($tmp.search_terms_array[$v.caption])}{$tmp.search_terms_array[$v.caption]}{/if}" onclick="this.form.choose_{$v.caption}[1].checked=1"/>
+	</div>
+</div>
+		{/if}
+	{/if}	
+	{/foreach}
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+{include file="footer.html"}

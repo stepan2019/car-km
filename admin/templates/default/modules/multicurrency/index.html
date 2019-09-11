@@ -1,0 +1,106 @@
+{include file="header.html"}
+
+<div class="page_title"><a href="{$live_site}/admin/modules.php">{$lng.panel.modules}</a> > {$lng_mc.title}</div>
+
+<div class="p30">
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th width=300 class="hleft">{$lng.lists.currency}</th>
+	<th width="100"></th>
+	<th width=200>{$lng_mc.ratio}</th>
+	<th width="70" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$mc_settings item=v}
+<tr>
+	<td>{$v.currency}</td>
+	<td>{if $v.default}<div class="small-btn optionsbutton icon">{$lng.general.default}</div>{else}<a href="javascript:;" class="default" id="default{$v.id}"><div class="small-btn activebutton icon">{$lng.languages.set_default}</div></a>{/if}</td>
+	<td><span id="span_ratio_{$v.id}">{$v.ratio}</span>&nbsp;{$default_currency}
+	<form name="mc_{$v.id}" id="mc_{$v.id}" class="save" method="post" action="">
+	<input type="hidden" name="id" id="id" value="{$v.id}">
+	<span style="display: none;" id="r{$v.id}">&nbsp;<input type="text" name="ratio" id="ratio_{$v.id}" size="6" value="{$v.ratio}"  /><strong><input type="submit" name="Submit" value="{$lng.general.save}" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if} /></strong></span></form></td>
+	<td>
+		{if !$v.default}
+		<a href="javascript:;" class="edit" id="{$v.id}"><img src="{$template_path}images/edit.png" class="tooltip" title="{$lng.general.edit}" alt=""></a>
+		{/if}
+	</td>
+</tr>
+{/foreach}
+
+{if !$mc_settings|@count }
+<tr><td colspan="4">{$lng.no_items}</td></tr>
+{/if}
+</table>
+
+<div class="form_footer center mt20">	
+	<p>{$lng_mc.info.recalculate_prices}</p>
+	<form name="regenerate" id="regenerate" method="post" action="">
+	<div class="buttons" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Recalculate" value="{$lng_mc.recalculate_prices}" /></span>
+	</div>
+	</form>
+</div>
+
+
+</div> {* p30 *}
+
+{literal}
+<script type="text/javascript">
+//<![CDATA[
+
+$(document).ready(function() {
+
+	 $(".edit").on('click',function(){
+		var id = jQuery(this).attr("id");
+		$("#r"+id).show();
+	});
+
+	 $(".default").on('click',function(){
+
+		var id = jQuery(this).attr("id").substr(7);
+		$.ajax({
+		type		: "GET",
+		cache		: false,
+		url		: "index.php?default="+id,
+		data		: $(this).serializeArray(),
+		success: function(data) {
+
+				location.reload(true);
+
+			} // end data
+		});// end ajax
+
+	});
+
+	$(document).on("submit", ".save", function(event){ 
+
+	var id = jQuery(this).attr("id").substr(3);
+	var ratio = jQuery("#ratio_"+id).val();
+
+	event.preventDefault();
+	$.post("index.php", jQuery(this).serialize(), function(data) {
+
+		try
+		{
+
+			$("#span_ratio_"+id).html(ratio);
+			$("#r"+id).hide();
+			
+
+		}
+		catch(e)
+		{
+		}
+
+	});
+		
+	});
+
+});
+//]]>
+
+</script>
+{/literal}
+
+{include file="footer.html"}

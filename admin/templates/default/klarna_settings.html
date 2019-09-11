@@ -1,0 +1,71 @@
+<div class="form_container">
+
+{if $error != ""}<div class="error">{$error}</div>{/if}
+{if $info != ""}<div class="info">{$info}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">Merchant id</div>
+	<div class="right_form"><input type="text" maxlength="100" size="40" name="merchant_id" id="merchant_id" value="{$processor_settings.merchant_id}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Shared secret</div>
+	<div class="right_form"><input type="text" maxlength="200" size="40" name="sharedSecret" id="sharedSecret" value="{$processor_settings.sharedSecret}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Currency</div>
+	<div class="right_form">
+		<select name="klarna_currency" id="klarna_currency">
+		<option value="SEK" {if $processor_settings.currency=='SEK'} selected="selected" {/if}>SEK</option>
+		<option value="EUR" {if $processor_settings.currency=='EUR'} selected="selected" {/if}>EUR</option>
+		<option value="NOK" {if $processor_settings.currency=='NOK'} selected="selected" {/if}>NOK</option>
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Country</div>
+	<div class="right_form">
+		<select name="klarna_country" id="klarna_country">
+		<option value="SE" {if $processor_settings.country=='SE'} selected="selected" {/if}>SE</option>
+		<option value="FI" {if $processor_settings.country=='FI'} selected="selected" {/if}>FI</option>
+		<option value="NO" {if $processor_settings.country=='NO'} selected="selected" {/if}>NO</option>
+		<option value="DE" {if $processor_settings.country=='DE'} selected="selected" {/if}>DE</option>
+		<option value="AT" {if $processor_settings.country=='AT'} selected="selected" {/if}>AT</option>
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Locale</div>
+	<div class="right_form">
+		<select name="klarna_locale" id="klarna_locale">
+		<option value="sv-se" {if $processor_settings.locale=='se-se'} selected="selected" {/if}>se-se</option>
+		<option value="fi-fi" {if $processor_settings.locale=='fi-fi'} selected="selected" {/if}>fi-fi</option>
+		<option value="sv-fi" {if $processor_settings.locale=='sv-fi'} selected="selected" {/if}>sv-fi</option>
+		<option value="nb-no" {if $processor_settings.locale=='nb-no'} selected="selected" {/if}>nb-no</option>
+		<option value="de-de" {if $processor_settings.locale=='de-de'} selected="selected" {/if}>de-de</option>
+		<option value="de-at" {if $processor_settings.locale=='de-at'} selected="selected" {/if}>de-at</option>
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="Klarna will provide the consumer with a link to your terms and conditions in certain phases of the order.&lt;br/&gt; In order to do this, you need to create a page that contains your store terms and conditions. &lt;br/&gt;Please create a terms and conditions URI, to which Klarna can provide a link. You can create one  using Custom Pages feature." />&nbsp;Terms URI</div>
+	<div class="right_form"><input type="text" size="70" name="terms_uri" id="terms_uri" value="{$processor_settings.terms_uri}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">Test mode</div>
+	<div class="right_form"><input type="checkbox" name="test" id="test" {if $processor_settings.test==1} checked="checked"{/if} /></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit_klarna" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}

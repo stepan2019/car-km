@@ -1,0 +1,819 @@
+{if $step<=1}
+{include file="header.html"}
+{include file="data/fancybox.html"}
+{include file="data/ui.html"}
+
+<div class="wait"></div>
+
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/fileuploader.js"></script>
+<script type="text/javascript" src="{$live_site}/libs/nicEdit/nicEdit.min.js"></script>
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/jquery.form.js"></script>
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/jquery.number.min.js"></script>
+
+<link rel="stylesheet" href="{$live_site}/libs/jQuery/plugins/intlTelInput/intlTelInput.css">
+<script src="{$live_site}/libs/jQuery/plugins/intlTelInput/intlTelInput.min.js"></script>
+
+<div class="page_title">{$lng.panel.listings} > {$lng.listings.newad}</div>
+
+<div class="p30">
+<form name="newad" id="newad" method="post" action="new_listing.php?step=3" enctype="multipart/form-data">
+
+<div id="newad_form">
+<div class="form_container">
+
+<div class="clearfix">
+	<div class="left_form">{$lng.listings.category}<span class="mandatory">*</span></div>
+	<div class="right_form">
+		<select id="category" name="category">
+			<option value="">{$lng.listings.category}</option>
+			{foreach from=$short_categories item=v name=cat}
+				{if $v.parent==1}
+				<optgroup label="{$v.str}{$v.name}">
+				{else}
+				<option value="{$v.id}">{$v.str}{$v.name}</option>
+				{if ( $smarty.foreach.cat.index!=$short_categories|@count-1 && $v.parent_id!=$short_categories[$smarty.foreach.cat.iteration].parent_id) || ($smarty.foreach.cat.index==$short_categories|@count && $v.parent_id!=0)}
+				</optgroup>
+				{/if}
+				{/if}
+			{/foreach}
+		</select>
+	</div>
+</div>
+
+
+<div class="clearfix">
+	<div class="left_form">{$lng.listings.package}<span class="mandatory">*</span></div>
+	<div class="right_form">
+	<select id="package" name="package">
+		<option value="">{$lng.listings.package}</option>
+		{foreach from=$plans_array item=v}
+        		<option value="{$v.id}">{$v.name}</option>
+		{/foreach}
+	</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.listings.user}<span class="mandatory">*</span></div>
+	<div class="right_form">
+	{if $no_users<=100}
+
+	<select id="user_id" name="user_id">
+	<option value="">{$lng.listings.user}</option>
+	{foreach from=$users_array item=v}
+        	<option value="{$v.id}" {if isset($tmp.user_id) && $tmp.user_id==$v.id}selected{/if}>{$v.username}</option>
+	{/foreach}
+	</select>
+
+	{else}
+
+	{include file="data/ui.html"}
+
+	<input type="hidden" name="user_id" id="user_id" />
+
+	{if $settings.enable_username}
+	<input type="text" name="username" id="username" onblur="userChecker();" />
+	{else}
+	<input type="text" name="email" id="email" onblur="userChecker();" />
+	{/if}
+
+	&nbsp;<span class="ok_msg" style="display: none;"></span>
+	<span class="nok_msg" style="display: none;"></span>
+
+	{/if}
+
+	</div>
+</div>
+
+<div class="form_footer2" id="next_div">
+
+	<div class="buttons rfloat">
+		<span class="positive"><a href="javascript:;" id="next">{$lng.general.next}</a></span>
+	</div>
+	<div class="clearfix"></div>
+
+</div>{* end form_footer *}
+
+
+<div id="newad_details"></div>
+</div> {* end form_container *}
+</div> {* end newad_form *}
+</form>
+
+<div id="listing"></div>
+</div> {* end p30 *}
+
+<script type="text/javascript">
+{literal}
+
+function userChecker() {
+
+	$.post("{/literal}{$live_site}{literal}/admin/include/user_checker.php", $( "#newad" ).serialize() , function(data){ 
+
+		data_split = data.split("|");
+		var error = data_split[0];
+		var info = data_split[1];
+		var user_id = data_split[2];
+
+		if(info) {
+			$(".ok_msg").html(info);
+			$(".ok_msg").show();
+			$(".nok_msg").hide();
+			$("#user_id").val(user_id);
+
+		}
+		else if(error) {
+			$(".nok_msg").html(error);
+			$(".nok_msg").show();
+			$(".ok_msg").hide();
+		}
+
+	});
+
+}
+
+{/literal}
+{if $no_users>10}
+{literal}
+        $(function() {
+                $( "#username" ).autocomplete({
+                        source: "{/literal}{$live_site}{literal}/admin/include/get_info.php?type=user_ac",
+                        minLength: 1
+                });
+
+                $( "#email" ).autocomplete({
+                        source: "{/literal}{$live_site}{literal}/admin/include/get_info.php?type=user_ac",
+                        minLength: 1
+                });
+        });
+{/literal}
+{/if}
+{literal}
+
+
+$(document).ready(function() {
+
+
+var options = { 
+       // target:        '#output1',   // target element(s) to be updated with server response 
+	beforeSerialize: beforeSerialize,
+        beforeSubmit:  beforeSubmit,  // pre-submit callback 
+        success:       successResponse  // post-submit callback 
+ 
+        // other available options: 
+        //url:       url         // override for form's 'action' attribute 
+        //type:      type        // 'get' or 'post', override for form's 'method' attribute 
+        //dataType:  null        // 'xml', 'script', or 'json' (expected server response type) 
+        //clearForm: true        // clear all form fields after successful submit 
+        //resetForm: true        // reset the form after successful submit 
+ 
+        // $.ajax options can be used here too, for example: 
+        //timeout:   3000 
+    }; 
+
+function beforeSerialize(jqForm, options) {
+
+	$("body").addClass("loading"); 
+
+	{/literal}{if $ads_settings.description_editor}{literal}
+
+	// capturing nicEditor content
+	for(var i=0;i<myNicEditor.nicInstances.length;i++){myNicEditor.nicInstances[i].saveContent();}
+
+	{/literal}
+	{/if}
+	{literal}
+
+	if (typeof data_htmlarea !== 'undefined')
+	for(var i=0;i<data_htmlarea.nicInstances.length;i++){ data_htmlarea.nicInstances[i].saveContent(); }
+
+	// international phones errors
+	var extra_phone_error = recheckIntlPhone();
+	if(extra_phone_error.length>0) {
+
+		// clean all fields possible err class
+		$(".err").removeClass("err");
+		// remove all err_labels
+		$(".err_label").remove();
+			
+		for (var i = 0, len = extra_phone_error.length; i < len; i++) {
+
+			$("#"+extra_phone_error[i]).addClass("err");
+			// add as child to first right_form
+			$("#"+extra_phone_error[i]).closest( ".right_form").prepend('<label class="err_label">{/literal}{$lng.listings.errors.invalid_phone}{literal}</label>');
+			
+		}
+
+		$("body").removeClass("loading");
+
+		// move the page to the first err_label element
+		$('html,body').animate({scrollTop:$(".err:first").offset().top-60}, 'slow');
+
+		return false;
+			
+	} // end international phone error
+
+	// return false to cancel submit
+
+}
+
+// pre-submit callback 
+function beforeSubmit(formData, jqForm, options) { 
+
+    // formData is an array; here we use $.param to convert it to a string to display it 
+    // but the form plugin does this for you automatically when it submits the data 
+    var queryString = $.param(formData); 
+ 
+    // jqForm is a jQuery object encapsulating the form element.  To access the 
+    // DOM element for the form do this: 
+    // var formElement = jqForm[0]; 
+ 
+    //alert('About to submit: \n\n' + queryString); 
+ 
+    // here we could return false to prevent the form from being submitted; 
+    // returning anything other than false will allow the form submit to continue 
+    return true; 
+} 
+
+// post-submit callback 
+function successResponse(responseText, statusText, xhr, $form)  { 
+
+    // for normal html responses, the first argument to the success callback 
+    // is the XMLHttpRequest object's responseText property 
+ 
+    // if the ajaxForm method was passed an Options Object with the dataType 
+    // property set to 'xml' then the first argument to the success callback 
+    // is the XMLHttpRequest object's responseXML property 
+ 
+    // if the ajaxForm method was passed an Options Object with the dataType 
+    // property set to 'json' then the first argument to the success callback 
+    // is the json data object returned by the server 
+ 
+    //alert('status: ' + statusText + '\n\nresponseText: \n' + responseText + 
+    //    '\n\nThe output div should have already been updated with the responseText.'); 
+
+//alert(responseText);
+			var ret = JSON.parse(responseText);
+
+			$("body").removeClass("loading"); 
+
+			if(ret.response==1) {
+
+				// show ad details
+				$.ajax({
+					type		: "GET",
+					cache		: false,
+					url		: "{/literal}{$live_site}{literal}/admin/new_listing.php?step=4&ad_id="+ret.ad_id,
+					data		: $(this).serializeArray(),
+					success: function(data) {
+
+						$("#newad_form").hide();
+						$("#listing").html(data);
+			
+					}// end data
+				}); // end ajax
+
+				return;
+			}
+
+			// response = 0 -> there are errors in submit ad process 
+			var no_err = ret.error.length;
+			var err_field, err_string;
+
+			// clean all fields possible err class
+			$(".err").removeClass("err");
+			// remove all err_labels
+			$(".err_label").remove();
+
+			// mark each field with error 
+			for (var idx=0;idx<no_err;idx++) { 
+
+				err_field = ret.error[idx].field;
+				err_string = ret.error[idx].error;
+				$("#"+err_field).addClass("err");
+
+				// nicEditor fix
+				if(err_field.match("description[a-z0-9_]*")) $("#"+err_field+"_elm").addClass("err");
+				$("#"+err_field).before('<label class="err_label">'+err_string+'</label>');
+
+			}
+			
+			// move the page to the first err_label element
+			$('html,body').animate({scrollTop:$(".err_label:first").offset().top}, 'slow');
+
+} 
+
+$(document).on("click", "#next", function(){ 
+
+	loadAdDetailsForm();
+
+}); // end #next click
+
+
+$(document).on("change", "#category", function(){ 
+
+	loadAdDetailsForm();
+
+}); // end #next click
+
+$(document).on("change", "#package", function(){ 
+
+	loadAdDetailsForm();
+
+}); // end #next click
+
+//initialize the AJAX form for submit ad
+ $('#newad').ajaxForm(options);
+
+}); // end document ready
+
+function onVideo() {
+
+	if($('#video').is(':checked')) $("#video_div").slideDown(); 
+	else $("#video_div").slideUp();
+}
+function onUrl() {
+
+	if($('#url').is(':checked')) $("#url_div").slideDown(); 
+	else $("#url_div").slideUp();
+}
+
+function loadAdDetailsForm() {
+
+	// clean all fields possible err class
+	$(".err").removeClass("err");
+
+	var err = 0;
+	if(!$("#category").val()) { $("#category").addClass("err"); err = 1; }
+	if(!$("#package").val()) { $("#package").addClass("err"); err = 1; }
+	if(!$("#user_id").val()) $("#user_id").addClass("err");
+	if(!$("#username").val()) $("#username").addClass("err");
+	if(!$("#email").val()) $("#email").addClass("err");
+	if(!$("#user_id").val() && !$("#username").val() && !$("#email").val()) err = 1;
+
+	if(!err) {
+
+	// get custom fields, images and extra options boxes
+	$.ajax({
+		type		: "GET",
+		cache		: false,
+		url		: "{/literal}{$live_site}{literal}/admin/new_listing.php?step=2&category="+$("#category").val()+"&plan="+$("#package").val(),
+		data		: $(this).serializeArray(),
+		success: function(data) {
+
+			$("#newad_details").html(data);
+			createUploader();
+			$("#next_div").hide();
+			
+		}// end data
+	}); // end ajax
+	} // end if not err
+
+}
+
+{/literal}
+</script>
+
+{include file="footer.html"}
+{/if} {* end if step 1 *}
+
+
+
+{if $step==2}
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.listings.ad_description|replace:" ":"&nbsp;"}</strong></div></div>
+
+{if $languages|@count>1 && $ads_settings.translate_title_description==1}
+
+{foreach from=$languages item=v}
+
+    {capture name=some_content assign=title_field}title_{$v.id}{/capture}
+    {capture name=some_content assign=desc_field}description_{$v.id}{/capture}
+	
+<!-- TITLE -->
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.listings.title}<span class="mandatory">*</span></div>
+	<div class="right_form">
+	<input type="text" name="title_{$v.id}" id="title_{$v.id}" size="70" value="{if isset($tmp.$title_field)}{$tmp.$title_field}{/if}"
+	 onKeyDown="CountTitleLeft(document.newad.title_{$v.id},150);" onKeyUp="CountTitleLeft(document.newad.title_{$v.id},150);" 
+	onPaste="CountTitleLeft(document.newad.title_{$v.id}, 150);" />
+	</div>
+</div>
+
+<!-- DESCRIPTION -->
+
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.listings.description}<span class="mandatory">*</span></div>
+	<div class="right_form"><textarea name="description_{$v.id}" cols="75" rows="10" id="description_{$v.id}">{if isset($tmp.$desc_field)}{$tmp.$desc_field}{/if}</textarea>
+	</div>
+</div>
+
+{/foreach}
+
+{else}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.listings.title}<span class="mandatory">*</span></div>
+	<div class="right_form">
+	<input type="text" name="title" id="title" size="70" value="{if isset($tmp.title)}{$tmp.title}{/if}"
+	 onKeyDown="CountTitleLeft(document.newad.title,150);" onKeyUp="CountTitleLeft(document.newad.title,150);" 
+	onPaste="CountTitleLeft(document.newad.title, 150);" />
+	</div>
+</div>
+
+<!-- DESCRIPTION -->
+
+<div class="clearfix">
+	<div class="left_form">{$lng.listings.description}<span class="mandatory">*</span></div>
+	<div class="right_form"><textarea name="description" cols="75" rows="10" id="description" >{if isset($tmp.description)}{$tmp.description}{/if}</textarea>
+	</div>
+</div>
+
+{/if}
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.listings.ad_information|replace:" ":"&nbsp;"}</strong></div></div>
+
+{include file="data/description_editor.html"}
+{include file="data/form_includes.html" fields_array=$fields}
+{include file="custom_fields_form.html" fields_array=$fields type="listing"}
+
+
+{*
+{if $ads_settings.enable_video && isset($tmp.enable_video) && $tmp.enable_video}
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.listings.video|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.listings.video_code}</div>
+	<div class="right_form"><textarea name="video" cols="55" rows="10" id="video"></textarea></div>
+</div>
+{/if}
+*}
+
+{if $ads_settings.add_meta_with_listings}
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.listings.meta_info|replace:" ":"&nbsp;"}</strong></div></div>
+
+<!-- META_KEYWORDS -->
+<div class="clearfix">
+	<div class="left_form">{$lng.listings.meta_keywords}</div>
+	<div class="right_form"><textarea name="meta_keywords" cols="50" rows="3">{if isset($tmp.meta_keywords)}{$tmp.meta_keywords}{/if}</textarea></div>
+</div>
+
+<!-- META_DESCRIPTION -->
+<div class="clearfix">
+	<div class="left_form">{$lng.listings.meta_description}</div>
+	<div class="right_form"><textarea name="meta_description" cols="50" rows="3">{if isset($tmp.meta_description)}{$tmp.meta_description}{/if}</textarea></div>
+</div>
+
+{/if}
+
+<!-- PHOTOS -->
+
+<link href="{$template_path}css/style-uploader.css" rel="stylesheet" type="text/css"/>
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.listings.enter_photos|replace:" ":"&nbsp;"}</strong></div></div>
+
+	<div id="file-uploader">
+		<noscript>
+		<p>Please enable JavaScript to use file uploader.</p>
+		</noscript>
+	</div>
+	
+	{literal}
+	<script>
+	function createUploader(){
+		var uploader = new qq.FileUploader({
+			element: document.getElementById('file-uploader'),
+			action: '../include/upload.php',{/literal}
+			max_photos: '{$no_photos}',
+			crt_photos: '{if isset($crt_photos)}{$crt_photos}{/if}',
+			order_up: '{$lng.listings.order_up|addslashes}',
+			order_down: '{$lng.listings.order_down|addslashes}',
+			delete_file: '{$lng.general.delete|addslashes}',
+			template_path: '{$template_path}',
+			files_uploaded: "{$lng.listings.files_uploaded|addslashes}",
+			allowed: "{$lng.listings.allowed|addslashes}",
+			limit_reached: "{$lng.listings.limit_reached|addslashes}",
+			click_to_upload: "{$lng.listings.click_to_upload|addslashes}",
+			{literal}
+			messages: { 
+			failed_message: "{/literal}{$lng.login_history.failed|addslashes}{literal}",
+			typeError: "{/literal}{$lng.images.errors.file_type_not_accepted|addslashes}{literal}" 
+			},
+			params: {
+        			max_photos: '{/literal}{$no_photos}{literal}'
+    			},
+			allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+			debug: false
+ 	});
+        }
+	</script>
+	{/literal}
+
+	<div id="maincol"></div>
+
+	<div class="clearfix"></div>
+
+<!-- EXTRA OPTIONS -->
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.listings.extra_options|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="options">
+
+<div class="option clearfix">
+	<div class="option_left">{$lng.listings.package}</div>
+	<div class="option_right">{$plan_name}</div>
+</div>
+
+{if $ads_settings.enable_featured}
+<div class="option clearfix">
+	<div class="option_left">{$lng.listings.featured}</div>
+	<div class="option_right">
+		<input type="radio" class="noborder" name="featured" value="" {if !isset($featured) || !$featured}checked="checked"{/if} />&nbsp;&nbsp;{$lng.general.none} <br>
+		{foreach from=$featured_plans item=v}
+			<input type="radio" class="noborder" name="featured" value="{$v.id}" {if $featured==$v.id || (isset($options.featured) && $options.featured==$v.id)}checked="checked"{/if}/>&nbsp;&nbsp;{$v.no_days}&nbsp;{$lng.days}<br>
+		{/foreach}
+	</div>
+</div>
+{/if}
+
+{if $ads_settings.enable_highlited}
+<div class="option clearfix">
+	<div class="option_left">{$lng.listings.highlited}</div>
+	<div class="option_right"><input type="checkbox" class="noborder" name="highlited" id="highlited" {if $highlited} checked{/if}/></div>
+</div>
+{/if}
+
+{if $ads_settings.enable_priorities}
+<div class="option clearfix">
+	<div class="option_left">{$lng.listings.priority}</div>
+	<div class="option_right">
+		<input type="radio" class="noborder" name="priority" value="" {if !isset($priority) || !$priority}checked="checked"{/if} />&nbsp;&nbsp;{$lng.general.none} <br>
+		{foreach from=$priorities item=v}
+			<input type="radio" class="noborder" name="priority" value="{$v.order_no}" {if $priority==$v.order_no || (isset($options.priority) && $options.priority==$v.order_no)}checked="checked"{/if}/>&nbsp;&nbsp;{$v.name}<br>
+		{/foreach}
+	</div>
+</div>
+{/if}
+
+{if $ads_settings.enable_urgent}
+<div class="option clearfix">
+	<div class="option_left">{$lng.packages.urgent}</div>
+	<div class="option_right"><input type="checkbox" class="noborder" name="urgent" id="urgent" {if $urgent} checked{/if} /></div>
+</div>
+{/if}
+
+{if $ads_settings.enable_video}
+<div class="option clearfix">
+	<div class="option_left">{$lng.listings.video}</div>
+	<div class="option_right">
+		<input type="checkbox" class="noborder" name="video" id="video" {if (isset($video) && $video) || (isset($options.video) && $options.video.value)}checked="checked"{/if} onclick="onVideo();" />
+
+		<div id="video_div" style="display: none;">
+		<label>{$lng.listings.video_code}</label>
+		<textarea name="video_code" id="video_code" cols="30" rows="5">{if isset($tmp.video_code)}{$tmp.video_code}{/if}</textarea>
+		</div>
+	</div>
+</div>
+{/if}
+
+{if $ads_settings.enable_url}
+<div class="option clearfix">
+	<div class="option_left">{$lng.packages.url}</div>
+	<div class="option_right">
+		<input type="checkbox" class="noborder" name="url" id="url" {if (isset($url) && $url) || (isset($options.url) && $options.url.value)}checked="checked"{/if} onclick="onUrl();" />
+
+		<div id="url_div" style="display: none;">
+		<label>{$lng.listings.site_url}</label>
+		<input name="site_url" id="site_url" size="30" value="{if isset($tmp.site_url)}{$tmp.site_url}{/if}"/>
+		</div>
+	</div>
+</div>
+{/if}
+
+</div> {* end options *}
+
+
+	<div class="form_footer">
+	<div class="buttons rfloat">
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+	</div>
+
+{literal}
+<script type="text/javascript">
+$(document).ready(function() {
+{/literal}
+var gmaps_on = {if $gmaps}1{else}0{/if};
+// initialize google maps
+if (gmaps_on) load_gmaps();
+{literal}
+});
+</script>
+{/literal}
+
+
+{/if} {* end if step=2 *}
+
+
+{if $step==4}
+
+<div class="form_container" style="padding-top: 0 !important;">
+
+<div class="form_footer2">
+
+	<div class="buttons rfloat">
+		<span class="positive"><a href="manage_listings.php">{$lng.panel.manage_listings}</a></span>
+
+		<span class="positive"><a href="{if $seo_settings.enable_mod_rewrite}{seo->makeDetailsLink p1=$id p2=$tmp.title}{else}{$live_site}/details.php?id={$id}{/if}">{$lng.listings.ad_details}</a></span>
+
+	</div>
+	<div class="clearfix"></div>
+
+</div>{* end form_footer *}
+
+<script type="text/javascript">
+//<![CDATA[
+
+{assign var="gmap_on" value="0"}
+
+{foreach from=$fields_array item=v}
+	{if $v.type=='google_maps'}
+		{include file="data/gmap-ro.html"}
+		{assign var="gmap_on" value="1"}
+	{/if}
+{/foreach}
+
+{if $gmap_on}
+{literal}
+$(document).ready(function() {
+init_gmap();
+});
+{/literal}
+{/if}
+//]]>
+</script>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.listings.category}:</div>	
+	<div class="right_form">{$tmp.category}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.listings.title}:</div>	
+	<div class="right_form">{$tmp.title|wordwrap:70:" ":true}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.listings.description}:</div>	
+	<div class="right_form">{$tmp.description_formatted|wordwrap:70:" ":true}</div>
+</div>
+
+{include file="custom_fields_form_list.html" fields_array=$fields_array values_array=$tmp}
+
+{if $tmp.enable_video && isset($tmp.video) && $tmp.video}
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.listings.video|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="center">{$tmp.video|regex_replace:'/ width="[0-9]+"/':' width="500"'|regex_replace:'/ height="[0-9]+"/':' height="388"'}</div>
+
+{/if}{* end video *}
+
+{if $tmp.enable_url && isset($tmp.site_url) && $tmp.site_url}
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.listings.site_url|replace:" ":"&nbsp;"}</strong></div></div>
+
+<div class="center"><a href="{$tmp.site_url}">{$tmp.site_url}</a></div>
+
+{/if}{* end video *}
+
+{if $ads_settings.add_meta_with_listings}
+
+	<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.listings.meta_info|replace:" ":"&nbsp;"}</strong></div></div>
+
+	<div class="clearfix">
+		<div class="left_form">{$lng.listings.meta_keywords}:</div>	
+		<div class="right_form">{if isset($tmp.meta_keywords) && $tmp.meta_keywords}{$tmp.meta_keywords}{else}-{/if}</div>
+	</div>
+
+	<div class="clearfix">
+		<div class="left_form">{$lng.listings.meta_description}:</div>	
+		<div class="right_form">{if isset($tmp.meta_description) && $tmp.meta_description}{$tmp.meta_description}{else}-{/if}</div>
+	</div>
+
+{/if}
+
+<div class="form_footer2">
+
+	<div class="buttons rfloat">
+		<span class="positive"><a href="{if $seo_settings.enable_mod_rewrite}{seo->makeDetailsLink p1=$id p2=$tmp.title}{else}{$live_site}/details.php?id={$id}{/if}">{$lng.general.view}</a></span>
+
+		<span class="positive"><a id="editad" href="{$live_site}/admin/edit_listing.php?id={$tmp.id}">{$lng.listings.edit_listing}</a></span>
+
+	</div>
+	<div class="clearfix"></div>
+
+</div>{* end form_footer *}
+
+{if $ads_settings.enable_featured || $ads_settings.enable_highlited || $ads_settings.enable_priorities || $ads_settings.enable_video || $ads_settings.enable_urgent || $ads_settings.enable_url}
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.listings.extra_options|replace:" ":"&nbsp;"}</strong></div></div>
+
+{if $ads_settings.enable_featured}
+	<div class="clearfix">
+		<div class="left_form">{$lng.listings.featured}:</div>	
+		<div class="right_form">{if ( isset($tmp.featured) && $tmp.featured ) || $options.featured}{$lng.general.yes}{else}{$lng.general.no}{/if}</div>
+	</div>
+{/if}
+
+{if $ads_settings.enable_highlited}
+	<div class="clearfix">
+		<div class="left_form">{$lng.listings.highlited}:</div>	
+		<div class="right_form">{if (isset($tmp.highlited) && $tmp.highlited) || $options.highlited}{$lng.general.yes}{else}{$lng.general.no}{/if}</div>
+	</div>
+{/if}
+
+{if $ads_settings.enable_priorities}
+	<div class="clearfix">
+		<div class="left_form">{$lng.listings.priority}:</div>	
+		<div class="right_form">{if isset($tmp.priority) && $tmp.priority>0}{$tmp.priority_name}{else}{$lng.general.no}{/if}</div>
+	</div>
+{/if}
+
+{if $ads_settings.enable_urgent}
+	<div class="clearfix">
+		<div class="left_form">{$lng.packages.urgent}:</div>	
+		<div class="right_form">{if ( isset($tmp.urgent) && $tmp.urgent ) || $options.urgent}{$lng.general.yes}{else}{$lng.general.no}{/if}</div>
+	</div>
+{/if}
+
+{if $ads_settings.enable_video}
+	<div class="clearfix">
+		<div class="left_form">{$lng.listings.video}:</div>	
+		<div class="right_form">{if (isset($tmp.video) && $tmp.video) || $options.video}{$lng.general.yes}{else}{$lng.general.no}{/if}</div>
+	</div>
+{/if}
+
+{if $ads_settings.enable_url}
+	<div class="clearfix">
+		<div class="left_form">{$lng.packages.url}:</div>	
+		<div class="right_form">{if (isset($tmp.url) && $tmp.url) || $options.url}{$lng.general.yes}{else}{$lng.general.no}{/if}</div>
+	</div>
+{/if}
+
+<div class="form_footer2">
+
+	<div class="buttons rfloat">
+		<span class="positive"><a  class="adsettings" href="javascript:;">{$lng.listings.edit_options}</a></span>
+	</div>
+	<div class="clearfix"></div>
+
+</div>{* end form_footer *}
+
+<script type="text/javascript">
+{literal}
+
+$(document).ready(function() {
+
+$("a.adsettings").click(function(event){
+
+	$.fancybox({
+		'width'         		: 630,
+		'height'        		: 600,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'margin'		: '0',
+		'padding'		: '0',
+		'titleShow'		: false,
+		'type'			: 'iframe',
+		'href'			: '{/literal}{$live_site}{literal}/admin/edit_ad_settings.php?id={/literal}{$id}{literal}'
+	});
+
+});
+
+});
+{/literal}
+</script>
+{/if} {* end if extra features *}
+
+<div class="form_subtitle_bg"><div class="btn1"><strong>{$lng.listings.ad_photos|replace:" ":"&nbsp;"}</strong></div></div>
+
+<ul id="ul_files">
+{foreach from=$tmp.images item=v}
+<li><img src="{$live_site}/images/listings{if $v.folder}/{$v.folder}{/if}/thmb/{$v.picture}"></li>
+{/foreach}
+</ul>
+
+
+<div class="form_footer2">
+
+	<div class="buttons rfloat">
+		<span class="positive"><a  href="{$live_site}/admin/edit_photos.php?id={$id}">{$lng.listings.edit_photos}</a></span>
+	</div>
+	<div class="clearfix"></div>
+
+</div>{* end form_footer *}
+
+<div class="wait"></div>
+
+</div> {* end form_container *}
+{/if} {* end if step=4 *}

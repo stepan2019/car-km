@@ -1,0 +1,237 @@
+{include file="header.html"}
+{include file="data/ui.html"}
+
+<div class="page_title">{$lng.panel.users} > {$lng.useraccount.messages}</div>
+
+<div class="p30">
+<form name="search" id="search" method="post" action="messages.php">
+
+<div class="lfloat" style="width: 600px;">
+
+<div class="lfloat mr10">
+	{if !$is_mod || $mod_sections.messages.delete==1}
+	<input type="image" value="delete_selected" name="delete_selected" id="delete_selected" src="{$template_path}images/delete_all.png" onclick="return myConfirm('{$lng.messages.confirm_delete_all|addslashes}')" style="border: 0px;" class="tooltip icon" title="{$lng.general.delete_all}"/>
+	{/if}
+	{if !$is_mod || $mod_sections.messages.edit==1}
+	<input type="image" value="activate_selected" name="activate_selected" src="{$template_path}images/activate_all.png" title="{$lng.messages.send_all_messages}" class="tooltip icon" onclick="return myConfirm('{$lng.messages.confirm_send_all|addslashes}')" style="border: 0px;">
+	{/if}
+</div>
+
+<div class="lfloat">
+<select name="show" onChange="doSel(this);">
+	<option value="location.href='{$pages_link|replace:'##page##':1}&show=all'" {if $show=="all"} selected="selected" {/if}>{$lng.general.all}</option>
+	<option value="location.href='{$pages_link|replace:'##page##':1}&show=pending'" {if $show=="pending"} selected="selected" {/if}>{$lng.general.pending}</option>
+</select>
+</div>
+
+<div class="buttonwrapper lfloat ml10"><div class="button3-left">
+
+	<a href="javascript:;" id="add_search"><span class="button3-right">{$lng.general.search}&nbsp;<img src="{$template_path}images/gray-down-arrow.png" /></span></a>
+
+	<a href="javascript:;" id="remove_search"><span class="button3-right">{$lng.general.search}&nbsp;<img src="{$template_path}images/gray-up-arrow.png" /></span></a>
+
+</div></div>
+
+</div> {* lfloat *}
+
+<div class="rfloat">
+{include file="paginator.html"}
+</div>
+
+<div class="clearfix"></div>
+
+<div id="search_box" style="display: none;">
+
+<input type="hidden" name="page" value = "{$page}" />
+<input type="hidden" name="show" value = "{$show}" />
+<input type="hidden" name="order" value = "{$order}" />
+<input type="hidden" name="order_way" value = "{$order_way}" />
+<input type="hidden" name="no_per_page" value = "{$no_per_page}" />
+
+<input type="text" name="id" size="6" class="defaultText" title="{$lng.listings.id}" value="{if isset($post_array.id)}{$post_array.id}{/if}"/>
+
+<input type="text" name="keyword" size="20" class="defaultText" title="{$lng.search.keyword}" value="{if isset($post_array.id)}{$post_array.keyword}{/if}" />
+{if $settings.enable_username}
+<input type="text" name="username" size="20" class="defaultText" title="{$lng.users.username}" value="{if isset($post_array.username)}{$post_array.username}{/if}"/>
+{/if}
+<input type="text" name="name" size="20" class="defaultText" title="{$lng.users.name}" value="{if isset($post_array.name)}{$post_array.name}{/if}"/>
+
+<input type="text" name="email" size="20" class="defaultText" title="{$lng.users.email}" value="{if isset($post_array.email)}{$post_array.email}{/if}"/>
+
+<input name="date_from_vis" id="date_from_vis" type="text" size="15" class="defaultText" title="{$lng.search.date_from}"/>
+<input name="date_from" id="date_from" type="hidden"/>
+
+<input name="date_to_vis" id="date_to_vis" type="text" size="15" class="defaultText" title="{$lng.search.date_to}" />
+<input name="date_to" id="date_to" type="hidden" />
+
+<div class="buttons">
+	<strong><input type="submit" name="Search" value="{$lng.general.search}" /></strong>
+</div>
+
+</div>
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th width="30" class="hleft"><input type="checkbox" class="noborder" name="check_all" id="check_all" /></th>
+	<th width="20">{$lng.general.id}</th>
+	<th></th>
+	<th width="70" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$messages_array item=v}
+<tr class="{if $v.report==1} spam{/if}{if $v.pending} pending{/if}">
+
+	<td><input type="checkbox" class="noborder" name="msg{$v.msg_id}" id="msg{$v.msg_id}" /></td>
+	<td>#{$v.msg_id}<br/>{if $v.report==1}<img src="{$template_path}/images/spam.png" class="tooltip icon" title="{$lng.messages.reported_as_spam}" />{/if}</td>
+	<td class="laligned">
+	<span class="sc1">{$lng.messages.from}: <span class="underline">{if $v.from && $settings.enable_username}{$v.username}{else}{$v.from_email}{/if}</span> {$lng.messages.to}: <span class="underline">{if $v.to && $settings.enable_username}{$v.to_username}{else}{$v.to_email}{/if}</span> {$lng.messages.on}: {$v.date_nice}</span>{if $v.pending}<div class="small-btn pendingbutton icon" style="display: inline-block;">{$lng.listings.pending}</div>{/if}
+	<p>{$v.message|truncate:400:"...":false}</p>
+
+	<div class="rfloat">
+	{if $v.starting}<a href="message_history.php?id={$v.starting}">
+	<div class="buttonwrapper"><div class="rbutton1-left"><span class="rbutton1-right">{$lng.messages.view_thread}</span></div></div>
+	</a>{/if}
+
+	</div>
+	{if $v.ad_id}<div class="small">{$lng.messages.started_for_listing}: <a href="{if $seo_settings.enable_mod_rewrite}{seo->makeDetailsLink p1=$v.ad_id p2=$v.title}{else}{$live_site}/details.php?id={$v.ad_id}{/if}" class="sc1" target="_blank">{$v.title}</a></div>{/if}
+
+	<div class="lfloat"><a href="view_message.php?id={$v.msg_id}">
+	<div class="buttonwrapper"><div class="rbutton1-left"><span class="rbutton1-right">{$lng.messages.view_complete_message}</span></div></div>
+	</a></div>
+
+	{if $v.pending}
+	{if !$is_mod || $mod_sections.messages.edit==1}
+	<div class="lfloat ml10" id="div_msg{$v.msg_id}"><a href="javascript:;" class="send_message" id="msg{$v.msg_id}">
+	<div class="buttonwrapper"><div class="button4-left"><span class="button4-right">{$lng.messages.send_message}</span></div></div>
+ 	</a></div>
+	{/if}
+	{/if}
+
+	</td>
+
+	<td>
+		{if !$is_mod || $mod_sections.messages.edit==1}
+		<a href="edit_message.php?id={$v.msg_id}">
+		<img src="{$template_path}images/edit.png" class="tooltip icon" title="{$lng.general.edit}" alt="{$lng.general.edit}" />
+		</a>
+		{/if}
+
+	
+		{if !$is_mod || $mod_sections.messages.delete==1}
+		<a href="javascript:;" onclick="onDelete('{$v.msg_id}','{$lng.settings.confirm_delete|addslashes}', 'msg');">
+		<img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt="{$lng.general.delete}" />
+		</a>
+		{/if}
+
+		{if !$is_mod || $mod_sections.messages.edit==1}
+		<span id="div_block{$v.msg_id}">
+			{if $v.blocked==0}
+			<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onMsgBlock('{$v.msg_id}','{$template_path}', '{$lng.users.block_ip|addslashes}', '{$lng.users.unblock_ip|addslashes}');{/if}">
+			<img src="{$template_path}images/block.png" class="tooltip icon" title="{$lng.users.block_ip}" alt="">
+			</a>
+			{else}
+			<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onMsgUnblock('{$v.msg_id}','{$template_path}', '{$lng.users.block_ip|addslashes}', '{$lng.users.unblock_ip|addslashes}');{/if}">
+			<img src="{$template_path}images/unblock.png" class="tooltip icon" title="{$lng.users.unblock_ip}" alt="">
+			</a>
+			{/if}
+		</span>
+		{/if}
+	
+	</td>
+</tr>
+{/foreach}
+
+{if $no_messages==0}
+	<tr><td colspan="4">{$lng.messages.no_messages}</td></tr>
+{/if}
+</table>
+</form>
+
+{if $no_messages}<div class="rfloat mt20">{include file="paginator.html"}</div>{/if}
+
+<div class="mt20">
+	{$lng.general.show}
+	<select name="no_per_page_sel" onchange="doSel(this);">
+		{section name=pg loop=60 start=10 step=10}
+		<option value="location.href='{$crt_page_link}&no_per_page={$smarty.section.pg.index}'" {if $no_per_page==$smarty.section.pg.index} selected="selected" {/if}>{$smarty.section.pg.index}</option>
+		{/section}
+	</select>
+	{$lng.general.on_a_page}
+</div>
+
+</div> {* p30 *}
+
+
+{literal}
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("input").keypress(function(e)
+		{
+        		// if the key pressed is the enter key
+        		if (e.which == 13)
+        		{
+
+				// delay action so the autocomplete list to fill
+				setTimeout(function() { $("#search").submit();}, 200);
+
+				return false;
+        		}
+		});
+		$("#remove_search").hide();
+		$("#search_box").hide();
+		$("#add_search").click(function()
+		{
+			$("#remove_search").show();
+			$("#add_search").hide();
+			$("#search_box").slideDown('fast').show();
+		});
+
+		$("#remove_search").click(function()
+		{
+			$("#add_search").show();
+			$("#remove_search").hide();
+			$("#search_box").hide().slideUp('fast');
+		});
+
+		$(".send_message").click(function()
+		{
+			var msg_id = jQuery(this).attr("id").substr(3);
+			$.ajax({
+				type		: "GET",
+				cache		: false,
+				url		: "{/literal}{$live_site}/admin/include/actions.php?action=send&object=msg&id="+msg_id+"{literal}",
+				success: function(data) {
+					$("#div_msg"+msg_id).hide();
+				} // end data
+			});// end ajax
+
+		})
+
+		$("#check_all").click(function()
+		{
+
+			if ($('#check_all').is(':checked')) checkAll(document);
+			else uncheckAll(document);
+
+		});
+
+	});
+
+	$(function() {
+		$('#date_from_vis').datepicker({
+			dateFormat: "M dd yy",
+			changeMonth: true,
+			changeYear: true,
+			altField: '#date_from', altFormat: 'yy-mm-dd'
+		});
+
+		$('#date_to_vis').datepicker({
+			dateFormat: "M dd yy",
+			changeMonth: true,
+			changeYear: true,
+			altField: '#date_to', altFormat: 'yy-mm-dd'
+		});
+	});
+{/literal}
+</script>
+{include file="footer.html"}

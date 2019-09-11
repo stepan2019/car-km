@@ -1,0 +1,30 @@
+	<div class="relative" style="display: inline;">
+
+		<a href="javascript:;" {if $demo}onclick="alert('{$lng.general.errors.demo}'); return false;"{else}class="suspend_all" id="suspend_all"{/if}>
+		<img src="{$template_path}modules/suspend_user/images/suspend_all.png" class="tooltip icon" title="{$lng_su.suspend_all}" >
+		</a>
+
+		<input type="image" value="unsuspend_all" name="unsuspend_all" src="{$template_path}modules/suspend_user/images/unsuspend_all.png" title="{$lng_su.unsuspend_all}" class="tooltip icon" style="border: 0px;">
+
+		<div style="position: absolute; width: 400px; top: 20px; left: 0; background: #f0f0f0; border: 1px solid #999; z-index: 1000; border-radius: 10px; display: none; color: #333;" id="suspend_days_div" class="suspend_days_div">
+			
+		<div style="padding: 20px; border-bottom: 1px solid #fff;">
+		<img class="remove_days tooltip" src="{$template_path}/images/delete.png" style="float: right; cursor: pointer;" title="Close"/>
+		<div style="margin-top: 30px; ">
+		<input type="text"  name="suspend_all_days" id="suspend_all_days" value="{$su_settings.days}" size="5" style="text-align: center; border: 1px solid #555;"/>&nbsp;{$lng.settings.days}&nbsp;
+
+		<input type="submit" name="suspend_selected" value="{$lng_su.suspend_all_selected}" style="float: right; padding: 7px 20px; background: #555; text-align: center; color: #fff; cursor: pointer; border-radius: 4px; border: 0" />
+
+		</div>
+		</div>
+			
+		{* ban div *}
+		<div style="background-color: #ecaa8a; border-top: 1px solid #d23636; padding: 30px 0; border-radius: 0 0 10px 10px; text-align: center;">
+
+		<input type="submit" name="ban_selected" value="{$lng_su.ban_all_selected}" style="padding: 7px; background: #900; text-align: center; color: #fff; cursor: pointer; font-weight: bold; border-radius: 4px; border: 0; width: 90%;" />
+			
+		</div> {* end ban div *}
+			
+		</div> {* end absolute *}
+				
+	</div>{* end relative *}

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="{$appearance.charset}"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >
+<head>
+<title>{$lng.general.admin_panel}</title>
+<meta http-equiv="Content-Type" content="text/html; charset={$appearance.charset}">
+<link rel="stylesheet" type="text/css" href="{$template_path}style.css">
+<link rel="stylesheet" type="text/css" href="{$live_site}/libs/jQuery/plugins/css/nyroModal.css">
+</head>
+<body>
+<script type="text/javascript" src="{$live_site}/libs/jQuery/jquery.js"></script>
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/jquery.nyroModal.js"></script>
+
+{if $info}<div style="color: #b00000">{$info}</div>{/if}
+
+<script type="text/javascript">
+{literal}
+$.nyroModalSettings({endRemove: refreshparent });
+ function refreshparent(){
+          window.location = window.location.pathname+window.location.search
+         };
+{/literal}
+</script>
+
+<div style="padding: 10px;">
+<form class="nyroModal" method="post" action="{$live_site}/admin/download_db.php">
+<table>
+<tr><td style="padding: 10px; text-align: center;">
+<input type="radio" name="compress" value="0" checked> &nbsp;&nbsp;{$lng.database.uncompressed}&nbsp;&nbsp;
+<input type="radio" name="compress" value="1"> &nbsp;&nbsp;{$lng.database.compressed}
+</td></tr>
+
+<tr><td style="padding: 10px; text-align: center;">
+	<div class="buttons"{if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<strong><input type="submit" name="Backup" value="{$lng.database.backup}" /></strong>
+	</div>
+</td></tr>
+</table>
+<br><br>
+</form>
+
+
+<button class="nyroModalClose">{$lng.general.close_window}</button>
+</div>
+
+</body>
+</html>

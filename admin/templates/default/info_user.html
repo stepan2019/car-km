@@ -1,0 +1,273 @@
+{include file="overlay_header.html"}
+
+<script type="text/javascript">
+{if $settings.google_maps_api_key}gmak='{$settings.google_maps_api_key}';{/if}
+places=0;
+</script>
+
+<script type="text/javascript" src="{$live_site}/libs/jQuery/jquery.js"></script>
+<script type="text/javascript" src="{$live_site}/js/common.min.js"></script>
+
+{include file="data/fancybox.html"}
+
+<div class="overlay-top-bg">{$lng.users.info_about}: {if $settings.enable_username}{$tmp.username}{else}{$tmp.email}{/if}</div>
+{*
+<script type="text/javascript">
+var tb_pathToImage = "{$live_site}/libs/jQuery/plugins/img/loadingAnimation.gif";
+var tb_next = "{$lng.tb.next}";
+var tb_close = "{$lng.tb.close}";
+var tb_prev = "{$lng.tb.prev}";
+var tb_esc = "{$lng.tb.or_esc}";
+var tb_image = "{$lng.custom_fields.image}";
+var tb_of = "{$lng.general.of}";
+</script>
+*}
+
+<script type="text/javascript">
+//<![CDATA[
+
+{foreach from=$gmaps item=v}
+	{include file="data/gmap-ro.html"}
+{/foreach}
+
+{literal}
+$(document).ready(function() {
+{/literal}
+
+var gmaps_on = {if isset($gmaps) && $gmaps}1{else}0{/if};
+// initialize google maps
+if (gmaps_on) load_gmaps();
+
+{literal}
+});
+{/literal}
+
+//]]>
+</script>
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+
+{* user info *}
+<tr><td class="raligned" valign="top">{if isset($tmp.user_info)}{$lng.users.info_user}{/if}</td><td class="laligned">{if isset($tmp.user_info_formatted)}{$tmp.user_info_formatted}{/if}{if $tmp.user_info}<div class="mid-btn editablebutton pointer add_info">{$lng.users.edit_info}</div>{else}<div class="mid-btn graybutton pointer add_info">{$lng.users.add_info}</div>{/if}</td></tr>
+
+<tr><td colspan="2" class="hidden raligned" id="user_info">
+
+	<form method="post" name="add_user_info" id="add_user_info" action="">
+	
+		<div><textarea name="user_info" id="user_info" style="width: 690px; height: 100px;">{$tmp.user_info}</textarea></div>
+	
+
+		<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+			<span class="positive"><input type="submit" name="Add_info" id="Add_info" value="{if $tmp.user_info}{$lng.general.modify}{else}{$lng.general.add}{/if}" /></span>
+		</div>
+
+	</form>
+		
+
+</td></tr>
+
+{* end user info *}
+
+<tr><td></td><td class="laligned">{if $tmp.active==1}<div class="mid-btn publicbutton">{$lng.users.active}</div>{else}<div class="mid-btn graybutton">{$lng.users.inactive}</div>{/if}
+{* if sms verification *}
+{if $activate_via_sms==1}
+
+{if isset($sms_result)}
+{if $sms_result.success==0}
+<div class="lfloat information">{$lng.sms_gateway.failed_to_send}</div>
+<div class="mid-btn graybutton lfloat pointer" onClick='$(".show_info").show()'>{$lng.sms_gateway.view_response}</div>
+<div class="mid-btn privatebutton lfloat pointer" id="resend_sms">{$lng.sms_gateway.send_again}</div>
+{else}
+<div class="lfloat information">{$lng.sms_gateway.successfully_sent}</div>
+<div class="mid-btn graybutton lfloat pointer" onClick='$(".show_info").show()'>{$lng.sms_gateway.view_response}</div>
+{/if}
+{/if} {* end if sms_result *}
+
+<div class="show_info" style="display: none; clear: both;">{$sms_result.details}</div>
+
+{/if}
+
+</td></tr>
+
+{if $tmp.moderator}<tr><td></td><td class="laligned"><div class="mid-btn requiredbutton">{$lng.users.moderator}</div></td></tr>{/if}
+
+{if $tmp.blocked==1}<tr><td></td><td class="laligned"><div class="mid-btn privatebutton">{$lng.users.blocked}</div></td></tr>{/if}
+
+{if $tmp.affiliate}
+<tr><td class="raligned">{$lng.affiliates.link}</td><td class="laligned"><a href="{$tmp.affiliate_link}" class="sc1" target="_blank">{$tmp.affiliate_link}</a></td></tr>
+{/if}
+
+{if $tmp.store>0}
+<tr><td></td>
+	<td class="laligned">
+	<div class="buttonwrapper lfloat ml10"><div class="button4-left"><span class="button4-right">{$lng.users.store_enabled}</span></div></div>
+	{if $tmp.store_banner}&nbsp;<a href="{$live_site}/images/store/{$tmp.store_banner}" class="imgfield"><img src="{$template_path}images/camera.png"></a>&nbsp;{/if}<a href="{if $seo_settings.enable_mod_rewrite}{seo->makeDealerLink p1=$tmp.id p2=$tmp[$settings.contact_name_field]}{else}{$live_site}/store.php?id={$tmp.id}{/if}" class="sc1" target='_blank'>{if $seo_settings.enable_mod_rewrite}{seo->makeDealerLink p1=$tmp.id p2=$tmp[$settings.contact_name_field]}{else}{$live_site}/store.php?id={$tmp.id}{/if}</a>
+	</td></tr>
+{elseif $ads_settings.show_more_link}
+	<tr><td class="raligned">{$lng.users.user_listings_page}</td><td class="laligned"><a href="{if $seo_settings.enable_mod_rewrite}{seo->makeUserListingsLink p1=$tmp.id}{else}{$live_site}/user_listings.php?id={$id}{/if}" class="sc1" target="_blank">{if $seo_settings.enable_mod_rewrite}{seo->makeUserListingsLink p1=$tmp.id}{else}{$live_site}/user_listings.php?id={$tmp.id}{/if}</a></td></tr>
+
+{/if}
+
+{if $tmp.bulk_uploads>0}<tr><td></td><td class="laligned">
+<div class="buttonwrapper lfloat ml10"><div class="button4-left"><span class="button4-right">{$lng.users.bulk_uploads_enabled}</span></div></div>
+</td></tr>{/if}
+
+{foreach from=$user_fields_array item=v}
+{if $v.caption!='password' && $v.type!="terms"}
+<tr><td class="raligned">{$v.name}</td>
+	<td class="laligned">
+	{if $v.type=="image" && isset($tmp[$v.caption]) && $tmp[$v.caption]}
+	<img src="{$live_site}/uploads/{$v.caption}/{$tmp[$v.caption]}">
+
+	{elseif $v.type=="file" && isset($tmp[$v.caption]) && $tmp[$v.caption]}
+	<a href="{$live_site}/uploads/{$v.caption}/{$tmp[$v.caption]}"><img src="{$template_path}/images/download.png" class="tooltip" alt="" title="{$lng.general.download}"/></a>
+
+	{elseif $v.type=="date"}
+	{if isset($tmp.vis[$v.caption])}{$tmp.vis[$v.caption]}{/if}
+
+	{elseif isset($v.validation_type) && $v.validation_type=="numeric"}
+	{if isset($tmp.formatted[$v.caption])}{$tmp.formatted[$v.caption]}{/if}
+
+	{elseif $v.type=="textarea"}
+	{if isset($tmp.formatted[$v.caption])}{$tmp.formatted[$v.caption]}{/if}
+
+	{elseif $v.type=="multiselect"}
+	{if isset($tmp[$v.caption])}{$tmp[$v.caption]|@implode:', '}{/if}
+
+	{elseif $v.type=="checkbox"}
+	{if isset($tmp[$v.caption]) && $tmp[$v.caption]==1}{$lng.general.yes}{else if isset($tmp[$v.caption])}{$lng.general.no}{/if}
+
+	{elseif $v.type=="google_maps"}
+	<div id="gm_ro_{$v.caption}" class="map"></div>
+
+	{elseif $v.type=="checkbox_group"}
+	{if isset($tmp[$v.caption])}{$tmp[$v.caption]|@implode:', '}{/if}
+
+	{else}
+	{if isset($tmp[$v.caption])}
+	{if $v.type=='url'}<a href="{$tmp[$v.caption]}" class="sc1">{/if}
+	{$tmp[$v.caption]}
+	{if $v.type=='url'}</a>{/if}
+	{/if}
+	{/if}
+</td></tr>
+{/if}
+{/foreach}
+
+<tr><td class="raligned">{$lng.users.date}</td><td class="laligned">{$tmp.date_nice}</td></tr>
+<tr><td class="raligned">{$lng.users.ip}</td><td class="laligned">{$tmp.register_ip}</td></tr>
+
+
+{if $tmp.moderator}
+<tr>
+	<td class="raligned">{$lng.users.moderator}</td>
+	<td class="laligned">
+
+	<table cellpadding=10 cellspacing=10>
+
+		<tr><td><b>{$lng.panel.listings}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;{if $tmp.sections.listings.view}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.add}&nbsp;&nbsp;{if $tmp.sections.listings.add}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;{if $tmp.sections.listings.edit}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;{if $tmp.sections.listings.delete}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.users}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;{if $tmp.sections.users.view}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.add}&nbsp;&nbsp;{if $tmp.sections.users.add}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;{if $tmp.sections.users.edit}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;{if $tmp.sections.users.delete}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.users_subscriptions}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;{if $tmp.sections.subscriptions.view}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.add}&nbsp;&nbsp;{if $tmp.sections.subscriptions.add}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;{if $tmp.sections.subscriptions.edit}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;{if $tmp.sections.subscriptions.delete}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.saved_searches}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;{if $tmp.sections.searches.view}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td></td>
+		<td></td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;{if $tmp.sections.searches.delete}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.email_alerts}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;{if $tmp.sections.alerts.view}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td></td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;{if $tmp.sections.alerts.edit}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;{if $tmp.sections.alerts.delete}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.messages}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;{if $tmp.sections.messages.view}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td></td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;{if $tmp.sections.messages.edit}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;{if $tmp.sections.messages.delete}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.orders}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;{if $tmp.sections.orders.view}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td></td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;{if $tmp.sections.orders.edit}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;{if $tmp.sections.orders.delete}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.security}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;{if $tmp.sections.security.view}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td></td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;{if $tmp.sections.security.edit}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;{if $tmp.sections.security.delete}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		</tr>
+
+		<tr><td><b>{$lng.panel.banners}:</b></td>
+		<td>{$lng.general.view}&nbsp;&nbsp;{if $tmp.sections.banners.view}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.add}&nbsp;&nbsp;{if $tmp.sections.banners.add}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.modify}&nbsp;&nbsp;{if $tmp.sections.banners.edit}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		<td>{$lng.general.delete}&nbsp;&nbsp;{if $tmp.sections.banners.delete}<img src="{$template_path}images/checkbox_on.png" />{else}<img src="{$template_path}images/checkbox_off.png" />{/if}</td>
+		</tr>
+	</table>
+	</td>
+</tr></table></div></td></tr>
+{/if} {* end moderators section *}
+
+
+
+</table>
+
+{literal}
+<script type="text/javascript">
+$(document).ready(function() {
+	$("a.imgfield").fancybox();
+
+	$(".add_info").click(function(){ 
+		
+		if($("#user_info").is(":visible"))
+			$("#user_info").hide();
+		else 
+			$("#user_info").show();
+	 });
+
+ 	$("#resend_sms").click(function(){ 
+ 	
+ 		$.ajax({
+		type		: "GET",
+		cache		: false,
+		url		: "{/literal}{$live_site}/admin/include/actions.php?action=resend&object=user_sms&id={$tmp.id}{literal}",
+		data		: $(this).serializeArray(),
+		success: function(data) {
+
+ 				location.reload(true);
+
+			} // end data
+		});// end ajax
+
+ 	});
+
+});
+</script>
+{/literal}
+
+</body>
+</html>

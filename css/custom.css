@@ -6,11 +6,11 @@
 
 body {
 	color: #000;
-	font-family: 'Lato', sans-serif;
+	font-family: 'Calibri ', lato,sans-serif;
 	background-color: #f1edd4;
 }
 h1, h2, h3, h4, h5 {
-	font-family: 'Montserrat', sans-serif;
+	font-family: 'Calibri', sans-serif;
 }
 .parallax-section {
 	background-attachment: fixed!important;
@@ -974,7 +974,7 @@ label.control-label {
 
 .agileits-main i {
     font-size: 1.2em;
-    color: #000;
+    color: #fe7500;
     position: absolute;
     top: 31%;
     left: 4%;
@@ -1027,7 +1027,7 @@ input[name="website"] {
 }
 
 .link-size {
-	font-size: 40px !important;
+	font-size: 30px !important;
 }
 
 .typing-glow {
@@ -1156,10 +1156,11 @@ input[name="website"] {
 }
 
 .analysis-txt {
-	font-size: 30px;
-	font-weight: 700;
+	font-size: 20px;
+	font-weight: 500;
 	color: white;
 	margin-bottom: 0px;
+	text-align: center;
 }
 
 .privacy {
@@ -1193,6 +1194,8 @@ input[name="website"] {
     padding-top: 20px;
     padding-bottom: 20px;
 }
+
+
 
 /* RESPONSIVE CSS
 -------------------------------------------------- */

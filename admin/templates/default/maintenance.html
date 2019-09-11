@@ -1,0 +1,52 @@
+{include file="header.html"}
+
+<div class="page_title">{$lng.panel.tools} > {$lng.panel.maintenance}</div>
+
+<div class="p30">
+
+<div class="form_container">
+
+{if isset($error) && $error != ""} <div class="error">{$error}</div> {/if}
+{if isset($info) && $info != ""} <div class="info">{$info}</div> {/if}
+
+<form name="db" method="post" action="{$self}" enctype="multipart/form-data">
+<div class="clearfix">
+	<div class="left_form">{$lng.maintenance.clear_cache}</div>
+	<div class="right_form">
+	<div class="buttons lfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Clear_cache" value="{$lng.maintenance.clear_cache_now}" /></span>
+	</div>
+	</div>
+</div>
+
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.maintenance.info.maintenance_mode}" />&nbsp;{$lng.maintenance.maintenance_mode}</div>
+	<div class="right_form">
+	<div class="buttons lfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		{if $appearance.maintenance_mode}
+		<span class="negative"><input type="submit" name="RemMaintenance" value="{$lng.maintenance.remove_maintenance_mode}" /></span>
+		{else}
+		<span class="positive"><input type="submit" name="Maintenance" value="{$lng.maintenance.set_maintenance_mode}" /></span>
+		{/if}
+	</div>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.maintenance.info.maintenance_ips}" />&nbsp;{$lng.maintenance.maintenance_ips}</div>
+	<div class="right_form">
+	<div><input type="text" size="80" name="ips" value="{$appearance.maintenance_ips}"/></div>
+	<div class="information mt10 mb10">{$lng.maintenance.info.add_maintenance_ips}</div>
+	<div class="buttons" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="MaintenanceIPs" value="{$lng.general.save}" /></span>
+	</div>
+	</div>
+</div>
+</form>
+
+</div> {* end form_container *}
+
+</div> {* end p30 *}
+
+{include file="footer.html"}

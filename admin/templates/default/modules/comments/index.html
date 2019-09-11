@@ -1,0 +1,119 @@
+{include file="header.html"}
+<script type="text/javascript" src="{$live_site}/admin/modules/comments/js/comments.js"></script>
+
+<div class="page_title">
+<div class="lfloat" width="200"><a href="{$live_site}/admin/modules.php">{$lng.panel.modules}</a> > {$lng_comments.comments}</div>
+<div class="rfloat mt5">
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab1-left">
+	<a href="{$live_site}/admin/modules/comments/index.php"><span class="tab1-right">{$lng_comments.comments}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="{$live_site}/admin/modules/comments/settings.php"><span class="tab2-right">{$lng_comments.settings}</span></a>
+	</div></div>
+
+</div>
+</div>
+
+<div class="p30">
+<form name="comments" id="comments" method="post" action="">
+
+<div class="lfloat" style="width: 600px;">
+<input type="image" value="delete_selected" name="delete_selected" src="{$template_path}images/delete_all.png" title="{$lng.general.delete_all}" class="tooltip" onclick="{if $demo}alert('{$lng.general.errors.demo}'); return false;{else}return myConfirm('{$lng.settings.confirm_delete_all|addslashes}'){/if}" style="border: 0px;">
+<input type="image" value="activate_selected" name="activate_selected" src="{$template_path}images/activate_all.png" title="{$lng.general.activate_all}" class="tooltip" style="border: 0px;">
+<input type="image" value="deactivate_selected" name="deactivate_selected" src="{$template_path}images/deactivate_all.png" title="{$lng.general.deactivate_all}" class="tooltip" onclick="{if $demo}alert('{$lng.general.errors.demo}'); return false;{/if}" style="border: 0px;">
+</div>
+
+<div class="rfloat">
+{include file="paginator.html"}
+</div>
+
+<div class="clearfix"></div>
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th width="30" class="hleft"><input type="checkbox" class="noborder" name="check_all" id="check_all" /></th>
+	<th width="20">{$lng.general.id}</th>
+	<th>{$lng_comments.comments}</th>
+	<th width="100">{$lng_comments.user}</th>
+	<th width="100">{$lng.custom_fields.date}</th>
+	<th width="50" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$array_comments item=v}
+<tr id="row{$v.id}">
+	<td><input type="checkbox" class="noborder" name="cm{$v.id}" id="cm{$v.id}"></td>
+	<td><div id="id{$v.id}">{$v.id}</div></td>
+	<td class="laligned">
+		<div>{$v.content}</div>
+		<div><span class="cursive">{$lng_comments.comment_for}:</span> <a href="{$live_site}/details.php?id={$v.listing_id}" target="_blank">{$v.title}</a> | {$lng_comments.posted_on} {$v.date_nice}<br/>
+		{if $v.name}{$v.name}&nbsp;{/if}{if $v.email}&nbsp;|&nbsp;{$v.email}{/if}{if $v.website}&nbsp;|&nbsp;<a href="{$v.website}">{$v.website}</a>{/if}</div>
+	</td>
+	<td>{if isset($v.user_id) && $v.user_id}{$v.username}{else}{$lng_comments.guest}{/if}</td>
+	<td>{$v.date_nice}</td>
+	<td>
+		<a href="{$live_site}/admin/modules/comments/edit_comment.php?id={$v.id}"><img src="{$template_path}images/edit.png" class="tooltip" title="{$lng.general.edit}" alt=""></a>
+
+		<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDeleteComment('{$v.id}','{$lng_comments.confirm_delete}');{/if}"><img src="{$template_path}images/delete.png" class="tooltip" title="{$lng.general.delete}" alt=""></a>
+		
+		<span id="div_active{$v.id}">
+		{if $v.active==0}
+			<a href="javascript:;" onclick="onCommentEnable('{$v.id}','{$template_path}', '{$lng.general.enable|addslashes}', '{$lng.general.disable|addslashes}');">
+			<img id="active{$v.id}" src="{$template_path}images/enable.png" class="tooltip" title="{$lng.general.enable}" alt="">
+			</a>
+		{else}
+			<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onCommentDisable('{$v.id}','{$template_path}', '{$lng.general.enable|addslashes}', '{$lng.general.disable|addslashes}');{/if}">
+			<img id="active{$v.id}" src="{$template_path}images/disable.png" class="tooltip" title="{$lng.general.disable}" alt="">
+			</a>
+		{/if}
+		</span>	
+
+		<span id="div_block{$v.id}">
+			{if $v.blocked==0}
+			<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onCommentBlock('{$v.id}','{$template_path}', '{$lng.users.block_ip|addslashes}', '{$lng.users.unblock_ip|addslashes}');{/if}">
+			<img src="{$template_path}images/block.png" class="tooltip" title="{$lng.users.block_ip}" alt="">
+			</a>
+			{else}
+			<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onCommentUnblock('{$v.id}','{$template_path}', '{$lng.users.block_ip|addslashes}', '{$lng.users.unblock_ip|addslashes}');{/if}">
+			<img src="{$template_path}images/unblock.png" class="tooltip" title="{$lng.users.unblock_ip}" alt="">
+			</a>
+			{/if}
+		</span>
+
+	</td>
+</tr>
+{/foreach}
+
+{if !$no }
+<tr><td colspan="6">{$lng_comments.no_comments}</td></tr>
+{/if}
+</table>
+</form>
+
+{if $no}<div class="rfloat mt20">{include file="paginator.html"}</div>{/if}
+
+<div class="clearfix"></div>
+
+</div> {* p30 *}
+
+<script type="text/javascript">
+{literal}
+
+$(document).ready(function() {
+
+	$("#check_all").click(function()
+	{
+
+		if ($('#check_all').is(':checked')) checkAll(document);
+		else uncheckAll(document);
+
+	});
+}); // end document ready
+
+
+{/literal}
+</script>
+
+{include file="footer.html"}
+

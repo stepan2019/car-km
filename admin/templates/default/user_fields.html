@@ -1,0 +1,188 @@
+{include file="header.html"}
+{include file="data/fancybox.html"}
+
+<div class="page_title">{$lng.panel.settings} > {$lng.panel.user_fields}</div>
+
+<div class="p30">
+<form name="fields" id="fields" method="post" action="user_fields.php">
+
+<div class="lfloat" style="width: 600px;">
+
+<div class="lfloat mr10">
+<a href="add_user_field.php"><img src="{$template_path}images/add.png" class="tooltip icon" title="{$lng.general.add}" alt=""></a>
+<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDeleteAll('{$lng.custom_fields.confirm_delete_all|addslashes}','uf'){/if}"><img src="{$template_path}images/delete_all.png" class="tooltip icon" title="{$lng.general.delete_all}" alt=""></a>
+</div>
+
+<div class="lfloat">
+<select name="group" onchange="doSel(this)">
+	<option value="location.href='user_fields.php'">{$lng.custom_fields.all_groups}</option>
+	<option value="location.href='?group=-1'" {if $group==-1}selected="selected"{/if}>{$lng.packages.not_logged_in}</option>
+{foreach from=$array_groups item=v}
+	<option value="location.href='?group={$v.id}'" {if $group==$v.id}selected="selected"{/if}>{$v.name}</option>
+{/foreach}
+</select>
+</div>
+</div> {* lfloat *}
+
+<div class="rfloat">
+
+<div class="buttonwrapper"><div class="button4-left">
+	<a href="{$self}?fix=1{if isset($fset) && $fset}&fset={$fset}{/if}"><span class="button4-right">{$lng.categories.fix_order}</span></a>
+</div></div>
+</div>{* end rfloat *}
+<div class="clearfix"></div>
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th width="40" class="hleft"><input type="checkbox" class="noborder" name="check_all" id="check_all" /></th>
+	<th width="40">{$lng.general.id}</th>
+	<th width="40">{$lng.general.position}</th>
+	<th width="300">{$lng.general.name}</th>
+	<th>{$lng.general.type}</th>
+	<th>{$lng.custom_fields.database_field}</th>
+	<th>{$lng.packages.details}</th>
+	<th width="60">{$lng.general.order}</th>
+	<th width="70" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$array_fields item=v}
+<tr id="row{$v.order_no}" class="noborder{if $v.read_only==1} sc3{/if}{if !$v.active} inactive{/if}">
+	<td id="checkbox{$v.order_no}"><input type="checkbox" class="noborder" name="chk{$v.id}" id="chk{$v.id}"></td>
+	<td id="id{$v.order_no}">#{$v.id}</td>
+	<td id="order{$v.order_no}">{$v.order_no}</td>
+	<td id="name{$v.order_no}">
+		{$v.name}
+		{if $v.type=="depending"}
+		<div class="fieldsbutton">{$v.depending.no} {$lng.ie.fields}</div>
+		<a href="edit_depending_field.php?id={$v.dep_id}&type=uf"><div class="edit-depending-button">{$lng.custom_fields.edit_values}</div></a>
+		{/if}
+	</td>
+	<td id="type{$v.order_no}">{if in_array($v.type,$default_fields_types)}{$lng.custom_fields[$v.type]}{else}{$v.type}{/if}</td>
+	<td id="caption{$v.order_no}">{if $v.type!="depending"}{$v.caption}{else}{$v.depending.caption1}<br>{$v.depending.caption2}{if $v.depending.no>=3 && $v.depending.caption3}<br>{$v.depending.caption3}{/if}{if $v.depending.no>=4 && $v.depending.caption4}<br>{$v.depending.caption4}{/if}{if $v.depending.no>=5 && $v.depending.caption5}<br>{$v.depending.caption5}{/if}{/if}</td>
+	<td id="description{$v.order_no}" class="laligned">
+
+	{if $v.editable}<div class="mid-btn editablebutton">{$lng.custom_fields.editable}</div>{else}<div class="mid-btn graybutton">{$lng.custom_fields.not_editable}</div>{/if}
+	{if $v.read_only}<div class="mid-btn readonlybutton">{$lng.custom_fields.read_only}</div>{/if}
+	{if $v.required}<div class="mid-btn requiredbutton">{$lng.custom_fields.required}</div>{else}<div class="mid-btn graybutton">{$lng.custom_fields.not_required}</div>{/if}
+	{if $v.public}<div class="mid-btn publicbutton">{$lng.custom_fields.public}</div>{else}<div class="mid-btn privatebutton">{$lng.custom_fields.not_public}</div>{/if}
+	{if $v.caption==$settings.contact_name_field}<div class="mid-btn contactbutton change_contact_name" style="cursor: pointer;">{$lng.settings.contact_name_field}</div>{/if}
+	{if $v.unique}<div class="mid-btn privatebutton">{$lng.custom_fields.unique}</div>{/if}
+	
+	<div style="display: none;"><div id="data{$v.id}" >{$v.description}</div></div>
+	</td>
+	<td>
+		{if $v.order_no>1}
+		<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onFieldMove({$v.order_no}, 'up', 'uf',0){/if}"><img src="{$template_path}images/up.png" class="tooltip icon" title="{$lng.general.move_up}" alt="" /></a>
+		{else}
+		<img src="{$template_path}images/up-off.png" />
+		{/if}
+
+		{if $v.last==0}
+		<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onFieldMove({$v.order_no}, 'down', 'uf',0){/if}"><img src="{$template_path}images/down.png" class="tooltip icon" title="{$lng.general.move_down}" alt="" /></a>
+		{else}
+		<img src="{$template_path}images/down-off.png" />
+		{/if}
+	</td>
+	<td id="action{$v.order_no}" class="laligned">
+
+		<a href="#data{$v.id}" class="inline"><img src="{$template_path}images/info.png" class="tooltip icon" title="{$lng.packages.details}" /></a>
+
+		<a href="edit_user_field.php?id={$v.id}"><img src="{$template_path}images/edit.png" class="tooltip icon" title="{$lng.general.edit}" alt=""></a>
+
+		{if $v.type=="password" || $v.type=="user_email"}
+			<img id="active{$v.id}" src="{$template_path}images/disable.png" onclick="{if $v.type=='password'}alert('You cannot disable the password field!'){else}alert('You cannot disable the email address field!'){/if}">
+		{else}
+		{if $v.active==0}
+			<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onEnable('{$v.id}','uf');{/if}">
+			<img id="active{$v.id}" src="{$template_path}images/enable.png" class="tooltip icon" title="{$lng.general.enable}" alt="" />
+			</a>
+		{else}
+			<a href="javascript:;" {if $demo}onclick="alert('{$lng.general.errors.demo}');"{elseif $v.caption==$settings.contact_name_field}class="disable_contact_name"{else}onclick="{if $v.type=="username"}alert('You disabled the username field, from now on users will login with their email addresses! As administrator you can login with either administrator username or email!');{/if}onDisable('{$v.id}','uf');"{/if}>
+			<img id="active{$v.id}" src="{$template_path}images/disable.png" class="tooltip icon" title="{$lng.general.disable}" alt="" />
+			</a>
+		{/if}
+		{/if}
+
+		{if $v.read_only==0}<a href="javascript:;"  {if $demo}onclick="alert('{$lng.general.errors.demo}');"{elseif $v.caption==$settings.contact_name_field}class="delete_contact_name"{else}onclick="onDelete('{$v.id}','{$lng.custom_fields.confirm_delete|addslashes}','uf');"{/if}><img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt=""></a>{else}<img src="{$template_path}images/delete_off.png" class="tooltip icon" title="{$lng.general.delete}" alt="">{/if}
+	</td>
+</tr>
+{/foreach}
+
+</table>
+</form>
+</div> {* p30 *}
+
+
+<script type="text/javascript">
+{literal}
+
+$(document).ready(function() {
+
+$(".inline").fancybox({
+		'width'         	: 630,
+		'height'        	: 400,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'margin'		: '0',
+		'padding'		: '0',
+		'titleShow'		: false
+	});
+
+$(".disable_contact_name").fancybox({
+	'width'         		: 630,
+	'height'        		: 400,
+	'transitionIn'		: 'none',
+	'transitionOut'		: 'none',
+	'margin'		: '0',
+	'padding'		: '0',
+	'titleShow'		: false,
+	'type'			: 'iframe',
+	'href'			: '{/literal}{$live_site}/admin/include/change_contact_name.php?disable=1{literal}',
+	'onClosed': function() {
+			parent.location.reload(true);
+	}
+});
+
+$(".delete_contact_name").fancybox({
+	'width'         		: 630,
+	'height'        		: 400,
+	'transitionIn'		: 'none',
+	'transitionOut'		: 'none',
+	'margin'		: '0',
+	'padding'		: '0',
+	'titleShow'		: false,
+	'type'			: 'iframe',
+	'href'			: '{/literal}{$live_site}/admin/include/change_contact_name.php?delete=1{literal}',
+	'onClosed': function() {
+			parent.location.reload(true);
+	}
+});
+
+$(".change_contact_name").fancybox({
+	'width'         		: 630,
+	'height'        		: 400,
+	'transitionIn'		: 'none',
+	'transitionOut'		: 'none',
+	'margin'		: '0',
+	'padding'		: '0',
+	'titleShow'		: false,
+	'type'			: 'iframe',
+	'href'			: '{/literal}{$live_site}/admin/include/change_contact_name.php{literal}',
+	'onClosed': function() {
+			parent.location.reload(true);
+	}
+});
+
+	$("#check_all").click(function()
+	{
+
+		if ($('#check_all').is(':checked')) checkAll(document);
+		else uncheckAll(document);
+
+	});
+
+});
+{/literal}
+</script>
+
+{include file="footer.html"}

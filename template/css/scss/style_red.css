@@ -1,0 +1,128 @@
+/* flux red */
+.default_logo { 
+	background: url("../images/flux-logo-gray.png") no-repeat 0 0; 
+}
+a { 
+	color: #4475fe; 
+}
+a:hover { 
+	color: #de2e3e; 
+}
+
+.search-button input { 
+	background: #b11927 !important; 
+	color: #fff !important; 
+}
+
+.tabs > label:hover { 
+	background: #de2e3e; 
+	border: 1px solid #ce1e2e; 
+	color: #fff; 
+}
+.tabs > input:checked + label { 
+	border-top: 3px solid #de2e3e;
+}
+
+.browse-tabs label { 
+	color: #4475fe;
+}
+.browse-tabs label:hover { 
+	color: #6f95fd;
+}
+
+.browse-tabs input:checked + label { 
+	background: #de2e3e;
+}
+
+.browse-tabs input:checked + label:hover { 
+	background: #f84652;
+}
+
+.cat-path { 
+	color: #4475fe; 
+}
+.cat-path a { 
+	color: #4475fe; 
+}
+.btn1 { 
+	background: #bfbe49; 
+}
+
+.plan_button {
+	border: 2px solid #bfbe49;
+	color: #9f9e19;
+}
+.plan_button:hover { 
+	background: #bfbe49;
+	color: #fff;
+}
+
+.more {
+	background: #de2e3e;
+}
+
+#nav ul li:hover {
+    background: #eee;
+}
+#choose_location a { 
+	background: #bfbe49; 
+}
+.mlink:hover { 
+	color: #de2e3e; 
+}
+
+#quick-search {
+	background: #de2e3e;
+}
+.negative {
+	background: #de2e3e;
+}
+.positive {
+	background: #8ebf49;
+}
+.cd-top {
+  background: #ae4d56 url(../images/top-arrow.png) no-repeat center 50%;
+}
+footer {
+	background-color: #b21624;
+	color: #fff;
+}
+footer a {
+	color: #fff;
+}
+footer a:hover {
+	color: #7a791a;
+}
+#secnav .parent {
+	color: #fff;
+	border-bottom: 1px solid #fff;
+}
+#nav li:not(.post-listing) a:hover {
+    background: #de2e3e;
+	text-shadow: none;
+	color: #fff;
+}
+#nav li a.starfav:hover { 
+	background: #de2e3e url("../images/star_white.png") 15px 50% no-repeat; 
+}
+
+@media all and (max-width: 600px) {
+	#nav li.post-listing { 
+		background: #de2e3e; 
+		border-bottom: 1px solid #ee1e2e; 
+	}
+	#nav li.post-listing:hover { 
+		background: #de2e3e; 
+		opacity: 0.8; 
+	}
+	#nav li.post-listing a { 
+		border-bottom: 1px solid #ee3e4e;
+	}
+}
+@media all and (min-width: 600px) {
+
+	#nav li:hover {
+		background: #eee;
+	}
+
+}

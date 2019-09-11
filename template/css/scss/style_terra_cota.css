@@ -1,0 +1,195 @@
+/* flux terra cota */
+body {	
+	background: #edf0e9; 
+}
+a { 
+	color: #685f7c; 
+}
+a:hover { 
+	color: #ed6a5a; 
+}
+.display_mode, .display_mode_map { 
+	color: #ed6a5a; 
+}
+.display_mode span, .display_mode_map span { 
+	color: #685f7c;
+}
+.search_details span { 
+	color: #ed6a5a; 
+}
+
+header { 
+	background-color: #f1f0e6; 
+}
+#quick-search { 
+	background: #ccd0cf; 
+}
+#fav_button { 
+	background: #ffcd47 url(../images/favorite-icon.png) 8px 8px no-repeat; 
+}
+.search-button input { 
+	background: #5d576b !important; 
+}
+
+.tabs > label {
+	background: #e5e9e8;
+}
+.tabs > label:hover { 
+	background: #ed6a5a; 
+	border: 1px solid #cd4a3a; 
+	color: #fff; 
+}
+.tabs > input:checked + label { 
+	border-top: 3px solid #ed6a5a;
+	background: #edf0e9;
+	border-bottom: 1px solid #edf0e9;
+}
+
+.browse-tabs label { 
+	color: #4475fe;
+}
+.browse-tabs label:hover { 
+	color: #6f95fd;
+}
+.browse-tabs input:checked + label { 
+	background: #ed6a5a;
+}
+.browse-tabs input:checked + label:hover { 
+	background: #fd7a6a;
+}
+
+.cat-path { 
+	color: #ed6a5a; 
+}
+.cat-path a { 
+	color: #ed6a5a; 
+}
+.cat-path a:hover { 
+	color: #fd7a6a; 
+}
+.btn1 { 
+	background: #fbbe1b; 
+}
+.btn2 { 
+	background: #5d576b;
+}
+.btn3 { 
+	background: #d12f4e;
+}
+.wide_btn1 { 
+	background: #5d576b;
+}
+.button { 
+	background-color: #52505a;
+}
+.sq-btn2 { 
+	background: #2b2735;
+}
+.positive { 
+	background-color: #43aa8b; 
+}
+.dark-bg { 
+	background: #52505a;
+}
+.search_tabs a { 
+	background-color: #e2e0e9; 
+}
+.search_tabs a:hover { 
+	background-color: #ebe9f5; 
+}
+.listig-extra { 
+	background-color: #f2f0f9; 
+}
+.dark-container { 
+	background-color: #f2f0f9; 
+}
+.light-container { 
+	background-color: #f7f5ff; 
+}
+.plan_button {
+	border: 2px solid #6a8be9;
+	color: #324c93;
+}
+.plan_button:hover { 
+	background: #6a8be9;
+	color: #fff;
+}
+footer { 
+	background-color: #423d50; 
+}
+footer a:hover { 
+	color: #ed6a5a; 
+}
+
+#nav ul li:hover {
+    background: #fb998d;
+}
+#nav li.post-listing { 
+	background: #ed6a5a; 
+	border-bottom: 1px solid #dd5a4a; 
+}
+#nav li.post-listing:hover { 
+	background: #ed6a5a; 
+	opacity: 0.8; 
+}
+#nav li.post-listing a { 
+	border-bottom: 1px solid #fd7a6a; 
+}
+#nav li a.starfav:hover { 
+	background: #ed6a5a url("../images/star_white.png") 15px 50% no-repeat; 
+}
+
+a.map_btn { 
+	background: #2b2735 url("../images/map_icon.png") no-repeat 5px 3px; 
+}
+.outline { 
+	background-color: #edf0e9; 
+	border: 1px solid #685f7c; 
+	color: #685f7c;
+}
+a.outline:hover { 
+	color: #ed6a5a !important;
+}
+#choose_location a { 
+	background: #4a4261; 
+}
+.mlink:hover { 
+	color: #ed6a5a; 
+}
+.btn-green { 
+	background: #43aa8b; 
+}
+.plan_button {
+	border: 2px solid #ed6a5a;
+	color: #cd4a3a;
+}
+.plan_button:hover { 
+	background: #ed6a5a;
+	color: #fff;
+}
+.more {
+	background: #ed6a5a;
+}
+.cd-top {
+  background: #ed6a5a url(../images/top-arrow.png) no-repeat center 50%;
+}
+#compare_button { 
+	background: #ccd0cf; 
+}
+
+@media all and (min-width: 600px) {
+	#nav li:hover {
+		background: #fb998d;
+	}
+	#nav{
+		background: transparent;
+		border: 0;
+	}
+	#nav li{
+		border: 0;
+	}
+	#nav li:hover {
+		background: #fb998d;
+	}
+
+}

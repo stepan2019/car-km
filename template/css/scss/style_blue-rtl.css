@@ -1,0 +1,133 @@
+/* flux blue rtl */
+.default_logo { 
+	background: url("../images/flux-logo-gray.png") no-repeat 0 0; 
+}
+a { 
+	color: #3485fe; 
+}
+a:hover { 
+	color: #54a5fe; 
+}
+.search-button input { 
+	background: #606060 !important; 
+	color: #fff !important; 
+}
+
+.tabs > label:hover { 
+	background: #3394de; 
+	border: 1px solid #2384ce; 
+	color: #fff; 
+}
+
+.tabs > input:checked + label { 
+	border-top: 3px solid #3394de;
+}
+
+.browse-tabs label { 
+	color: #3485fe;
+}
+.browse-tabs label:hover { 
+	color: #54a5fe;
+}
+
+.browse-tabs input:checked + label { 
+	background: #3394de;
+}
+
+.browse-tabs input:checked + label:hover { 
+	background: #2090c5;
+}
+
+.cat-path { 
+	color: #3485fe; 
+}
+.cat-path a { 
+	color: #3485fe; 
+}
+.btn1 { 
+	background: #fc5130; 
+}
+
+.plan_button {
+	border: 2px solid #84c0c6;
+	color: #64a0a6;
+}
+.plan_button:hover { 
+	background: #84c0c6;
+	color: #fff;
+}
+footer {
+	background: #303036;
+}
+footer a:hover { 
+	color: #54a5fe; 
+}
+
+.more {
+	background: #1080b5;
+}
+
+#nav ul li:hover {
+    background: #eee;
+}
+
+.outline { 
+	color: #3485fe;
+}
+a.outline:hover { 
+	color: #54a5fe !important;
+}
+#choose_location a { 
+	background: #84c0c6; 
+}
+.mlink:hover { 
+	color: #3485fe; 
+}
+
+#quick-search {
+	background-color: #3394de;
+}
+.positive {
+	background: #63a6d9;
+}
+.btn-green {
+	background: #63a6d9;	
+}
+.negative {
+	background: #d62246;
+}
+.btn3 {
+	background: #ea254c;
+}
+.wide_btn2 {
+	background: #ea254c;
+}
+#nav li:not(.post-listing) a:hover {
+    background: #3394de;
+	text-shadow: none;
+	color: #fff;
+}
+#nav li a.starfav:hover { 
+	background: #3394de url("../images/star_white.png")  90% 50% no-repeat; 
+}
+
+@media all and (max-width: 600px) {
+	#nav li.post-listing { 
+		background: #3394de; 
+		border-bottom: 1px solid #2384ee; 
+	}
+	#nav li.post-listing:hover { 
+		background: #3394de; 
+		opacity: 0.8; 
+	}
+	#nav li.post-listing a { 
+		border-bottom: 1px solid #43a4ee;
+	}
+}
+
+@media all and (min-width: 600px) {
+	#nav li:hover {
+		background: #eee;
+	}
+
+}

@@ -1,0 +1,44 @@
+<script type="text/javascript">
+//<![CDATA[
+
+{literal}
+$(document).ready(function() {
+{/literal}
+
+{if $ads_settings.description_editor}
+
+{if $languages|@count>1 && $ads_settings.translate_title_description==1}
+
+{literal}
+$(document).ready(function () {
+
+	myNicEditor = new nicEditor({iconsPath : '../libs/nicEdit/nicEditorIcons.gif', buttonList : ['bold','italic','underline', 'left', 'center', 'right', 'justify', 'ul', 'ol', 'indent', 'outdent', 'forecolor', 'bgcolor', 'hr','link','unlink', 'fontSize', 'fontFormat'], countTextLeft: {/literal}{if isset($no_words) && $no_words}1{else}0{/if}{literal}, count_input: {/literal}'count_{$v.id}'{literal}});
+
+{/literal}
+
+{foreach from=$languages item=v}
+{literal}
+myNicEditor.panelInstance('description_{/literal}{$v.id}{literal}');
+{/literal}
+{/foreach}
+
+{literal}
+	});
+{/literal}
+
+{else}
+{literal}
+	$(document).ready(function () {
+	myNicEditor = new nicEditor({iconsPath : '../libs/nicEdit/nicEditorIcons.gif', buttonList : ['bold','italic','underline', 'left', 'center', 'right', 'justify', 'ul', 'ol', 'indent', 'outdent', 'forecolor', 'bgcolor', 'hr','link','unlink', 'fontSize', 'fontFormat'], countTextLeft: {/literal}{if isset($no_words) && $no_words}1{else}0{/if}{literal}, count_input: {/literal}'count'{literal}}).panelInstance('description');
+	});
+
+{/literal}
+{/if}
+{/if}
+
+{literal}
+});
+{/literal}
+
+//]]>
+</script>

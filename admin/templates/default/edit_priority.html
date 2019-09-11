@@ -1,0 +1,36 @@
+{include file="header.html"}
+
+<div class="page_title">{$lng.panel.settings} > {$lng.settings.extra_visibility_options} > {$lng.settings.edit_priority}</div>
+
+<div class="p30">
+<form name="editpri" method="post" action="{$self}?id={$id}">
+
+<div class="form_container">
+
+{if $error != ""}<div class="error">{$error}</div>{/if}
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.categories.name}<span class="mandatory"> *</span></div>
+	<div class="right_form"><input type="text" name="name_{$v.id}" size="30" value="{$tmp.name[$v.id]}" /></div>
+</div>
+{/foreach}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.priorities.price}<span class="mandatory"> *</span></div>
+	<div class="right_form"><input type="text" name="price" size="30" value="{$tmp.price}" /></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+
+{include file="footer.html"}

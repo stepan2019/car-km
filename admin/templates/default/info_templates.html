@@ -1,0 +1,62 @@
+{include file="header.html"}
+
+<script type="text/javascript" src="{$live_site}/libs/markitup/jquery.markitup.js"></script>
+<script type="text/javascript" src="{$live_site}/libs/markitup/sets/default/set.js"></script>
+<link rel="stylesheet" type="text/css" href="{$live_site}/libs/markitup/skins/markitup/style.css" />
+<link rel="stylesheet" type="text/css" href="{$live_site}/libs/markitup/sets/default/style.css" />
+
+<div class="page_title">{$lng.panel.templates} > {$lng.panel.info_templates}</div>
+
+<div class="p30">
+<form name="templates" method="post" action="info_templates.php{if $template_code}?template={$template_code}{/if}">
+
+<div class="form_container">
+
+{if isset($error) && $error}<div class="error">{$error}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.templates.select_template}</div>
+	<div class="right_form">
+		<div style="width: 600px;" class="sc4">{$crt_template[$languages[0].id].info}</div>
+		<select name="template" size=20 onchange="doSel(this);" class="mselect">
+			{foreach from=$array_templates item=v}
+			<option value="location.href='?template={$v.code}'" {if $template_code==$v.code}selected="selected"{/if} >{$v.code}</option>
+			{/foreach}
+		</select>
+	</div>
+</div>
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}<img src="{$template_path}images/info.png"  class="tooltip icon" title="{$crt_template.$crt_lang.info}" />&nbsp;{$lng.mailto.content}</div>
+	<div class="right_form"><textarea name="content_{$v.id}" id="content_{$v.id}" rows=30 cols=70 {if $v.direction=="rtl"}dir="rtl"{/if}>{if isset($crt_template[$v.id].content)}{$crt_template[$v.id].content}{/if}</textarea></div>
+</div>
+{/foreach}
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Save" value="{$lng.general.save}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+<script type="text/javascript">
+{literal}
+$(document).ready(function()	{
+	{/literal}{foreach from =$languages item=v}{literal}
+	$('#content_{/literal}{$v.id}{literal}').markItUp(mySettings, { 
+			beforeInsert:function() {
+				
+			}
+		}
+	);
+	{/literal}{/foreach}{literal}
+});
+{/literal}
+</script>
+
+{include file="footer.html"}

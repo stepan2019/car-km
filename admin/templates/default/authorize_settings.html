@@ -1,0 +1,38 @@
+<div class="form_container">
+
+{if $error != ""}<div class="error">{$error}</div>{/if}
+{if $info != ""}<div class="info">{$info}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.authorize_login}</div>
+	<div class="right_form"><input type="text" maxlength="100" size="30" name="authorize_login" id="authorize_login" value="{$processor_settings.authorize_login}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.authorize_tkey}</div>
+	<div class="right_form"><input type="text" maxlength="100" size="30" name="authorize_tkey" id="authorize_tkey" value="{$processor_settings.authorize_tkey}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.authorize_secret}</div>
+	<div class="right_form"><input type="text" maxlength="100" size="30" name="authorize_secret" id="authorize_secret" value="{$processor_settings.authorize_secret}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.authorize_pay_title}</div>
+	<div class="right_form"><input type="text" maxlength="200" size="40" name="authorize_pay_title" id="authorize_pay_title" value="{$processor_settings.authorize_pay_title}"></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.authorize_demo}</div>
+	<div class="right_form"><input type="checkbox" name="authorize_demo" id="authorize_demo" {if $processor_settings.authorize_demo==1} checked="checked"{/if} /></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit_authorize" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}

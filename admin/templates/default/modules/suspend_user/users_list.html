@@ -1,0 +1,37 @@
+		
+		<span>
+		{if $v.suspended==0}
+			<div class="relative" style="display: inline;">
+			
+			<a href="javascript:;" {if $demo}onclick="alert('{$lng.general.errors.demo}'); return false;"{else}class="suspend" id="suspend{$v.id}"{/if}>
+			<img src="{$template_path}modules/suspend_user/images/suspend.png" class="tooltip icon" title="{$lng_su.suspend_user}" >
+			</a>
+			
+			<div style="position: absolute; width: 320px; top: 20px; right: 0; background: #f0f0f0; border: 1px solid #999; z-index: 1000; border-radius: 10px; display: none; color: #333;" id="suspend_days{$v.id}" class="suspend_days_div">
+			
+			<div style="padding: 20px; border-bottom: 1px solid #fff;">
+			<img class="remove_days tooltip" src="{$template_path}/images/delete.png" style="float: right; cursor: pointer;" title="Close"/>
+			<div style="margin-top: 30px; ">
+			<input type="text"  name="days{$v.id}" id="days{$v.id}" value="{$su_settings.days}" size="5" style="text-align: center; border: 1px solid #555;"/>&nbsp;{$lng.settings.days}&nbsp;
+			
+			<div style="float: right; padding: 5px 20px; background: #555; text-align: center; color: #fff; cursor: pointer; border-radius: 4px;" class="suspend_days" id="suspend_days{$v.id}">{$lng_su.suspend}</div>
+			
+			</div>
+			</div>
+			
+			{* ban div *}
+			<div style="background-color: #ecaa8a; border-top: 1px solid #d23636; padding: 30px 0; border-radius: 0 0 10px 10px;">
+			
+			<div style="margin: 0 10px; padding: 5px; background: #900; text-align: center; color: #fff; cursor: pointer; font-weight: bold; border-radius: 4px;" class="ban" id="ban{$v.id}">{$lng_su.ban}</div>
+			
+			</div> {* end ban div *}
+			
+			</div> {* end absolute *}
+				
+			</div>{* end relative *}
+		{else}
+			<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onUnsuspend('{$v.id}');{/if}">
+			<img src="{$template_path}modules/suspend_user/images/unsuspend.png" class="tooltip icon" title="{if $v.banned}{$lng_su.unban_user}{else}{$lng_su.unsuspend_user}{/if}" alt="">
+			</a>
+		{/if}
+		</span>

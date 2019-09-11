@@ -1,0 +1,83 @@
+{include file="header.html"}
+{if ($type=="ad" && $rt_settings.ar_html_editor) || ($type!="ad" && $rt_settings.html_editor)}
+<script type="text/javascript" src="{$live_site}/libs/nicEdit/nicEdit.min.js"></script>
+
+<script type="text/javascript">
+{literal}	
+bkLib.onDomLoaded(function() { nicEditors.allTextAreas({iconsPath : '../../../libs/nicEdit/nicEditorIcons.gif', fullPanel : true}) });
+{/literal}
+</script>
+{/if}
+
+<div class="page_title">
+<div class="lfloat" width="200"><a href="{$live_site}/admin/modules.php">{$lng.panel.modules}</a> > {$lng_ratings.ratings} > <a href="{$live_site}/admin/modules/ratings/index.php">{$lng_ratings.reviews}</a> > {$lng.general.edit} #{$id}</div>
+<div class="rfloat mt5">
+
+	<div class="buttonwrapper lfloat mr10"><div class={if $type=="ad"}"tab2-left"{else}"tab1-left"{/if}>
+	<a href="{$live_site}/admin/modules/ratings/index.php"><span class={if $type=="ad"}"tab2-right"{else}"tab1-right"{/if}>{$lng_ratings.reviews}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class={if $type=="ad"}"tab1-left"{else}"tab2-left"{/if}>
+	<a href="{$live_site}/admin/modules/ratings/listing_reviews.php"><span class={if $type=="ad"}"tab1-right"{else}"tab2-right"{/if}>{$lng_ratings.ads_reviews}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="{$live_site}/admin/modules/ratings/settings.php"><span class="tab2-right">{$lng_ratings.settings}</span></a>
+	</div></div>
+
+</div>
+</div>
+
+
+<div class="p30">
+<form name="edit_review" method="post" action="{if $type=="ad"}edit_ad_review.php{else}edit_review.php{/if}?id={$id}">
+<div class="form_container">
+
+<div class="clearfix">
+	<div class="left_form">{$lng_ratings.review_for}</div>
+	<div class="right_form">
+		{if $type=="ad"}
+		<a href="{$details_link}" target="_blank">{$review.ad_title}</a>
+		{else}
+		<a href="{if isset($review.store) && $review.store}{$live_site}/store.php?id={$review.user_id}{else}{$live_site}/user_listings.php?id={$review.user_id}{/if}" target="_blank">{$review.username}</a>
+		{/if}
+		| {$lng_ratings.posted_on} {$review.date_nice}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_ratings.name}<span class="mandatory">*</span></div>
+	<div class="right_form"><input type="text" name="name" size="30" value="{if isset($review.name)}{$review.name}{/if}" /></div>
+</div>
+
+{if $rt_settings.use_email}
+<div class="clearfix">
+	<div class="left_form">{$lng_ratings.email}{if $rt_settings.use_email==1}<span class="mandatory">*</span>{/if}</div>
+	<div class="right_form"><input type="text" name="email" size="30" value="{if isset($review.email)}{$review.email}{/if}"></div>
+</div>
+{/if}
+
+{if $rt_settings.use_website}
+<div class="clearfix">
+	<div class="left_form">{$lng_ratings.website}{if $rt_settings.use_website==1}<span class="mandatory">*</span>{/if}</div>
+	<div class="right_form"><input type="text" name="website" size="30" value="{if isset($review.website)}{$review.website}{/if}" /></div>
+</div>
+{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng_ratings.content}<span class="mandatory">*</span></div>
+	<div class="right_form"><textarea name="content" rows="10" cols="70">{if isset($review.content)}{$review.content}{/if}</textarea></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+{include file="footer.html"}

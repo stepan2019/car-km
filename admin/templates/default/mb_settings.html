@@ -1,0 +1,49 @@
+<div class="form_container">
+
+{if $error != ""}<div class="error">{$error}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.mb_email}</div>
+	<div class="right_form"><input type="text" maxlength="100" size="40" name="mb_email" id="mb_email" value="{$processor_settings.mb_email}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.mb_title}</div>
+	<div class="right_form"><input type="text" maxlength="200" size="40" name="mb_pay_title" id="mb_pay_title" value="{$processor_settings.mb_pay_title}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.mb_currency}</div>
+	<div class="right_form">
+		<select name="mb_currency" id="mb_currency">
+		{foreach from=$mb_currencies item=c}
+		<option value="{$c}" {if $processor_settings.mb_currency==$c} selected="selected" {/if}>{$c}</option>
+		{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.mb_language}</div>
+	<div class="right_form">
+		<select name="mb_language" id="mb_language">
+		{foreach from=$mb_languages item=c}
+		<option value="{$c}" {if $processor_settings.mb_language==$c} selected="selected" {/if}>{$c}</option>
+		{/foreach}
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.mb_demo}" />&nbsp;{$lng.settings.mb_demo}</div>
+	<div class="right_form"><input type="checkbox" name="mb_demo" id="mb_demo" {if $processor_settings.mb_demo==1} checked="checked"{/if} /></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit_mb" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}

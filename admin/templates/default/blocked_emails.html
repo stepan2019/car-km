@@ -1,0 +1,167 @@
+{include file="header.html"}
+
+<div class="page_title">
+<div class="lfloat" width="200">{$lng.panel.security} > {$lng.panel.blocked_emails}</div>
+<div class="rfloat mt5">
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab1-left">
+	<a href="blocked_emails.php"><span class="tab1-right">{$lng.security.blocked_emails}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="whitelist_emails.php"><span class="tab2-right">{$lng.security.email_whitelist}</span></a>
+	</div></div>
+
+</div>
+</div>
+
+<div class="p30">
+
+<form name="search" id="search" method="post" action="blocked_emails.php">
+
+<div class="lfloat">
+	{if !$is_mod || $mod_sections.security.edit==1}
+	<a href="javascript:;" id="add_email"><img src="{$template_path}images/add.png" class="tooltip icon" title="{$lng.general.add}" alt=""></a>
+
+	<input type="image" value="delete_selected" name="delete_selected" src="{$template_path}images/delete_all.png" onclick="{if $demo}alert('{$lng.general.errors.demo}'); return false;{else}return myConfirm('{$lng.settings.confirm_delete_all|addslashes}'){/if}" style="border: 0px;" class="tooltip icon" title="{$lng.general.delete_all}" alt="">
+	{/if}
+</div>
+
+<div class="buttonwrapper lfloat ml10"><div class="button3-left">
+
+	<a href="javascript:;" id="add_search"><span class="button3-right">{$lng.general.search}&nbsp;<img src="{$template_path}images/gray-down-arrow.png" /></span></a>
+
+	<a href="javascript:;" id="remove_search"><span class="button3-right">{$lng.general.search}&nbsp;<img src="{$template_path}images/gray-up-arrow.png" /></span></a>
+
+</div></div>
+
+<div class="rfloat">
+{include file="paginator.html"}
+</div>
+
+<div class="clearfix"></div>
+
+<div id="search_box" style="text-align: left; display: none;">
+
+<input type="hidden" name="page" value = "{$page}" />
+<input type="hidden" name="no_per_page" value = "{$no_per_page}" />
+
+<input type="text" name="email" size="20" class="defaultText" title="{$lng.users.email}" value="{if isset($post_array.email)}{$post_array.email}{/if}"/>
+&nbsp;
+<input type="text" name="info" size="20" class="defaultText" title="{$lng.general.comment}" value="{if isset($post_array.info)}{$post_array.info}{/if}"/>
+
+<div class="buttons">
+	<strong><input type="submit" name="Search" id="Search" value="{$lng.general.search}" /></strong>
+</div>
+
+</div>{* end search_box *}
+
+<div id="add_box" style="text-align: left; display: none;">
+ {$lng.users.email} / {$lng.security.email_list}:<br/>
+<textarea name="bulk_emails" cols="60" rows="4"></textarea><br/>
+{$lng.custom_fields.elements_info}<br/>
+{$lng.general.comment}:<br/>
+<input type="text" name="sinfo" size="40" /><br/>
+<div class="buttons">
+	<span class="positive"><input type="submit" name="Add" id="Add" value="{$lng.general.add}" /></span>
+</div>
+
+</div>{* end add_box *}
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th class="hleft" width="20"><input type="checkbox" class="noborder" name="check_all" id="check_all" /></th>
+	<th>{$lng.users.email}</th>
+	<th>{$lng.general.comment}</th>
+	<th class="hright" width="70">&nbsp;</th>
+</tr>
+
+{foreach from=$array_blocked_emails item=v}
+<tr>
+	<td><input type="checkbox" class="noborder" name="be{$v.id}" id="be{$v.id}"></td>
+	<td>{$v.email}</td>
+	<td>{$v.info}</td>
+	<td>
+	{if !$is_mod || $mod_sections.security.delete==1}
+	<span><a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDelete('{$v.id}','{$lng.settings.confirm_delete|addslashes}','blockedemail');{/if}"><img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt=""></a></span>
+	{/if}
+	{if !$is_mod || $mod_sections.security.edit==1}
+	<span><a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onAddWhitelistEmail('{$v.email}','{$lng.security.confirm_add_whitelist|addslashes}');{/if}"><img src="{$template_path}images/whitelist.png" class="tooltip icon" title="{$lng.security.add_to_whitelist}" alt=""></a></span>
+	{/if}
+	</td>
+</tr>
+{/foreach}
+
+
+{if !$no_emails}<tr><td colspan="4">{$lng.no_items}</td></tr>{/if}
+
+</table>
+
+</form>
+
+{if $no_emails}<div class="rfloat mt20">{include file="paginator.html"}</div>{/if}
+
+<div class="mt20">
+	{$lng.general.show}
+	<select name="no_per_page_sel" onchange="doSel(this);">
+		{section name=pg loop=60 start=10 step=10}
+		<option value="location.href='{$crt_page_link}&no_per_page={$smarty.section.pg.index}'" {if $no_per_page==$smarty.section.pg.index} selected="selected" {/if}>{$smarty.section.pg.index}</option>
+		{/section}
+	</select>
+	{$lng.general.on_a_page}
+</div>
+
+</div> {* end p30 *}
+
+{literal}
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("input").keypress(function(e)
+		{
+        		// if the key pressed is the enter key
+        		if (e.which == 13)
+        		{
+				// delay action so the autocomplete list to fill
+				setTimeout(function() { $("#search").submit();}, 200);
+
+				return false;
+        		}
+		});
+		$("#remove_search").hide();
+		$("#search_box").hide();
+		$("#add_box").hide();
+		$("#add_search").click(function()
+		{
+			$("#remove_search").show();
+			$("#add_search").hide();
+			$("#search_box").slideDown('fast').show();
+		});
+
+		$("#remove_search").click(function()
+		{
+			$("#add_search").show();
+			$("#remove_search").hide();
+			$("#search_box").hide().slideUp('fast');
+		});
+
+		$("#add_email").click(function()
+		{
+			if($("#add_box").is(":visible")) $("#add_box").slideDown('fast').hide();
+			else  $("#add_box").slideDown('fast').show();
+		});
+
+		$("#check_all").click(function()
+		{
+
+			if ($('#check_all').is(':checked')) checkAll(document);
+			else uncheckAll(document);
+
+		});
+
+	});
+
+
+{/literal}
+</script>
+
+{include file="footer.html"}

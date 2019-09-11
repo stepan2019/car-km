@@ -1,0 +1,223 @@
+{include file="header.html"}
+{include file="data/fancybox.html"}
+{include file="data/ui.html"}
+
+<div class="page_title">
+	<div class="lfloat" width="200">{$lng.panel.users} > {$lng.affiliates.payments_history}	</div>
+
+	<div class="rfloat mt5">
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="affiliates_revenues.php"><span class="tab2-right">{$lng.affiliates.revenues}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab1-left">
+	<a href="affiliates_payments.php"><span class="tab1-right">{$lng.affiliates.payments_history}</span></a>
+	</div></div>
+
+	</div>
+
+</div>
+
+
+<div class="p30">
+<form name="search" id="search" method="post" action="affiliates_payments.php?no_per_page={$no_per_page}{if $page}&page={$page}{/if}">
+
+<div class="lfloat" style="width: 600px;">
+
+<div class="lfloat mr10">
+
+	<select name="order" onchange="doSel(this);">
+
+	<option value="location.href='{$order_by_link|replace:'##order##':'date'}'" {if $order=='date'}selected="selected"{/if}>
+	{$lng.order_history.order_by_date}</option>
+
+	<option value="location.href='{$order_by_link|replace:'##order##':'amount'}'" {if $order=='amount'}selected="selected"{/if}>
+	{$lng.order_history.order_by_amount}</option>
+
+	<option value="location.href='{$order_by_link|replace:'##order##':'user_id'}'" {if $order=='user_id'}selected="selected"{/if}>
+	{$lng.order_history.order_by_user}</option>
+
+	</select>
+
+	<select name="order_way" onchange="doSel(this);">
+	<option value="location.href='{$order_way_link|replace:'##order_way##':'desc'}'" {if $order_way=='desc'}selected="selected"{/if}>{$lng.general.desc}</option>
+	<option value="location.href='{$order_way_link|replace:'##order_way##':'asc'}'" {if $order_way=='asc'}selected="selected"{/if}>{$lng.general.asc}</option>
+	</select>
+
+</div>
+
+<div class="buttonwrapper lfloat ml10"><div class="button3-left">
+
+<a href="javascript:;" id="add_search"><span class="button3-right">{$lng.general.search}&nbsp;<img src="{$template_path}images/gray-down-arrow.png" /></span></a>
+
+<a href="javascript:;" id="remove_search"><span class="button3-right">{$lng.general.search}&nbsp;<img src="{$template_path}images/gray-up-arrow.png" /></span></a>
+
+</div></div>
+
+</div> {* end lfloat *}
+
+<div class="rfloat">
+{include file="paginator.html"}
+</div>
+
+<div class="clearfix"></div>
+
+<div id="search_box" style="display: none;">
+
+<input type="hidden" name="page" value = "{$page}" />
+<input type="hidden" name="order" value = "{$order}" />
+<input type="hidden" name="order_way" value = "{$order_way}" />
+<input type="hidden" name="no_per_page" value = "{$no_per_page}" />
+
+<input type="text" name="id" size="6" class="defaultText" title="{$lng.listings.id}" value="{if isset($post_array.id)}{$post_array.id}{/if}"/>
+
+{if $settings.enable_username}
+<input type="text" name="username" size="20" class="defaultText" title="{$lng.users.username}" value="{if isset($post_array.username)}{$post_array.username}{/if}" />
+{/if}
+
+<input type="text" name="email" size="20" class="defaultText" title="{$lng.users.email}" value="{if isset($post_array.email)}{$post_array.email}{/if}" />
+
+<input type="text" name="amount_from" size="10" class="defaultText" title="{$lng.search.amount_from}" value="{if isset($post_array.amount_from)}{$post_array.amount_from}{/if}" />
+
+<input type="text" name="amount_to" size="10" class="defaultText" title="{$lng.search.amount_to}" value="{if isset($post_array.amount_to)}{$post_array.amount_to}{/if}" />
+
+<input name="date_from_vis" id="date_from_vis" type="text" size="15" class="defaultText" title="{$lng.search.date_from}"/>
+<input name="date_from" id="date_from" type="hidden"/>
+
+<input name="date_to_vis" id="date_to_vis" type="text" size="15" class="defaultText" title="{$lng.search.date_to}" />
+<input name="date_to" id="date_to" type="hidden" />
+
+<div class="buttons">
+	<strong><input type="submit" name="Search" value="{$lng.general.search}" /></strong>
+</div>
+
+</div> {* end search box *}
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+
+<tr id="theading">
+	<th width="30" class="hleft">{$lng.listings.id}</th>
+	<th>{$lng.affiliates.id}</th>
+	<th>{$lng.order_history.user}</th>
+	<th>{$lng.order_history.amount}</th>
+	<th>{$lng.order_history.date}</th>
+	<th>{$lng.affiliates.paid_to}</th>
+	<th>{$lng.general.status}</th>
+	<th width="80" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$payments_array item=v}
+<tr class="{if !$v.completed}inactive{/if}">
+	<td>#{$v.id}</td>
+	<td><a href="affiliates_payments.php?affiliate_id={$v.affiliate_id}">{$v.affiliate_id}</a></td>
+	<td>{if $v.user_id}<a href="javascript:;" class="usrinfo" id="info{$v.user_id}">{if $settings.enable_username}{$v.username}{else}{$v.email}{/if}</a>{else}{$v.username}{/if}</td>
+	<td>{$v.amount_nice}</td>
+	<td>{$v.date_nice}</td>
+	<td>{$v.affiliate_paypal_email}</td>
+	<td>{if $v.completed}<div class="small-btn orangebutton icon">{$lng.affiliates.paid}</div>{else}<a href="{$live_site}/admin/include/pay_affiliate.php?id={$v.id}" target="_blank"><div class="small-btn inactivebutton pay tooltip" id="pay{$v.id}" title="{$lng.affiliates.pay}" >{$lng.affiliates.not_paid}</div></a>{/if}</td>
+	<td>
+
+		{if $v.completed} {* mark unpaid *}
+		<a href="javascript:;" onclick="markPaid('{$v.id}', 0)"><div class="small-btn inactivebutton icon">{$lng.affiliates.unmark_paid}</div></a>
+		{else}
+		<a href="javascript:;" onclick="markPaid('{$v.id}', 1)"><div class="small-btn inactivebutton icon">{$lng.affiliates.mark_paid}</div></a>
+		{/if}
+
+	</td>
+</tr>
+{/foreach}
+
+{if $no_payments==0}
+	<tr><td colspan="9">{$lng.no_items}</td></tr>
+{/if}
+
+</table>
+</form>
+
+{if $no_payments}<div class="rfloat mt20">{include file="paginator.html"}</div>{/if}
+
+<div class="mt20">
+	{$lng.general.show}
+	<select name="no_per_page_sel" onchange="doSel(this);">
+		{section name=pg loop=60 start=10 step=10}
+		<option value="location.href='{$crt_page_link}&no_per_page={$smarty.section.pg.index}'" {if $no_per_page==$smarty.section.pg.index} selected="selected" {/if}>{$smarty.section.pg.index}</option>
+		{/section}
+	</select>
+	{$lng.general.on_a_page}
+</div>
+
+</div> {* end p30 *}
+
+
+
+
+<script type="text/javascript">
+{literal}
+	$(function() {
+		$('#date_from_vis').datepicker({
+			dateFormat: "M dd yy",
+			changeMonth: true,
+			changeYear: true,
+			altField: '#date_from', altFormat: 'yy-mm-dd'
+		});
+
+		$('#date_to_vis').datepicker({
+			dateFormat: "M dd yy",
+			changeMonth: true,
+			changeYear: true,
+			altField: '#date_to', altFormat: 'yy-mm-dd'
+		});
+	});
+
+
+$(document).ready(function() {
+
+	$("input").keypress(function(e)
+	{
+        	// if the key pressed is the enter key
+        	if (e.which == 13)
+        	{
+
+			// delay action so the autocomplete list to fill
+			setTimeout(function() { $("#search").submit();}, 200);
+
+			return false;
+        	}
+	});
+	$("#remove_search").hide();
+	$("#search_box").hide();
+	$("#add_search").click(function()
+	{
+		$("#remove_search").show();
+		$("#add_search").hide();
+		$("#search_box").slideDown('fast').show();
+	});
+
+	$("#remove_search").click(function()
+	{
+		$("#add_search").show();
+		$("#remove_search").hide();
+		$("#search_box").hide().slideUp('fast');
+	});
+
+	$("a.usrinfo").click(function(event){
+		var user_id = jQuery(this).attr("id").substr(4);
+		$.fancybox({
+			'width'         		: 730,
+			'height'        		: 700,
+			'transitionIn'		: 'none',
+			'transitionOut'		: 'none',
+			'margin'		: '0',
+			'padding'		: '0',
+			'titleShow'		: false,
+			'type'			: 'iframe',
+			'href'			: '{/literal}{$live_site}{literal}/admin/include/info_user.php?id='+user_id
+		});
+});
+
+});
+{/literal}
+</script>
+
+{include file="footer.html"}

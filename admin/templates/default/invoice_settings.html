@@ -1,0 +1,137 @@
+{include file="header.html"}
+{include file="data/fancybox.html"}
+
+<link href="{$live_site}/libs/jQuery/plugins/LWMS/jquery.lwMultiSelect.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/LWMS/jquery.lwMultiSelect.min.js"></script>
+<script type="text/javascript" src="{$live_site}/libs/nicEdit/nicEdit.min.js"></script>
+
+<script type="text/javascript">
+{literal}	
+bkLib.onDomLoaded(function() { nicEditors.allTextAreas({iconsPath : '../libs/nicEdit/nicEditorIcons.gif', fullPanel : true}) });
+{/literal}
+</script>
+
+
+<div class="page_title">
+<div class="lfloat" width="200">{$lng.panel.settings} > {$lng.settings.invoice_settings}</div>
+<div class="rfloat mt5">
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="payment_settings.php"><span class="tab2-right">{$lng.settings.payment_processors}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab1-left">
+	<a href="invoice_settings.php"><span class="tab1-right">{$lng.settings.invoice_settings}</span></a>
+	</div></div>
+
+</div>
+</div>
+
+<div class="p30">
+<form name="settings" method="post" action="invoice_settings.php" enctype="multipart/form-data">
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.enable_invoices}</div>
+	<div class="right_form"><input type="checkbox" name="enable_invoices" id="enable_invoices" {if $invoice_settings.enable_invoices==1}checked="checked"{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.seller_details}" />&nbsp;{$lng.settings.seller_details}</div>
+	<div class="right_form"><textarea name="seller_details" rows="4" cols="70">{$invoice_settings.seller_details}</textarea></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.invoice_logo}" />&nbsp;{$lng.settings.invoice_logo}</div>
+	<div class="right_form">
+		<input type="file" name="invoice_logo" />&nbsp;&nbsp;
+		{if $ads_settings.nopic!=""}
+		<a href="{$live_site}/images/{$invoice_settings.invoice_logo}" class="imgfield">
+		<img src="{$template_path}images/camera.png"/></a>
+		{else}
+		<img src="{$template_path}images/camera_off.png"/>
+		{/if}
+		{if $invoice_settings.invoice_logo!=""}&nbsp;&nbsp;<a href="invoice_settings.php?delete=logo"><img src="{$template_path}images/delete.png" class="tooltip" title="{$lng.general.delete}" alt="" /></a>{/if}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.invoice_filename}" />&nbsp;{$lng.settings.invoice_filename}</div>
+	<div class="right_form"><input name="filename" value="{if $invoice_settings.filename}{$invoice_settings.filename}{/if}" />.pdf</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.invoice_user_fields}" />&nbsp;{$lng.settings.invoice_user_fields}</div>
+	<div class="right_form">
+		<select id="user_fields" name="user_fields" multiple="multiple">
+		{foreach from = $fields item = v}
+		<option value="{$v.caption}">{$v.name}</option>
+		{/foreach}
+		</select>
+		<select id="selected_user_fields" multiple="multiple" style="display: none">
+		
+		{foreach from = $invoice_settings.array_user_fields item = v}
+		{if $v}
+		<option value="{$v}" selected="selected">{foreach from = $fields item = f}{if $f.caption==$v}{$f.name}{/if}{/foreach}</option>
+		{/if}
+		{/foreach}
+		
+		{foreach from = $fields item = v}
+		{if !in_array($v.caption, $invoice_settings.array_user_fields)}
+		<option value="{$v.caption}">{$v.name}</option>
+		{/if}
+		{/foreach}
+		
+		</select>
+		<input type="hidden" id="user_fields_val" name="user_fields_val" value="{$invoice_settings.user_fields}"/>
+		<div class="information">{$lng.settings.info.comboselect}</div>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.settings.info.custom_text}" />&nbsp;{$lng.settings.custom_text}</div>
+	<div class="right_form"><textarea name="custom_text" id="custom_text" rows="7" cols="70">{$invoice_settings.custom_text}</textarea></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.invoice.show_vat}</div>
+	<div class="right_form">
+	<input type="checkbox" name="show_vat" id="show_vat" {if isset($invoice_settings.show_vat) &&  $invoice_settings.show_vat==1}checked="checked"{/if}/>
+	&nbsp;&nbsp;<input type="text" size="4" name="vat_percent" id="vat_percent" value="{if isset($invoice_settings.vat_percent) && $invoice_settings.vat_percent}{$invoice_settings.vat_percent}{/if}" />%
+	</div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat"  onClick='{if $demo}alert("{$lng.general.errors.demo}");return false;{else}return checkInvoiceSettings();{/if}'>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.save_changes}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+
+</form>
+</div> {* p30 *}
+
+{literal}
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		$("a.imgfield").fancybox();
+
+		//initialize the element
+		$('#user_fields').lwMultiSelect({
+		onChange: function() { 
+			//alert($('#user_fields').val());
+			$('#user_fields_val').val($('#user_fields').val());
+		}
+		});       
+		modList();
+    });
+    
+     function modList() {
+        jQuery('#user_fields').html(jQuery('#selected_user_fields').html()).data('plugin_lwMultiSelect').updateList();
+      }
+
+</script>
+{/literal}
+
+{include file="footer.html"}

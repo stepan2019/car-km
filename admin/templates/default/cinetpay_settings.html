@@ -1,0 +1,43 @@
+<div class="form_container">
+
+{if $error != ""}<div class="error">{$error}</div>{/if}
+{if $info != ""}<div class="info">{$info}</div>{/if}
+
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.hipay_website_id}</div>
+	<div class="right_form"><input type="text" maxlength="100" size="40" name="cinetpay_siteId" id="cinetpay_siteId" value="{$processor_settings.cinetpay_siteId}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.experttexting_api_key}</div>
+	<div class="right_form"><input type="text" maxlength="200" size="40" name="cinetpay_apikey" id="cinetpay_apikey" value="{$processor_settings.cinetpay_apikey}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.epay_currency}</div>
+	<div class="right_form">
+		<select name="cinetpay_currency" id="cinetpay_currency">
+		<option value="CFA" {if $processor_settings.cinetpay_currency=='CFA'} selected="selected" {/if}>CFA</option>
+		</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.listings.description}</div>
+	<div class="right_form"><input type="text" size="40" name="cinetpay_description" id="cinetpay_description" value="{$processor_settings.cinetpay_description}"></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.payfast_demo}</div>
+	<div class="right_form"><input type="checkbox" name="cinetpay_test" id="cinetpay_test" {if $processor_settings.cinetpay_test==1} checked="checked"{/if} /></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit_cinetpay" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}

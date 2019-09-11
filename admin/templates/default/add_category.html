@@ -1,0 +1,193 @@
+{include file="header.html"}
+
+<div class="page_title">{$lng.panel.settings} > <a href="manage_categories.php">{$lng.panel.manage_categories}</a> > {if isset($id) && $id}{$lng.categories.edit_category}{else}{$lng.categories.add_category}{/if}</div>
+
+<div class="p30">
+<form name="addcateg" method="post" action="{$self}{if isset($id) && $id}?id={$id}{/if}" enctype="multipart/form-data">
+
+<div class="form_container">
+
+{if $error}<div class="error">{$error}</div>{/if}
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.categories.name}<span class="mandatory">*</span></div>
+	<div class="right_form"><input type="text" name="name_{$v.id}" {if $v.default}id="categ_name"{/if} size="30" value="{if isset($tmp.name[$v.id])}{$tmp.name[$v.id]}{/if}" /></div>
+</div>
+{/foreach}
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.categories.description}</div>
+	<div class="right_form"><textarea name="description_{$v.id}" rows="3" cols="90">{if isset($tmp.description[$v.id])}{$tmp.description[$v.id]}{/if}</textarea></div>
+</div>
+{/foreach}
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.seo_settings.info.category_slug}" />&nbsp;{$lng.seo_settings.slug}</div>
+	<div class="right_form"><input type="text" size="40" name="slug" id="slug" value="{if isset($slug) && $slug}{$slug}{/if}" />
+	<span class="ok hidden" id="slug_ok">{$lng.seo_settings.info.slug_ok}</span><span class="not-ok hidden" id="slug_error">{$lng.seo_settings.error.slug_exists}</span>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.categories.picture}</div>
+	<div class="right_form">
+	<input type="file" name="picture" />
+	{if isset($id) && $id && isset($tmp.picture) && $tmp.picture}
+	&nbsp;
+	<img src="{$live_site}/images/categories/{$tmp.picture}" />
+	&nbsp;<a href="edit_category.php?id={$id}&delete_picture=1"><img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt=""></a>
+	{/if}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.categories.icon}</div>
+	<div class="right_form">
+	<input type="file" name="icon" />
+	{if  isset($id) && $id && isset($tmp.icon) && $tmp.icon}
+	&nbsp;
+	<img src="{$live_site}/images/categories/{$tmp.icon}" />
+	&nbsp;<a href="edit_category.php?id={$id}&delete_icon=1"><img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt=""></a>
+	{/if}
+
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.categories.parent_category}</div>
+	<div class="right_form">
+	<select name="parent_id">
+	<option value="0">{$lng.categories.no_parent}</option>
+	{foreach from=$array_categories item=v}
+		{if  !isset($id) || ( $id!=$v.id && $v.parent_id!=$id ) }
+		<option value="{$v.id}" {if isset($tmp.parent_id) && $v.id==$tmp.parent_id}selected="selected"{/if}>{$v.str}{$v.name}</option>
+		{else}
+		<optgroup label="{$v.str}{$v.name}">
+		{/if}
+	{/foreach}
+	</select>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.categories.set}<span class="mandatory">*</span></div>
+	<div class="right_form">
+	<select name="fieldset">
+	{foreach from=$array_sets item=v}
+		<option value="{$v.id}" {if isset($tmp.fieldset) && $tmp.fieldset==$v.id}selected="selected"{/if}>{$v.name}</option>
+	{/foreach}
+	</select>
+	</div>
+</div>
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.categories.page_title}</div>
+	<div class="right_form"><input name="page_title_{$v.id}" type="text" size="50" value="{if isset($tmp.page_title[$v.id])}{$tmp.page_title[$v.id]}{/if}" /></div>
+</div>
+{/foreach}
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.categories.meta_keywords}</div>
+	<div class="right_form"><textarea name="meta_keywords_{$v.id}" rows=6 cols=50>{if isset($tmp.meta_keywords[$v.id])}{$tmp.meta_keywords[$v.id]}{/if}</textarea></div>
+</div>
+{/foreach}
+
+{foreach from =$languages item=v}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}{$lng.categories.meta_description}</div>
+	<div class="right_form"><textarea name="meta_description_{$v.id}" rows=6 cols=50>{if isset($tmp.meta_description[$v.id])}{$tmp.meta_description[$v.id]}{/if}</textarea></div>
+</div>
+{/foreach}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.categories.allow_to_post}</div>
+	<div class="right_form">
+		<input type="radio" name="choose_group" id="choose_group1" value="all" {if !isset($tmp.choose_group) || $tmp.choose_group!="choose"}checked="checked"{/if} onchange="onChooseGroup(this.form)" onclick="onChooseGroup(this.form)" />&nbsp;{$lng.custom_fields.all_groups}&nbsp;&nbsp;
+		<input type="radio" name="choose_group" id="choose_group2" value="choose" {if isset($tmp.choose_group) && $tmp.choose_group=="choose"}checked="checked"{/if} onchange="onChooseGroup(this.form)" onclick="onChooseGroup(this.form)"/>&nbsp;{$lng.custom_fields.choose_groups}
+	</div>
+</div>
+
+<div class="clearfix" id="div_groups" style="display: none">
+	<div class="left_form">&nbsp;</div>
+	<div class="right_form"><select multiple="multiple" size=8 name="groups[]" id="groups" class="mselect">
+		{foreach from=$groups_list item=v}
+			<option value="{$v.id}">{$v.name}</option>
+		{/foreach}
+		{if $settings.nologin_enabled}<option value="1000">{$lng.packages.not_logged_in}</option>{/if}
+		</select></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+
+</div> {* end form_container *}
+
+</form>
+</div>
+
+
+<script>
+
+var old_group_val="{if isset($tmp.groups)}{$tmp.groups}{/if}";
+if(old_group_val!=0) chooseGroup(document.forms["addcateg"], old_group_val);
+
+{if !$id}
+jQuery(document).ready(function() {
+
+	$("#categ_name").focusout(function() {
+	
+		$.ajax({
+		type		: "GET",
+		cache		: false,
+		url		: "{$live_site}/admin/include/actions.php?object=slug&action=make&str="+$("#categ_name").val(),
+		data		: $(this).serializeArray(),
+		success: function(data) {
+
+				$("#slug").val(data);
+				
+				// if id
+				id_str='';
+				{if $id}
+				id_str='&id={$id}';
+				{/if}
+				
+				// check if slug exists
+				$.ajax({
+				type		: "GET",
+				cache		: false,
+				url		: "{$live_site}/admin/include/actions.php?object=slug&action=exists&slug="+data+id_str,
+				data		: $(this).serializeArray(),
+				success: function(data) {
+					if(data==1) {
+						$("#slug_ok").hide();
+						$("#slug_error").show();
+					}
+					else {
+						$("#slug_ok").show();
+						$("#slug_error").hide();
+					}
+				} // end success
+				
+				}); // end ajax
+				
+			} // end data
+		});// end ajax
+
+	});// end focustout
+
+}); // end document ready
+
+{/if}
+
+</script>
+
+{include file="footer.html"}

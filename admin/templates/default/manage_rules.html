@@ -1,0 +1,81 @@
+{include file="header.html"}
+
+<div class="page_title">{$lng.panel.settings} > {$lng.panel.manage_rules}</div>
+
+<div class="p30">
+
+<div>
+<a href="add_rule.php"><img src="{$template_path}images/add.png" class="tooltip icon" title="{$lng.general.add}" alt=""></a>
+<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDeleteAll('{$lng.rules.confirm_delete_all|addslashes}','rule'){/if}"><img src="{$template_path}images/delete_all.png" class="tooltip icon" title="{$lng.general.delete_all}" alt=""></a>
+</div>
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th width="30" class="hleft"><input type="checkbox" class="noborder" name="check_all" id="check_all" /></th>
+	<th width="30">{$lng.general.id}</th>
+	<th width="30">{$lng.general.position}</th>
+	<th width="100">{$lng.general.type}</th>
+	<th width="100">{$lng.fieldsets.categories_list}</th>
+	<th>{$lng.packages.details}</th>
+	<th width="60">{$lng.general.order}</th>
+	<th width="70" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$array_rules item=v}
+<tr id="row{$v.order_no}">
+	<td><input type="checkbox" class="noborder" name="chk{$v.id}" id="chk{$v.id}"></td>
+	<td>#{$v.id}</td>
+	<td>{$v.order_no}</td>
+	<td>{$lng.rules[$v.type]}</td>
+	<td>{$v.categories}</td>
+	<td>{$v.details}</td>
+	<td>
+		{if $v.order_no>1}
+		<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onMoveUp({$v.id}, 'rule'){/if}"><img src="{$template_path}images/up.png"></a>
+		{else}
+		<img src="{$template_path}images/up-off.png" class="tooltip icon" title="{$lng.general.move_up}" alt="">
+		{/if}
+
+		{if $v.last==0}
+		<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onMoveDown({$v.id}, 'rule'){/if}"><img src="{$template_path}images/down.png" class="tooltip icon" title="{$lng.general.move_down}" alt=""></a>
+		{else}
+		<img src="{$template_path}images/down-off.png">
+		{/if}
+
+	</td>
+	<td style="text-align: left !important">
+		<a href="edit_rule.php?id={$v.id}"><img src="{$template_path}images/edit.png" class="tooltip icon" title="{$lng.general.edit}" alt=""></a>
+
+		<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onDelete('{$v.id}','{$lng.rules.confirm_delete|addslashes}','rule');{/if}"><img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt=""></a>
+	</td>
+</tr>
+{/foreach}
+
+{if $no_rules==0}
+	<tr><td colspan=9>{$lng.rules.no_rules}</td></tr>
+{/if}
+
+</table>
+
+</div> {* p30 *}
+
+
+{literal}
+<script type="text/javascript">
+
+	$(document).ready(function() {
+
+		$("#check_all").click(function()
+		{
+
+			if ($('#check_all').is(':checked')) checkAll(document);
+			else uncheckAll(document);
+
+		});
+
+	});
+
+{/literal}
+</script>
+
+{include file="footer.html"}

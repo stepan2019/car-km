@@ -1,0 +1,33 @@
+<div class="form_container">
+
+{if $error != ""}<div class="error">{$error}</div>{/if}
+{if $info != ""}<div class="info">{$info}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.payfast_merchant_id}</div>
+	<div class="right_form"><input type="text" maxlength="100" size="40" name="payfast_merchant_id" id="payfast_merchant_id" value="{$processor_settings.merchant_id}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.payfast_merchant_key}</div>
+	<div class="right_form"><input type="text" maxlength="200" size="40" name="payfast_merchant_key" id="payfast_merchant_key" value="{$processor_settings.merchant_key}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.payfast_item_name}</div>
+	<div class="right_form"><input type="text" maxlength="200" size="40" name="payfast_item_name" id="payfast_item_name" value="{$processor_settings.item_name}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.settings.payfast_demo}</div>
+	<div class="right_form"><input type="checkbox"  name="payfast_demo" id="payfast_demo" {if $processor_settings.demo==1} checked="checked"{/if} /></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit_payfast" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}

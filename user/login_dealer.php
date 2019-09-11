@@ -5,7 +5,7 @@
     if(!empty($_GET['go'])) {
         $goTo = $_GET['go'];
     }
-
+    global $lng;
     if(isset($_POST['login'])) {
         $email = $_POST['email'];
         $password = md5($_POST['password']);
@@ -16,13 +16,13 @@
             $_SESSION['user'] = $email;
             $_SESSION['type'] = "dealer";
             if(isset($goTo) && $goTo == "goVehicle"){
-                $URL="http://car-km.com/vehicle/add.php";
+                $URL="/vehicle/add.php";
                 echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
             }elseif(isset($goTo) && $goTo == "goRequest"){
-                $URL="http://car-km.com/vehicle/history.php";
+                $URL="/vehicle/history.php";
                 echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
             }else{
-                $URL="http://car-km.com/vehicle/add.php";
+                $URL="/vehicle/add.php";
                 echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
                 
             }
@@ -36,14 +36,14 @@
     <form method="post">
         <div class="row col-md-12">
             <div class="col-md-5 text-left mt-4 mr-4">
-                <label class="control-label">Email</label>
+                <label class="control-label"><?php echo $lng['login']['Email'];?></label>
                 <div class="agileits-main">
                     <i class="far fa-envelope"></i>
                     <input type="email" required="" name="email">
                 </div>
             </div>
             <div class="col-md-5 text-left mt-4">
-                <label class="control-label">Password</label>
+                <label class="control-label"><?php echo $lng['login']['password'];?></label>
                 <div class="agileits-main">
                     <i class="fas fa-unlock-alt"></i>
                     <input type="password" required="" name="password">
@@ -51,10 +51,10 @@
             </div>
         </div>
         <div class="text-center submit mt-5">
-            <a href="forgot.php?type=dealer" style="color: black;"><i class="fas fa-key"></i>&nbsp;&nbsp;&nbsp;Forgot password?</a>
+            <a href="forgot.php?type=dealer" style="color: black;"><i class="fas fa-key"></i>&nbsp;&nbsp;&nbsp;<?php echo $lng['login']['forgot_pass'];?></a>
         </div>
         <div class="text-center submit mt-5">
-            <input type="submit" class="btn btn-primary submit-fs btn-custom" value="Login" name="login">
+            <input type="submit" class="btn btn-primary submit-fs btn-custom" value="<?php echo $lng['login']['login'];?>" name="login">
             <?php if($response != "") { ?>
                 <p><label class="control-label mt-3"><?php echo $response; ?></label></p>
             <?php } ?>

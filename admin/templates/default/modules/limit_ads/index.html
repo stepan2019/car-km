@@ -1,0 +1,33 @@
+{include file="header.html"}
+
+<div class="page_title"><a href="{$live_site}/admin/modules.php">{$lng.panel.modules}</a> > {$lng_limit.title}</div>
+
+<div class="p30">
+<form name="limit_settings" method="post" enctype="multipart/form-data" action="">
+
+<div class="form_container">
+
+{if isset($error) && $error != ""}<div class="error">{$error}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng_limit.max_ads}</div>
+	<div class="right_form"><input type="text" size="4" name="max_ads" value="{$limit_settings.max_ads}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng_limit.info.exclude_prioritized}" />&nbsp;{$lng_limit.exclude_prioritized}</div>
+	<div class="right_form"><input type="checkbox" name="exclude_prioritized" {if $limit_settings.exclude_prioritized}checked="checked"{/if} /></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" onClick='{if $demo}alert("{$lng.general.errors.demo}");return false;{/if}'>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+{include file="footer.html"}

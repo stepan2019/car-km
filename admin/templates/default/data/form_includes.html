@@ -1,0 +1,58 @@
+<script type="text/javascript">
+//<![CDATA[
+
+{foreach from=$gmaps item=v}
+	{if $v}
+	{include file="data/gmap.html"}
+	{/if}
+{/foreach}
+
+	{literal}
+$(document).ready(function() {
+	{/literal}
+
+{assign var="phone_index" value="0"}
+	
+{foreach from=$fields_array item=v}
+
+	{if $v.type=='htmlarea'}
+		{assign var="htmlarea_exists" value="1"}
+		{include file="data/htmlarea.html"}
+	{/if}
+
+	{if $v.type=='phone' && $v.ext1==1}
+		{assign var="phone_exists" value="1"}
+		{include file="data/phone.html"}
+		{append var='phonearr' value={$v.caption} index=$phone_index}
+		{assign var=phone_index value=$phone_index+1}
+	{/if}
+
+{/foreach}
+
+{literal}
+});
+{/literal}
+
+function recheckIntlPhone() {
+var arr_invalid_phones=[], index=0;
+
+{if isset($phone_exists) && $phone_exists}
+{foreach from=$phonearr item=t}
+	if($("#{$t}").val() && !$("#{$t}").intlTelInput("isValidNumber")) {
+ 		arr_invalid_phones[index]='{$t}';
+		index++;
+	}
+{/foreach}
+{/if}
+return arr_invalid_phones;
+} //end recheckIntlPhone()
+
+
+{if isset($gmaps) && $gmaps}
+{foreach from=$gmaps item=v}
+	{include file="data/gmap-autolocator.html"}
+{/foreach}
+{/if}
+
+//]]>
+</script>

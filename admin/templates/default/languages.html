@@ -1,0 +1,69 @@
+
+<div class="p30">
+<form name="search" id="search" method="post" action="manage_saved_searches.php">
+
+<div>
+<a href="add_language.php"><img src="{$template_path}images/add.png" class="tooltip icon" title="{$lng.general.add}" alt=""></a>
+</div>
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th class="hleft">{$lng.general.position}</th>
+	<th>{$lng.languages.language_id}</th>
+	<th>{$lng.languages.language_name}</th>
+	<th>{$lng.languages.language_image}</th>
+	<th></th>
+	<th width="60">{$lng.general.order}</th>
+	<th width="100" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$array_languages item=v}
+<tr {if !$v.enabled}class="inactive"{/if}>
+	<td>{$v.order_no}</td>
+	<td>{$v.id}</td>
+	<td>{$v.name}</td>
+	<td>{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{/if}</td>
+	<td>{if $v.default}<div class="small-btn optionsbutton icon">{$lng.general.default}</div>{elseif $v.enabled}<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onLanguageDefault('{$v.id}'){/if}"><div class="small-btn activebutton icon">{$lng.languages.set_default}</div></a>{/if}</td>
+	<td>
+		{if $v.order_no>1}
+		<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onLanguageMoveUp('{$v.id}'){/if}"><img src="{$template_path}images/up.png" class="" title="{$lng.general.move_up}" alt=""></a>
+		{else}
+		<img src="{$template_path}images/up-off.png" />
+		{/if}
+
+		{if $v.last==0}
+		<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onLanguageMoveDown('{$v.id}'){/if}"><img src="{$template_path}images/down.png" class="" title="{$lng.general.move_down}" alt=""></a>
+		{else}
+		<img src="{$template_path}images/down-off.png">
+		{/if}
+
+	</td>
+	<td>
+
+		<a href="home.php?query=edit_language&id={$v.id}"><img src="{$template_path}images/edit.png" class="" title="{$lng.general.edit}" alt=""></a>
+
+		<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}{if $v.default}alert('{$lng.languages.errors.cannot_delete_default_lang}');{else}onDeleteLanguage('{$lng.languages.confirm_delete|addslashes}', '{$v.id}');{/if}{/if}">
+		<img src="{$template_path}images/delete.png" class="" title="{$lng.general.delete}" alt=""></a>
+	
+		<span id="div_active{$v.id}">
+		{if $v.enabled==0}
+			<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onLanguageEnable('{$v.id}','{$template_path}', '{$lng.general.enable|addslashes}', '{$lng.general.disable|addslashes}');{/if}">
+			<img id="active{$v.id}" src="{$template_path}images/enable.png" class="" title="{$lng.general.enable}" alt="">
+			</a>
+		{else}
+			<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}{if $v.default}alert('{$lng.languages.errors.cannot_disable_default_lang}');{else}onLanguageDisable('{$v.id}','{$template_path}', '{$lng.general.enable|addslashes}', '{$lng.general.disable|addslashes}');{/if}{/if}">
+			<img id="active{$v.id}" src="{$template_path}images/disable.png" class="" title="{$lng.general.disable}" alt="" />
+			</a>
+		{/if}
+		</span>
+
+	</td>
+</tr>
+{/foreach}
+
+{if $total==0}<tr><td colspan="6">{$lng.languages.no_language}</td></tr>{/if}
+
+</table>
+</form>
+</div> {* p30 *}
+

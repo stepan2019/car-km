@@ -1,0 +1,181 @@
+{include file="overlay_header.html"}
+
+<script type="text/javascript" src="{$live_site}/js/common.min.js"></script>
+<script type="text/javascript" src="{$live_site}/libs/jQuery/jquery.js"></script>
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/jquery.form.js"></script>
+
+{include file="data/ui.html"}
+
+<div class="wait"></div>
+
+<div class="overlay-top-bg"></div>
+
+<form method="post" name="sia" id="sia" action="{$live_site}/admin/selective_invoice_accept.php?post=1&id={$id}&type={$type}">
+
+<div class="info" style="display: none"></div>
+
+<div class="form2 lpdiv100" style="height: 520px;">
+
+<ul>
+
+{foreach from = $action name = action key=myid item=v}
+
+{assign var="prev" value="`$myid-1`"}
+{* if first one or the invoice different from the previous one *}
+{if $myid==0 || $action.$myid.invoice!=$action.$prev.invoice}
+<li>
+	<label>{$lng.listings.invoice}: #{$v.invoice}</label>
+</li>
+
+{if !$v.completed}
+<li>
+	<label><input type="checkbox" name="complete_payment{$v.invoice}" />&nbsp;{$lng.listings.complete_payment_invoice} #{$v.invoice}</label>
+</li>
+{/if}
+{/if} {* end if $myid==0 *}
+
+{if $v.type=="newad" || $v.type=="renewad"}
+<li>
+	<label>	<input type="checkbox" name="ad{$v.object_id}" {if !$v.pending} checked="checked" disabled="disabled" {/if} />&nbsp;
+	{if $v.type=="newad"}{$lng.listings.newad}{else}{$lng.listings.renewad}{/if} ID #{$v.object_id}</label>
+</li>
+{/if}
+
+{if $v.type=="featured"}
+<li>
+	<label><input type="checkbox" name="featured{$v.object_id}" {if !$v.pending} checked="checked" disabled="disabled" {/if} />&nbsp;
+	{$lng.listings.feature} ID #{$v.object_id}</label>
+</li>
+{/if}
+
+{if $v.type=="highlited"}
+<li>
+	<label><input type="checkbox" name="highlited{$v.object_id}" {if !$v.pending} checked="checked" disabled="disabled" {/if} />&nbsp;
+	{$lng.listings.highlite} ID #{$v.object_id}</label>
+</li>
+{/if}
+
+{if $v.type=="priority"}
+<li>
+	<label><input type="checkbox" name="priority{$v.object_id}" {if !$v.pending} checked="checked" disabled="disabled" {/if} />&nbsp;
+	{$lng.listings.priority} {$v.name} ID #{$v.object_id}</label>
+</li>
+{/if}
+
+{if $v.type=="urgent"}
+<li>
+	<label><input type="checkbox" name="urgent{$v.object_id}" {if !$v.pending} checked="checked" disabled="disabled" {/if} />&nbsp;
+	{$lng.listings.make_urgent} ID #{$v.object_id}</label>
+</li>
+{/if}
+
+{if $v.type=="video"}
+<li>
+	<label><input type="checkbox" name="video{$v.object_id}" {if !$v.pending} checked="checked" disabled="disabled" {/if} />&nbsp;
+	{$lng.listings.video} ID #{$v.object_id}</label>
+</li>
+{/if}
+
+{if $v.type=="url"}
+<li>
+	<label><input type="checkbox" name="url{$v.object_id}" {if !$v.pending} checked="checked" disabled="disabled" {/if} />&nbsp;
+	{$lng.listings.add_site_link} ID #{$v.object_id}</label>
+</li>
+{/if}
+
+{if $v.type=="bump"}
+<li>
+	<label><input type="checkbox" name="bump{$v.object_id}" {if !$v.pending} checked="checked" disabled="disabled" {/if} />&nbsp;
+	{$lng.listings.bump} ID #{$v.object_id}</label>
+</li>
+{/if}
+
+{if $v.type=="newpkg" || $v.type=="renewpkg"}
+<li>
+	<label><input type="checkbox" name="pkg{$v.object_id}" {if !$v.pending} checked="checked" disabled="disabled" {/if} />&nbsp;
+	{if $v.type=="newpkg"}{$lng.order_history.subscription}{else}{$lng.order_history.renew_subscription}{/if} {$v.name} ID #{$v.object_id}</label>
+</li>
+{/if}
+
+{if $v.type=="new_creditspkg"}
+<li>
+	<label><input type="checkbox" name="credits_pkg{$v.object_id}" {if !$v.pending} checked="checked" disabled="disabled" {/if} />&nbsp;
+	{$lng.order_history.credits_purchase} {$v.name} </label>
+</li>
+{/if}
+
+{if $v.type=="store"}
+<li>
+	<label><input type="checkbox" name="store{$v.object_id}" {if !$v.pending} checked="checked" disabled="disabled" {/if} />&nbsp;
+	{$lng.order_history.buy_store}</label>
+</li>
+{/if}
+
+{/foreach}
+
+<li>
+	<label><a href="javascript:;" class="small sc1" onClick="checkAll(document)">{$lng.listings.check_all}</a> | <a href="javascript:;" class="small sc1" onClick="uncheckAll(document)">{$lng.listings.uncheck_all}</a><label>
+</li>
+
+<li>
+	<label><input type="radio" name="type" value="accept" checked="checked" />&nbsp;{$lng.general.accept_selected}<label>
+</li>
+<li>
+	<label><input type="radio" name="type" value="reject" />&nbsp;{$lng.general.reject_selected}</label>
+</li>
+
+</ul>
+
+</div> {* end form2 *}
+
+<div class="overlay-bottom-bg">
+<div class="buttons">
+	<strong><input type="submit" name="Apply" value="{$lng.general.apply}" /></strong>
+</div>
+
+</div>
+
+</form>
+
+<script type="text/javascript">
+{literal}
+
+jQuery(document).ready(function() {
+
+	$(".info").hide();
+
+var options = { 
+
+	beforeSerialize: function(jqForm, options){ $("body").addClass("loading") },
+        beforeSubmit:  function(formData, jqForm, options) {var queryString = $.param(formData);  return true;  }, 
+        success:       successResponse 
+ 
+   }; 
+
+function successResponse(responseText, statusText, xhr, $form)  { 
+
+//alert(responseText);
+			var ret = JSON.parse(responseText);
+
+			$("body").removeClass("loading");
+
+			if(ret.response==1) {
+
+				$(".info").html("<p>"+ret.info+"</p>");
+				$(".info").show();
+				$(".form2").slideUp();
+				$(".overlay-bottom-bg").hide();
+				return;
+
+			}
+
+} 
+
+ $('#sia').ajaxForm(options);
+
+});
+
+{/literal}
+</script>
+
+{include file="overlay_footer.html"}

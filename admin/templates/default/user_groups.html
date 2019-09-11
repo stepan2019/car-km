@@ -1,0 +1,127 @@
+{include file="header.html"}
+{include file="data/fancybox.html"}
+
+<div class="page_title">{$lng.panel.users} > {$lng.panel.user_groups}</div>
+
+<div class="p30">
+<form name="groups" method="post">
+
+<div>
+<a href="addgroup.php" class="tooltip icon" title="{$lng.general.add}" alt=""><img src="{$template_path}images/add.png" class="tooltip icon" title="{$lng.general.add}" alt=""></a>
+<input type="image" value="delete_selected" name="delete_selected" src="{$template_path}images/delete_all.png" onClick="{if $demo}alert('{$lng.general.errors.demo}'); return false;{else}return myConfirm('{$lng.groups.confirm_delete_all|addslashes}'){/if}" style="border: 0px;" class="tooltip icon" title="{$lng.general.delete_all}" alt="">
+</div>
+
+<table cellpadding="0" cellspacing="0" align="center" width="100%" class="datatable">
+<tr id="theading">
+	<th width="30" class="hleft"><input type="checkbox" class="noborder" name="check_all" id="check_all" /></th>
+	<th>{$lng.general.id}</th>
+	<th>{$lng.general.position}</th>
+	<th>{$lng.groups.name}</th>
+	<th>{$lng.groups.description}</th>
+	<th>{$lng.groups.post_ads}</th>
+	<th>{$lng.groups.register}</th>
+	<th>{$lng.groups.activate}</th>
+	<th>{$lng.groups.store}</th>
+	<th>{$lng.groups.bulk_uploads_short}</th>
+	<th>{$lng.groups.no_users}</th>
+	<th width=60>{$lng.general.order}</th>
+	<th width="80" class="hright">{$lng.general.action}</th>
+</tr>
+
+{foreach from=$array_groups item=v}
+<tr class="{if !$v.active} inactive{/if}">
+	<td><input type="checkbox" class="noborder" name="group{$v.id}" id="group{$v.id}"></td>
+	<td>#{$v.id}</td>
+	<td>{$v.order_no}</td>
+	<td>{$v.name}</td>
+	<td class="laligned">{$v.description}</td>
+	<td>{if $v.post_ads}{$lng.general.yes}{else}{$lng.general.no}{/if}</td>
+	<td>{if $v.auto_register}{$lng.general.yes}{else}{$lng.general.no}{/if}</td>
+	<td>{if $v.activate_via_email}<div>{$lng.groups.via_email}</div>{/if}{if $v.activate_via_sms}<div>{$lng.groups.via_sms}</div>{/if}{if !$v.activate_via_email && !$v.activate_via_sms}<div>{$lng.general.no}</div>{/if}</td>
+	<td>{if !$v.post_ads}-{else}{if $v.store==0}{$lng.groups.do_not_allow}{elseif $v.store==1}{$lng.groups.allow_to_buy}{else}{$lng.groups.enable_by_default}{/if}{/if}</td>
+	<td>{if !$v.post_ads}-{else}{if $v.bulk_uploads}{$lng.general.yes}{else}{$lng.general.no}{/if}{/if}</td>
+	<td><a class="sc1 underline" href="users_list.php?group={$v.id}">{$v.users}</a></td>
+	<td>
+		{if $v.order_no>1}
+		<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onMoveUp({$v.id}, 'group'){/if}"><img src="{$template_path}images/up.png" /></a>
+		{else}
+		<img src="{$template_path}images/up-off.png" class="tooltip icon" title="{$lng.general.move_up}" alt="" />
+		{/if}
+
+		{if $v.last==0}
+		<a href="javascript:;" onClick="{if $demo}alert('{$lng.general.errors.demo}');{else}onMoveDown({$v.id}, 'group'){/if}"><img src="{$template_path}images/down.png" class="tooltip icon" title="{$lng.general.move_down}" alt="" /></a>
+		{else}
+		<img src="{$template_path}images/down-off.png" />
+		{/if}
+
+	</td>
+	<td>
+		<a href="editgroup.php?id={$v.id}">
+		<img src="{$template_path}images/edit.png" class="tooltip icon" title="{$lng.general.edit}" alt=""></a>
+
+		{if $v.users>0}
+		<a href="javascript:;" class="delgroup" id="del{$v.id}">
+		{else}	
+		<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onGroupDelete('{$v.id}','{$template_path}');{/if}">
+		{/if}
+
+		<img src="{$template_path}images/delete.png" class="tooltip icon" title="{$lng.general.delete}" alt=""></a>
+	
+		<span id="div_active{$v.id}">
+		{if $v.active==0}
+			<a href="javascript:;" onclick="onGroupEnable('{$v.id}','{$template_path}', '{$lng.general.enable|addslashes}', '{$lng.general.disable|addslashes}');">
+			<img id="active{$v.id}" src="{$template_path}images/enable.png" class="tooltip icon" title="{$lng.general.enable}" alt="">
+			</a>
+		{else}
+			<a href="javascript:;" onclick="{if $demo}alert('{$lng.general.errors.demo}');{else}onGroupDisable('{$v.id}','{$template_path}', '{$lng.general.enable|addslashes}', '{$lng.general.disable|addslashes}');{/if}">
+			<img id="active{$v.id}" src="{$template_path}images/disable.png" class="tooltip icon" title="{$lng.general.disable}" alt="">
+			</a>
+		{/if}
+		</span>
+	</td>
+</tr>
+{/foreach}
+
+{if $array_groups|@count==0}
+	<tr><td colspan="11">{$lng.groups.no_groups}</td></tr>
+{/if}
+
+</table>
+</form>
+</div> {* p30 *}
+
+<script type="text/javascript">
+{literal}
+
+$(document).ready(function() {
+
+	$("#check_all").click(function()
+	{
+
+		if ($('#check_all').is(':checked')) checkAll(document);
+		else uncheckAll(document);
+
+	});
+
+
+$("a.delgroup").click(function(event){
+	var group_id = jQuery(this).attr("id").substr(3);
+	$.fancybox({
+		'width'         		: 630,
+		'height'        		: 500,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'margin'		: '0',
+		'padding'		: '0',
+		'titleShow'		: false,
+		'type'			: 'iframe',
+		'href'			: '{/literal}{$live_site}{literal}/admin/delete_group.php?id='+group_id,
+		'onClosed': function(){ location.reload(true); }
+	});
+});
+
+});
+{/literal}
+</script>
+
+{include file="footer.html"}

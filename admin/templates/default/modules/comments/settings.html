@@ -1,0 +1,152 @@
+{include file="header.html"}
+<script type="text/javascript" src="{$live_site}/libs/nicEdit/nicEdit.min.js"></script>
+
+<script type="text/javascript">
+{literal}	
+bkLib.onDomLoaded(function() { nicEditors.allTextAreas({iconsPath : '../../../libs/nicEdit/nicEditorIcons.gif', fullPanel : true}) });
+{/literal}
+</script>
+
+<link rel="stylesheet" type="text/css" href="{$live_site}/libs/jQuery/plugins/css/jquery.comboselect.css" />
+{literal}
+<!--[if IE]>
+<style type="text/css">
+select.csleft, select.csright {
+	width: 100px;
+}
+</style>
+<![endif]-->
+{/literal}
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/jquery.selso.js"></script>	
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/jquery.comboselect.js"></script>
+<script type="text/javascript">
+{literal}
+
+		$(function(){
+			$('#allowed_html_box').comboselect({ sort: 'none', addbtn: '+',  rembtn: '-' });
+		});
+{/literal}
+</script>
+
+<div class="page_title">
+<div class="lfloat" width="200"><a href="{$live_site}/admin/modules.php">{$lng.panel.modules}</a> > <a href="{$live_site}/admin/modules/comments/index.php">{$lng_comments.comments}</a> > {$lng.panel.settings}</div>
+<div class="rfloat mt5">
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab2-left">
+	<a href="{$live_site}/admin/modules/comments/index.php"><span class="tab2-right">{$lng_comments.comments}</span></a>
+	</div></div>
+
+	<div class="buttonwrapper lfloat mr10"><div class="tab1-left">
+	<a href="{$live_site}/admin/modules/comments/settings.php"><span class="tab1-right">{$lng_comments.settings}</span></a>
+	</div></div>
+
+</div>
+</div>
+
+<div class="p30">
+<form name="settings" method="post" action="" enctype="multipart/form-data">
+<div class="form_container">
+{if isset($info) && $info}<div class="info">{$info}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng_comments.require_login}</div>
+	<div class="right_form"><input type="checkbox" name="require_login" {if $comments_settings.require_login==1}checked{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng_comments.info.admin_verification}" />&nbsp;{$lng_comments.admin_verification}</div>
+	<div class="right_form">
+		<input type="radio" class="noborder" name="admin_verification" value="1" {if $comments_settings.admin_verification==1}checked{/if}>&nbsp;{$lng_comments.always}&nbsp;&nbsp;
+		<input type="radio" class="noborder" name="admin_verification" value="0" {if $comments_settings.admin_verification==0}checked{/if}>&nbsp;{$lng_comments.never}&nbsp;&nbsp;
+		<input type="radio" class="noborder" name="admin_verification" value="2" {if $comments_settings.admin_verification==2}checked{/if}>&nbsp;{$lng_comments.guests_only}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_comments.use_captcha}</div>
+	<div class="right_form">
+		<input type="radio" class="noborder" name="captcha" value="1" {if $comments_settings.captcha==1}checked{/if}>&nbsp;{$lng_comments.always}&nbsp;&nbsp;
+		<input type="radio" class="noborder" name="captcha" value="0" {if $comments_settings.captcha==0}checked{/if}>&nbsp;{$lng_comments.never}&nbsp;&nbsp;
+		<input type="radio" class="noborder" name="captcha" value="2" {if $comments_settings.captcha==2}checked{/if}>&nbsp;{$lng_comments.guests_only}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_comments.use_email}</div>
+	<div class="right_form">
+		<input type="radio" class="noborder" name="use_email" value="1" {if $comments_settings.use_email==1}checked{/if}>&nbsp;{$lng_comments.required}&nbsp;&nbsp;
+		<input type="radio" class="noborder" name="use_email" value="0" {if $comments_settings.use_email==0}checked{/if}>&nbsp;{$lng_comments.do_not_use}&nbsp;&nbsp;
+		<input type="radio" class="noborder" name="use_email" value="2" {if $comments_settings.use_email==2}checked{/if}>&nbsp;{$lng_comments.optional}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_comments.use_website}</div>
+	<div class="right_form">
+		<input type="radio" class="noborder" name="use_website" value="1" {if $comments_settings.use_website==1}checked{/if}>&nbsp;{$lng_comments.required}&nbsp;&nbsp;
+		<input type="radio" class="noborder" name="use_website" value="0" {if $comments_settings.use_website==0}checked{/if}>&nbsp;{$lng_comments.do_not_use}&nbsp;&nbsp;
+		<input type="radio" class="noborder" name="use_website" value="2" {if $comments_settings.use_website==2}checked{/if}>&nbsp;{$lng_comments.optional}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_comments.comments_on_page}</div>
+	<div class="right_form"><input type="text" name="comments_on_page" size="10" value="{$comments_settings.comments_on_page}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_comments.html_editor}</div>
+	<div class="right_form"><input type="checkbox" class="noborder" name="html_editor" {if $comments_settings.html_editor==1}checked{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_comments.badwords_check}</div>
+	<div class="right_form"><input type="checkbox" name="badwords_check" {if $comments_settings.badwords_check==1}checked{/if} /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng_comments.allowed_html}</div>
+	<div class="right_form">
+		<select id="allowed_html_box" name="allowed_html_box[]" multiple="multiple" size="6" class="mselect">
+			{foreach from = $html_tags item = v}
+			<option value="{$v}" {if in_array($v, $comments_settings.array_allowed_html)}selected="selected"{/if}>&lt;{$v}&gt;</option>
+			{/foreach}
+		</select>
+		<input type="hidden" id="allowed_html" name="allowed_html" value="">
+		<div class="information" style="float: left;">{$lng.settings.info.comboselect}</div>
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng_comments.info.logo_field}" />&nbsp;{$lng_comments.logo_field}</div>
+	<div class="right_form">
+		<select name="logo_field">
+				<option value="">{$lng_comments.do_not_use}</option>
+				{foreach from=$user_fields item=v}
+				<option value="{$v.caption}" {if $comments_settings.logo_field==$v.caption}selected{/if}>{$v.name}</option>
+				{/foreach}
+		</select>
+	</div>
+</div>
+
+{foreach from =$languages item=v}
+{capture name=some_content assign=field_name}terms_{$v.id}{/capture}
+<div class="clearfix">
+	<div class="left_form">{if $languages|@count > 1}{if $v.image}<img src="{$live_site}/images/languages/{$v.image}">{else}<span class="small">( {$v.name} )</span>{/if}&nbsp;{/if}<img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng_comments.info.terms}" />&nbsp;{$lng_comments.terms}</div>
+	<div class="right_form"><textarea name="terms_{$v.id}" id="terms_{$v.id}" rows="4" cols="70">{$comments_settings[$field_name]}</textarea></div>
+</div>
+{/foreach}
+
+<div class="form_footer">
+	<div class="buttons rfloat" onclick='{if $demo}alert("{$lng.general.errors.demo}");return false;{else}getMultiple(document.settings.allowed_html_box_right, document.settings.allowed_html);{/if}'>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+</form>
+</div> {* p30 *}
+
+{include file="footer.html"}
+

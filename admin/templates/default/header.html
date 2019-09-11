@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="{$appearance.charset}">
+<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="initial-scale=1">
+
+<title>{$lng.general.admin_panel}</title>
+<link rel="stylesheet" href="{$template_path}css/style.css">
+<link rel="stylesheet" href="{$template_path}css/style-sage.css">
+
+{if isset($htmlarea) && $htmlarea}<script type="text/javascript" src="{$live_site}/libs/nicEdit/nicEdit.min.js"></script>{/if}
+<script type="text/javascript" src="{$live_site}/libs/jQuery/jquery.js"></script>
+<script type="text/javascript" src="{$live_site}/js/common.min.js"></script>
+<script type="text/javascript" src="{$live_site}/admin/js/functions.js"></script>
+<script type="text/javascript" src="{$live_site}/libs/jQuery/plugins/powertip/jquery.powertip.min.js"></script>
+<link rel="stylesheet" href="{$live_site}/libs/jQuery/plugins/powertip/css/jquery.powertip.min.css" />
+
+<!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<script type="text/javascript">
+{if $settings.google_maps_api_key}gmak='{$settings.google_maps_api_key}';{/if}
+places=0;
+</script>
+
+</head>
+<body>
+
+<header>
+
+<div id="pagetop">
+	<div class="centered pwidth">
+
+	<div class="lfloat">
+	<div class="top-logo"><a href="{$live_site}"><img src="{$template_path}images/logo.png"></a></div>
+	</div>
+
+	<div class="rfloat">
+
+		<div class="buttonwrapper mt10 mb10" id="logged"><div class="rbutton2-left"><span class="rbutton2-right">{$logged_in}&nbsp;&nbsp;|&nbsp;&nbsp;<a href="{$live_site}/admin/logout.php">{$lng.panel.logout}</a></span></div><div class="clearfix"></div></div>
+		
+		
+		{*<a href="{$live_site}/admin/logout.php">{$lng.panel.logout}</a>*}
+
+	<nav>
+	<ul class="nlinks">
+		<li><a href="{$live_site}/admin/index.php" id="nav-home">{$lng.panel.statistics}</a></li>
+		{if !$is_mod || in_array("listings", $sections_array)}
+		<li><a href="javascript:;" id="nav-listings" class="nav-parent">{$lng.panel.listings}</a>
+			<ul class="navlinkmenu submenu2">
+
+				<li><a href="{$live_site}/admin/manage_listings.php">{$lng.panel.manage_listings}</a></li>
+				{if $is_admin}
+				<li><a href="{$live_site}/admin/manage_packages.php">{$lng.panel.packages}</a></li>
+				<li><a href="{$live_site}/admin/coupons.php">{$lng.panel.coupons}</a></li>
+				{/if}
+
+			</ul>
+		</li>
+		{/if}
+		{if !$is_mod || in_array("users", $sections_array) || in_array("subscriptions", $sections_array) || in_array("messages", $sections_array) || in_array("searches", $sections_array) || in_array("alerts", $sections_array)}
+		<li><a href="javascript:;" id="nav-users" class="nav-parent">{$lng.panel.users}</a>
+			<ul class="navlinkmenu submenu2">
+
+				{if !$is_mod || in_array("users", $sections_array)}
+				<li><a href="{$live_site}/admin/users_list.php">{$lng.panel.users_list}</a></li>
+				{/if}
+
+				{if $is_admin}
+				<li><a href="{$live_site}/admin/user_groups.php">{$lng.panel.user_groups}</a></li>
+				<li><a href="{$live_site}/admin/affiliates_revenues.php">{$lng.users.affiliates}</a></li>
+				{/if}
+
+				{if !$is_mod || in_array("subscriptions", $sections_array)}
+				<li><a href="{$live_site}/admin/subscriptions.php">{$lng.panel.users_subscriptions}</a></li>
+				{/if}
+
+				{if !$is_mod || in_array("bulk_emails", $sections_array)}
+				<li><a href="{$live_site}/admin/bulk_emails.php">{$lng.panel.send_bulk_emails}</a></li>
+				{/if}
+
+				{if !$is_mod || in_array("searches", $sections_array)}
+				<li><a href="{$live_site}/admin/manage_saved_searches.php">{$lng.panel.saved_searches}</a></li>
+				{/if}
+
+				{if !$is_mod || in_array("alerts", $sections_array)}
+				<li><a href="{$live_site}/admin/manage_email_alerts.php">{$lng.panel.email_alerts}</a></li>
+				{/if}
+
+				{if !$is_mod || in_array("messages", $sections_array)}
+				<li><a href="{$live_site}/admin/messages.php">{$lng.panel.messages}</a></li>
+				{/if}
+
+			</ul>
+		</li>
+		{/if}
+		{if !$is_mod || in_array("orders", $sections_array)}
+		<li>
+			<a href="javascript:;" id="nav-orders" class="nav-parent">{$lng.panel.orders}</a>
+
+			<ul class="navlinkmenu submenu2">
+				<li><a href="{$live_site}/admin/order_history.php">{$lng.panel.order_history}</a></li>
+				<li><a href="{$live_site}/admin/invoices.php">{$lng.settings.invoices}</a></li>
+			</ul>
+
+		</li>
+		{/if}
+
+		{if !$is_mod || in_array("security", $sections_array)}
+		<li>
+			<a href="javascript:;" id="nav-security" class="nav-parent">{$lng.panel.security}</a>
+
+			<ul class="navlinkmenu submenu2">
+
+				{if $is_admin}
+				<li><a href="{$live_site}/admin/security_settings.php">{$lng.panel.security_settings}</a></li>
+				{/if}
+
+				{if !$is_mod || in_array("security", $sections_array)}
+				<li><a href="{$live_site}/admin/login_history.php">{$lng.panel.login_history}</a></li>
+				{/if}
+
+				{if !$is_mod || in_array("security", $sections_array)}
+				<li><a href="{$live_site}/admin/blocked_ips.php">{$lng.panel.blocked_ips}</a></li>
+				<li><a href="{$live_site}/admin/blocked_emails.php">{$lng.panel.blocked_emails}</a></li>
+				<li><a href="{$live_site}/admin/blocked_phones.php">{$lng.panel.blocked_phones}</a></li>
+				{/if}
+
+				{if !$is_mod || in_array("security", $sections_array)}
+				<li><a href="{$live_site}/admin/forbidden_words.php">{$lng.panel.badwords_lists}</a></li>
+				{/if}
+
+				{if $is_admin}
+				<li><a href="{$live_site}/admin/change_password.php">{$lng.panel.change_password}</a></li>
+				{/if}
+
+			</ul>
+
+		</li>
+		{/if}
+
+		
+		<li>
+			<a href="javascript:;" id="nav-tools" class="nav-parent">{$lng.panel.tools}</a>
+			<ul class="navlinkmenu submenu2">
+				{if !$is_mod || in_array("custom_pages", $sections_array)}
+				<li><a href="{$live_site}/admin/manage_custom_pages.php">{$lng.panel.custom_pages}</a></li>
+				{/if}
+				{if $is_admin}
+				<li><a href="{$live_site}/admin/db_tools.php">{$lng.panel.database}</a></li>
+				<li><a href="{$live_site}/admin/sitemap.php">{$lng.panel.google_sitemap}</a></li>
+				<li><a href="{$live_site}/admin/rss.php">{$lng.panel.rss}</a></li>
+				{/if}
+				{if !$is_mod || in_array("import_export", $sections_array)}
+				<li><a href="{$live_site}/admin/import-export.php">{$lng.panel.import_export}</a></li>
+				{/if}
+				{if $is_admin}
+				<li><a href="{$live_site}/admin/images_tools.php">{$lng.imgtools.images_tools}</a></li>
+				<li><a href="{$live_site}/admin/maintenance.php">{$lng.panel.maintenance}</a></li>
+				{/if}
+			</ul>
+		</li>
+
+		{if !$is_mod || in_array("banners", $sections_array)}
+		<li>
+			<a href="javascript:;" id="nav-banners" class="nav-parent">{$lng.panel.banners}</a>
+			<ul class="navlinkmenu submenu2">
+
+				<li><a href="{$live_site}/admin/manage_banners.php">{$lng.panel.manage_banners}</a></li>
+				{if $is_admin}
+				<li><a href="{$live_site}/admin/banners_settings.php">{$lng.panel.banners_settings}</a></li>
+				{/if}
+
+			</ul>
+		</li>
+		{/if}
+
+		{if $is_admin}
+		<li>
+			<a href="javascript:;" id="nav-settings" class="nav-parent">{$lng.panel.settings}</a>
+			<ul class="navlinkmenu submenu2">
+
+				<li><a href="{$live_site}/admin/settings.php">{$lng.settings.general_settings}</a></li>
+				<li><a href="{$live_site}/admin/listings_settings.php">{$lng.settings.listings_settings}</a></li>
+				<li><a href="{$live_site}/admin/appearance.php">{$lng.settings.site_appearance}</a></li>
+				<li><a href="{$live_site}/admin/localization.php">{$lng.settings.localization}</a></li>
+				<li><a href="{$live_site}/admin/extra_visibility_options.php">{$lng.settings.extra_visibility_options}</a></li>
+				<li><a href="{$live_site}/admin/seo_settings.php">{$lng.settings.seo_settings}</a></li>
+				<li><a href="{$live_site}/admin/mails_settings.php">{$lng.settings.mails_settings}</a></li>
+				<li><a href="{$live_site}/admin/payment_settings.php">{$lng.settings.payment_settings}</a></li>
+				<li><a href="{$live_site}/admin/mobile_settings.php">{$lng.settings.mobile_settings}</a></li>
+				<li><a href="{$live_site}/admin/manage_categories.php">{$lng.panel.manage_categories}</a></li>
+				<li><a href="{$live_site}/admin/manage_fieldsets.php">{$lng.panel.fieldsets}</a></li>
+				<li><a href="{$live_site}/admin/manage_custom_fields.php">{$lng.panel.custom_fields}</a></li>
+				<li><a href="{$live_site}/admin/user_fields.php">{$lng.panel.user_fields}</a></li>
+				{*<li><a href="{$live_site}/admin/manage_rules.php">{$lng.panel.manage_rules}</a></li>*}
+				<li><a href="{$live_site}/admin/languages.php">{$lng.panel.languages}</a></li>
+				<li><a href="{$live_site}/admin/sms_gateways.php">{$lng.panel.sms_gateways}</a></li>
+			</ul>
+		</li>
+		{/if} {* end is admin *}
+		
+		<li>
+			<a href="{$live_site}/admin/modules.php" id="nav-modules" >{$lng.panel.modules}</a>
+		</li>
+		
+		{if $is_admin}
+		<li>
+			<a href="javascript:;" id="nav-templates" class="nav-parent">{$lng.panel.templates}</a>
+			<ul class="navlinkmenu submenu2">
+
+				<li><a href="{$live_site}/admin/templates_editor.php">{$lng.panel.templates_editor}</a></li>
+				<li><a href="{$live_site}/admin/css_editor.php">{$lng.panel.css_editor}</a></li>
+				<li><a href="{$live_site}/admin/languages_editor.php">{$lng.panel.language_editor}</a></li>
+				<li><a href="{$live_site}/admin/mail_templates.php">{$lng.panel.mail_templates}</a></li>
+				<li><a href="{$live_site}/admin/info_templates.php">{$lng.panel.info_templates}</a></li>
+
+			</ul>
+		</li>
+		{/if}
+
+	</ul>
+	</nav>
+	</div>
+<div class="clearfix"></div>
+	</div>{* end pwidth *}
+	
+</div> {* end navbar *}
+
+</header>
+<div class="clearfix"></div>
+
+{* start page *}
+<div class="centered page pwidth">
+
+{if isset($db_error) && $db_error!=''}<div class="db_error error mt20">{$db_error}</div>{/if}
+
+<script type="text/javascript">
+{literal}	
+jQuery(document).ready(function() {
+
+jQuery('.tooltip').powerTip({
+	placement: 'ne'
+});
+
+
+	$("a.nav-parent").click(function() { 
+
+		$(this).parent().find("ul.navlinkmenu:first").slideDown('fast').show();
+
+		$(this).parent().hover(function() {
+		}, function(){
+			$(this).parent().find("ul.navlinkmenu").slideUp('fast');
+		});
+
+	});
+
+
+
+}); // end document ready
+
+{/literal}
+</script>
+
+<div class="main">
+{if $appearance.maintenance_mode}
+		<div class="warning" style="margin: 0 !important;"><p>{$lng.maintenance.info.site_in_maintenance_mode}</p></div>
+{/if}

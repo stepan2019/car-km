@@ -1,0 +1,17 @@
+{include file="overlay_header.html"}
+
+<div class="overlay-top-bg">{$lng.listings.invoice}: #{$id}</div>
+
+
+<table cellpadding="0" cellspacing="0" align="center" class="centered datatable" width="90%">
+{foreach from=$payment_array item=v key=k}
+<tr><td class="raligned">{$k}</td><td class="laligned">{$v}</td></tr>
+{/foreach}
+
+{if $invoice}
+<tr><td class="raligned">{$lng.invoice.invoice}</td><td class="laligned">#{$invoice}&nbsp;&nbsp;<a href="{$live_site}/include/generate_invoice.php?id={$invoice}"><img src="{$template_path}images/download-db.png" /></a></td></tr>
+{/if}
+
+</table>
+
+{include file="overlay_footer.html"}

@@ -1,0 +1,44 @@
+
+{literal}
+<style type="text/css">
+.pedigree1 {padding: 20px 0 20px 0;}
+.pedigree21 {padding: 20px 10px 10px 70px;}
+.pedigree22 {padding: 10px 10px 20px 70px;}
+
+</style>
+{/literal}
+
+<table cellpadding="2" cellspacing="2">
+	<tr>
+		<td valign="top">
+			<div class="pedigree21">
+			<input type="text" size="35" name="pedigree_ss" value="{$tmp.pedigree_ss}">
+			</div>
+
+			<div class="pedigree1">
+			<input type="text" size="35" name="pedigree_s" value="{$tmp.pedigree_s}" class="defaultText" title="{$pedigree_settings.sire_field}">
+			</div>
+
+			<div class="pedigree22">
+			<input type="text" size="35" name="pedigree_sd" value="{$tmp.pedigree_sd}">
+			</div>
+		</td>
+	</tr>
+<tr><td height="20"></td></tr>
+	<tr>
+		<td valign="top">
+			<div class="pedigree21">
+			<input type="text" size="35" name="pedigree_ds" value="{$tmp.pedigree_ds}">
+			</div>
+
+			<div class="pedigree1">
+			<input type="text" size="35" name="pedigree_d" value="{$tmp.pedigree_d}" class="defaultText" title="{$pedigree_settings.dam_field}">
+			</div>
+
+			<div class="pedigree22">
+			<input type="text" size="35" name="pedigree_dd" value="{$tmp.pedigree_dd}">
+			</div>
+		</td>
+	</tr>
+
+</table>

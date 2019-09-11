@@ -1,0 +1,181 @@
+{include file="header.html"}
+{include file="data/fancybox.html"}
+{include file="data/ui.html"}
+
+<div class="page_title">{$lng.panel.banners} > <a href="manage_banners.php">{$lng.panel.manage_banners}</a> > {if !isset($id) || !$id}{$lng.panel.add_banner}{else}{$lng.banners.edit_banner}{/if}</div>
+
+<div class="p30">
+<form name="addbanner" method="post" action="{$self}{if isset($id) && $id}?id={$id}{/if}" enctype="multipart/form-data">
+
+<div class="form_container">
+
+{if isset($error) && $error}<div class="error">{$error}</div>{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.banners.banner_type}<span class="mandatory"> *</span></div>
+	<div class="right_form"><input type="radio" class="noborder" name="btype" value="image" {if !isset($id) || !$id || (isset($banner.type) && $banner.type=="image")}checked="checked"{/if} onchange="activateImage()" onClick="activateImage()" />&nbsp;{$lng.banners.image}
+	<input type="radio" class="noborder" name="btype" value="code" {if (isset($banner.btype) || isset($banner.type)) && ($banner.type=='code' ||  $banner.type=='code')}checked="checked"{/if} onchange="activateCode()" onClick="activateCode()" />&nbsp;{$lng.banners.code}
+	</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.banners.title}</div>
+	<div class="right_form"><input name="title" type="text" size="50" value="{if isset($banner.title)}{$banner.title}{/if}" /></div>
+</div>
+
+<div class="clearfix" id="div_image" style="display: block">
+	<div class="left_form">{$lng.banners.image}<span class="mandatory"> *</span></div>
+	<div class="right_form"><input type="file" name="image" id="image">&nbsp;({$lng.banners.image_info})
+		{if isset($banner.filename) && $banner.filename!=""}<a href="{$live_site}/images/baners/{$banner.filename}" class="imgfield">
+		<img src="{$template_path}images/camera.png" /></a>{/if}</div>
+</div>
+
+<div class="clearfix" id="div_code" style="display: none">
+	<div class="left_form">{$lng.banners.code}<span class="mandatory"> *</span></div>
+	<div class="right_form"><textarea name="code" rows=10 cols=60>{if isset($banner.code)} {$banner.code}{/if}</textarea></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.banners.position}<span class="mandatory"> *</span></div>
+	<div class="right_form">
+	<select name="position" id="position" onchange="chooseBannerPosition(this.form)">
+	{foreach from=$array_banners_categories item=v}
+		<option value="{$v.name}" {if isset($banner.position) && $banner.position==$v.name}selected="selected"{/if}>{$v.name}</option>
+	{/foreach}
+	{foreach from=$extra_positions item=x}
+		<option value="{$v.name}" {if isset($banner.position) &&  $banner.position==$x}selected="selected"{/if}>{$x}</option>
+	{/foreach}
+	</select>
+	</div>
+</div>
+
+<div class="clearfix" id="div_link">
+	<div class="left_form">{$lng.banners.link_to}<span class="mandatory"> *</span></div>
+	<div class="right_form"><input name="link" type="text" size="50" value="{if isset($banner.link)}{$banner.link}{/if}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.banners.date_start}</div>
+	<div class="right_form"><input id="date_start" name="date_start" type="text" value="{if isset($banner.date_start) && $banner.date_start!='0000-00-00 00:00:00'}{$banner.date_start}{/if}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.banners.date_end}</div>
+	<div class="right_form"><input id="date_end" name="date_end" type="text" value="{if isset($banner.date_end) && $banner.date_end!='0000-00-00 00:00:00'}{$banner.date_end}{/if}" /></div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.banners.max_impressions}</div>
+	<div class="right_form"><input name="max_impressions" size="10" type="text" value="{if isset($banner.max_impressions)}{$banner.max_impressions}{/if}" />&nbsp;{$lng.settings.info_days_unlimited}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.banners.max_clicks}</div>
+	<div class="right_form"><input name="max_clicks" size="10" type="text" value="{if isset($banner.max_clicks)}{$banner.max_clicks}{/if}" />&nbsp;{$lng.settings.info_days_unlimited}</div>
+</div>
+
+<div class="clearfix">
+	<div class="left_form">{$lng.banners.use_banner_for}</div>
+	<div class="right_form">
+	<input type="radio" class="noborder" name="choose_categ" value="all" checked="checked" onchange="onChooseCateg(this.form)" onClick="onChooseCateg(this.form)" >&nbsp;{$lng.banners.all_categories}
+	<input type="radio" class="noborder" name="choose_categ" value="choose" onchange="onChooseCateg(this.form)" onClick="onChooseCateg(this.form)" >&nbsp;{$lng.banners.choose_categories}
+	</div>
+</div>
+
+<div class="clearfix" id="div_categories" style="display: none">
+	<div class="left_form"><img src="{$template_path}images/info.png"  class="tooltip icon" title="{$lng.banners.choose_categories_info}" /></div>
+	<div class="right_form">
+	<select multiple="multiple" name="categories[]" id="categories" size="20" class="mselect">
+	{foreach from=$subcats item=v}
+		<option value="{$v.id}">{$v.str_start}{$v.name}</option>
+	{/foreach}
+	</select>
+	</div>
+</div>
+
+<div class="clearfix" id="div_choose_sections">
+	<div class="left_form">&nbsp;</div>
+	<div class="right_form">
+	<input type="radio" class="noborder" name="choose_section" value="all" checked="checked" onchange="onChooseSection(this.form)" onClick="onChooseSection(this.form)" >&nbsp;{$lng.banners.all_sections}
+	<input type="radio" class="noborder" name="choose_section" value="choose" onchange="onChooseSection(this.form)" onClick="onChooseSection(this.form)" >&nbsp;{$lng.banners.choose_sections}
+	</div>
+</div>
+
+<div class="clearfix" id="div_sections" style="display: none">
+	<div class="left_form">&nbsp;</div>
+	<div class="right_form">
+	<select multiple="multiple" name="sections[]" id="sections" size="10" class="mselect">
+	{foreach from=$sections item=v}
+		<option value="{$v}">{$v}</option>
+	{/foreach}
+	</select>
+	</div>
+</div>
+
+{if in_array("banners_location", $modules_array)}
+<div class="clearfix">
+	<div class="left_form">{$field_name}</div>
+	<div class="right_form">
+	{if $bl_menu}
+	<select name="location">
+		<option value=""></option>
+		{foreach from=$bl_elements item=v}
+		<option value="{$v}" {if isset($banner.location) && $v==$banner.location}selected="selected"{/if}>{$v}</option>
+		{/foreach}
+	</select>
+	{else}
+	<input type="text" size="40" name="location" value="{if isset($banner.location)}{$banner.location}{/if}" />
+	{/if}
+	</div>
+</div>
+{/if}
+
+<div class="clearfix">
+	<div class="left_form">{$lng.banners.open_new}</div>
+	<div class="right_form"><input type="checkbox" name="open_new" {if isset($banner.open_new) && $banner.open_new}checked{/if}></div>
+</div>
+
+<div class="form_footer">
+	<div class="buttons rfloat" {if $demo}onClick="alert('{$lng.general.errors.demo}');return false;"{/if}>
+		<span class="positive"><input type="submit" name="Submit" id="Submit" value="{$lng.general.submit}" /></span>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+</div> {* end form_container *}
+
+</form>
+</div>
+
+
+<script type="text/javascript">
+
+var old_type="{if isset($id) && $id}{$banner.type}{else}{if isset($banner.btype)}{$banner.btype}{/if}{/if}";
+if(old_type=="image") activateImage(); else if(old_type=="code") activateCode();
+var old_categ_val="{if isset($banner.categories)}{$banner.categories}{/if}";
+var old_section_val="{if isset($banner.sections)}{$banner.sections}{/if}";
+if(old_categ_val && old_categ_val!="0") chooseCateg(document.forms["addbanner"], old_categ_val);
+if(old_section_val && old_section_val!="0") chooseSection(document.forms["addbanner"], old_section_val);
+
+{literal}
+	$(document).ready(function() {
+		$("a.imgfield").fancybox();
+	});
+
+	$(function() {
+		$('#date_start').datepicker({
+			dateFormat: "yy-mm-dd",
+			changeMonth: true,
+			changeYear: true
+		});
+		$('#date_end').datepicker({
+			dateFormat: "yy-mm-dd",
+			changeMonth: true,
+			changeYear: true
+		});
+	});
+	{/literal}
+	</script>
+
+
+{include file="footer.html"}
