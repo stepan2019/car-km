@@ -3,13 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="cc247929-1d62-4f87-8878-de2e31666a78" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lang/eng.php" beforeDir="false" afterPath="$PROJECT_DIR$/lang/eng.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/template/contact.php" beforeDir="false" afterPath="$PROJECT_DIR$/template/contact.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/login.php" beforeDir="false" afterPath="$PROJECT_DIR$/user/login.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/register.php" beforeDir="false" afterPath="$PROJECT_DIR$/user/register.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/register_dealer.php" beforeDir="false" afterPath="$PROJECT_DIR$/user/register_dealer.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/register_user.php" beforeDir="false" afterPath="$PROJECT_DIR$/user/register_user.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vehicle/add.php" beforeDir="false" afterPath="$PROJECT_DIR$/vehicle/add.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -73,11 +66,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="528">
-              <caret line="39" column="47" lean-forward="true" selection-start-line="39" selection-start-column="47" selection-end-line="39" selection-end-column="47" />
+            <state relative-caret-position="88">
+              <caret line="4" column="23" selection-start-line="4" selection-start-column="23" selection-end-line="4" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -100,11 +93,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/user/login.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="396">
-              <caret line="51" column="14" selection-start-line="51" selection-start-column="14" selection-end-line="51" selection-end-column="14" />
+            <state relative-caret-position="220">
+              <caret line="43" column="4" selection-start-line="43" selection-start-column="4" selection-end-line="51" selection-end-column="14" />
             </state>
           </provider>
         </entry>
@@ -183,10 +176,10 @@
         <option value="$PROJECT_DIR$/vehicle/add.php" />
         <option value="$PROJECT_DIR$/lang/eng.php" />
         <option value="$PROJECT_DIR$/template/contact.php" />
-        <option value="$PROJECT_DIR$/index.php" />
         <option value="$PROJECT_DIR$/user/register_user.php" />
         <option value="$PROJECT_DIR$/user/register_dealer.php" />
         <option value="$PROJECT_DIR$/user/login.php" />
+        <option value="$PROJECT_DIR$/index.php" />
       </list>
     </option>
   </component>
@@ -268,12 +261,12 @@
       <workItem from="1568021042040" duration="17295000" />
       <workItem from="1568063093371" duration="40000" />
       <workItem from="1568105602927" duration="38844000" />
-      <workItem from="1568276864614" duration="12809000" />
+      <workItem from="1568276864614" duration="13461000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="68988000" />
+    <option name="totallyTimeSpent" value="69640000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -580,13 +573,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="528">
-          <caret line="39" column="47" lean-forward="true" selection-start-line="39" selection-start-column="47" selection-end-line="39" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/template/header.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="286">
@@ -616,8 +602,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/user/login.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="51" column="14" selection-start-line="51" selection-start-column="14" selection-end-line="51" selection-end-column="14" />
+        <state relative-caret-position="220">
+          <caret line="43" column="4" selection-start-line="43" selection-start-column="4" selection-end-line="51" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="4" column="23" selection-start-line="4" selection-start-column="23" selection-end-line="4" selection-end-column="23" />
         </state>
       </provider>
     </entry>

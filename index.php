@@ -2,6 +2,7 @@
 include "include/include.php";
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 global $crt_lang_code;
+global $text_direction;
 global $lng;
 
 include $root . "/setting/config.php";
@@ -31,6 +32,15 @@ session_start();
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
+    <?php
+    if ($text_direction == 'rtl') {
+        ?>
+        <link href="/css/custom_rtl.css" rel="stylesheet">
+        <?php
+    } else {
+        ?>
+        <link href="/css/custom.css" rel="stylesheet">
+    <?php } ?>
     <link href="css/loaders.css" rel="stylesheet">
     <link href="css/swiper.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/animate.min.css">
