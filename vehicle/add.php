@@ -135,9 +135,9 @@ if (isset($_POST['add_car'])) {
                     <div class="modal-dialog" role="document" style="max-width: 800px;margin: 200px auto;">
                         <div class="modal-content" style="background-color: #1d4964; border-radius: 4px;">
                             <div class="modal-body text-center">
-                                <p class="dashboard-txt">Thanks for Registration of your Vehicle.</p>
-                                <p class="dashboard-txt">If you want to see all Report of this vehicle, please click on
-                                    Generate Report.</p>
+                                <p class="dashboard-txt"><?php echo $lng['Payment']['Thank_you'];?></p>
+                                <p class="dashboard-txt"><?php echo $lng['Payment']['please_click'];?></p>
+                                <p class="dashboard-txt"><?php echo $lng['Payment']['generate_report'];?></p>
                                 <?php
                                 $result = $config->getPrice();
                                 $currentPrice = $result->fetch_assoc();
@@ -146,7 +146,7 @@ if (isset($_POST['add_car'])) {
                                 if ($val == 0) {
                                     ?>
                                     <button class="btn btn-primary submit-fs btn-custom"
-                                            onclick="modalClose()">Generate Report
+                                            onclick="modalClose()"><?php echo $lng['Payment']['generate_report'];?>
                                     </button>
                                     <?php
                                 } else {

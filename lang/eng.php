@@ -125,13 +125,15 @@ $lng['password_recovery']['email_inexistent'] = 'There is no user registered wit
 
 // -------------------------- Payment-------------------
 
-$lng['Payment']['Thank_you'] = 'Thanks for Registration of your Vehicle.If you want to see all Report of this vehicle, please click on Generate Report.';
+$lng['Payment']['Thank_you'] = 'Thanks for Registration of your Vehicle.If you want to see all Report of this vehicle,';
+$lng['Payment']['please_click'] = 'If you want to see all Report of this vehicle, please click on Generate Report.';
 $lng['Payment']['Paypal'] = 'Paypal';
 $lng['Payment']['Copun'] = 'Copun';
 $lng['Payment']['after'] = 'After that you get Full Information about vehicle KM.';
 $lng['Payment']['Close'] = 'Close';
 $lng['Payment']['Copun_code'] = 'Coupon Code';
 $lng['Payment']['Submit'] = 'Submit';
+$lng['Payment']['generate_report'] = 'Generate Report';
 
 
 // -------------------------- PDF-------------------

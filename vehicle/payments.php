@@ -9,9 +9,9 @@ $enableSandbox = true;
 // Database settings. Change these for your database configuration.
 $dbConfig = [
 	'host' => 'localhost',
-	'username' => 'root',
-	'password' => '',
-	'name' => 'car'
+	'username' => 'carkm_Fouad',
+	'password' => '1?U}=aQ5U27M',
+	'name' => 'carkm_test'
 ];
 
 $vin = $_POST['vin'];
@@ -20,9 +20,9 @@ $vin = $_POST['vin'];
 // for your site.
 $paypalConfig = [
 	'email' => 'volleyvolley321@hotmail.com',
-	'return_url' => 'https://www.test.com.carpass.gr/vehicle/pdf.php?query='.$vin,
-	'cancel_url' => 'https://www.test.com.carpass.gr/vehicle/payment-cancelled.html',
-	'notify_url' => 'https://www.test.com.carpass.gr/vehicle/payments.php'
+	'return_url' => 'https://car-km.com/vehicle/pdf.php?query='.$vin,
+	'cancel_url' => 'https://car-km.com/vehicle/payment-cancelled.html',
+	'notify_url' => 'https://car-km.com/vehicle/payments.php'
 ];
 
 $paypalUrl = $enableSandbox ? 'https://www.sandbox.paypal.com/cgi-bin/webscr' : 'https://www.paypal.com/cgi-bin/webscr';
