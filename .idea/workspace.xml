@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cc247929-1d62-4f87-8878-de2e31666a78" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/setting/config.php" beforeDir="false" afterPath="$PROJECT_DIR$/setting/config.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/forgot.php" beforeDir="false" afterPath="$PROJECT_DIR$/user/forgot.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/register_dealer.php" beforeDir="false" afterPath="$PROJECT_DIR$/user/register_dealer.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/register_user.php" beforeDir="false" afterPath="$PROJECT_DIR$/user/register_user.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vehicle/add.php" beforeDir="false" afterPath="$PROJECT_DIR$/vehicle/add.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -17,7 +15,23 @@
     <pharConfigPath>$PROJECT_DIR$/phpmailer/composer.json</pharConfigPath>
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/vehicle/add.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="66">
+              <caret line="273" column="36" selection-start-line="273" selection-start-column="35" selection-end-line="273" selection-end-column="36" />
+              <folding>
+                <element signature="n#style#0;n#input#0;n#div#0;n#div#1;n#div#0;n#form#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#select#0;n#div#1;n#div#1;n#div#0;n#form#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#option#1;n#select#0;n#div#1;n#div#1;n#div#0;n#form#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#1;n#div#1;n#div#0;n#form#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -67,7 +81,6 @@
         <option value="$PROJECT_DIR$/admin/provinceedit.php" />
         <option value="$PROJECT_DIR$/admin/send-mail.php" />
         <option value="$PROJECT_DIR$/vehicle/invoice.php" />
-        <option value="$PROJECT_DIR$/vehicle/add.php" />
         <option value="$PROJECT_DIR$/user/profile_user.php" />
         <option value="$PROJECT_DIR$/activate_account.php" />
         <option value="$PROJECT_DIR$/admin/mails_settings.php" />
@@ -77,6 +90,7 @@
         <option value="$PROJECT_DIR$/setting/config.php" />
         <option value="$PROJECT_DIR$/index.php" />
         <option value="$PROJECT_DIR$/user/forgot.php" />
+        <option value="$PROJECT_DIR$/vehicle/add.php" />
       </list>
     </option>
   </component>
@@ -98,6 +112,11 @@
               <item name="car-km" type="b2602c69:ProjectViewProjectNode" />
               <item name="car-km" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="car-km" type="b2602c69:ProjectViewProjectNode" />
+              <item name="car-km" type="462c0819:PsiDirectoryNode" />
+              <item name="vehicle" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -108,7 +127,7 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/admin" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/template/css/style-rtl.css" />
@@ -143,16 +162,18 @@
       <workItem from="1568021042040" duration="17295000" />
       <workItem from="1568063093371" duration="40000" />
       <workItem from="1568105602927" duration="38844000" />
+      <workItem from="1568276864614" duration="1071000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="56179000" />
+    <option name="totallyTimeSpent" value="57250000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16364606" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1652452" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -296,13 +317,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/province.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="616">
-          <caret line="28" column="1" lean-forward="true" selection-start-line="28" selection-start-column="1" selection-end-line="28" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/home.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1113">
@@ -408,23 +422,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/vehicle/add.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="256" column="4" lean-forward="true" selection-start-line="256" selection-start-column="4" selection-end-line="260" selection-end-column="13" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#input#0;n#div#0;n#div#1;n#div#0;n#form#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#select#0;n#div#1;n#div#1;n#div#0;n#form#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#1;n#div#1;n#div#0;n#form#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="e#21710#21717#1#HTML" expanded="true" />
-            <element signature="n#style#0;n#img#0;n#div#1;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/user/register_dealer.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-499">
@@ -485,6 +482,19 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="198">
           <caret line="30" column="23" lean-forward="true" selection-start-line="30" selection-start-column="23" selection-end-line="30" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vehicle/add.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="66">
+          <caret line="273" column="36" selection-start-line="273" selection-start-column="35" selection-end-line="273" selection-end-column="36" />
+          <folding>
+            <element signature="n#style#0;n#input#0;n#div#0;n#div#1;n#div#0;n#form#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#select#0;n#div#1;n#div#1;n#div#0;n#form#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#option#1;n#select#0;n#div#1;n#div#1;n#div#0;n#form#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#div#1;n#div#0;n#form#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

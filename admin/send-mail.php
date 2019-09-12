@@ -28,7 +28,7 @@ function smtpmailer($to, $from_name, $subject, $body)
     $mail2send->setMessage($msg);
     $is_sendMail = $mail2send->send();
     if (!$is_sendMail) {
-        exit($mail2send->send_error);
+        $response = $mail2send->send_error;
     }
 }
 

@@ -271,31 +271,31 @@ include "../template/header.php";
         <form method="post">
             <div class="row col-md-12">
                 <div class="col-md-1"></div>
-                <div class="col-md-5 text-left mt-1">
+                <div class="col-md-4 text-left mt-1">
                     <label class="control-label"><?php echo $lng['general']['Plate_Number']; ?></label>
                     <div class="only-plate row">
                         <!--<i class="fas fa-list-ol"></i>-->
                         <input type="text" required="" name="plate" id="car_plate"
-                               style="text-transform: uppercase;border:solid 1px black;height: 28px;"
+                               style="text-transform: uppercase;border:solid 1px black;height: 45px;"
                                onkeyup="this.value = this.value.toUpperCase();" class="col-md-10">
                     </div>
                     <div class="row">
                         <select name="after_fix" required="" id="add_provin" class="col-md-7 col-sm-7"
-                                style="border:solid 1px black;font-weight:bolder;">
+                                style="border:solid 1px black;font-weight:bolder;font-size:25px;height:45px;">
                             <option disabled selected></option>
 
                             <?php
                             $getProvinList = $config->getProvinList();
                             while ($getProvinList_fetch = $getProvinList->fetch_assoc()) {
                                 ?>
-                                <option value="<?php echo $getProvinList_fetch[$crt_lang_code]; ?>">
+                                <option value="<?php echo $getProvinList_fetch[$crt_lang_code]; ?>" style="font-size:25px;">
                                     <?php echo $getProvinList_fetch[$crt_lang_code]; ?>
                                 </option>
                                 <?php
                             }
                             ?>
                         </select>
-                        <div style="font-size:23px;border:solid 1px black;background:white;text-align: center;font-weight:bolder;"
+                        <div style="font-size:25px;border:solid 1px black;background:white;text-align: center;font-weight:bolder;"
                              class="col-md-3 col-sm-5">العراق
                         </div>
                     </div>
