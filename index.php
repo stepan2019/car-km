@@ -1,5 +1,5 @@
 <?php
-
+exit('sdfsdf');
 include "include/include.php";
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 global $crt_lang_code;
