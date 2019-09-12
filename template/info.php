@@ -47,7 +47,7 @@ include "header.php";
 
 <div class="contact-sec info-panel parallax-section" style="background-size: cover; background-repeat: no-repeat;">
     <div class="container privacy mt-3">
-        <h2>National CarPass Information</h2>
+        <h2><?php echo $lng['general']['national_information'];?></h2>
         <div class="row pt-2">
             <div class="col-md-2"></div>
             <div class="col-md-8 privacy-box">

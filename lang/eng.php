@@ -45,6 +45,7 @@ $lng['general']['Request_make_model'] = 'You can request to us the new make or m
 $lng['general']['search'] = 'Search';
 $lng['general']['download'] = 'Download';
 $lng['general']['select_crashed_car'] = 'You must select the Car Crashed Status if car has been crashed.';
+$lng['general']['national_information'] = 'National CarPass Information.';
 
 
 
