@@ -78,12 +78,12 @@ if (isset($_POST['register'])) {
     }
 </style>
 
-<div class="register-div">
+<div class="register-div container">
     <?php if ($response != "") { ?>
         <p><label class="control-label mt-3"><?php echo $response; ?></label></p>
     <?php } ?>
     <form method="post">
-        <div class="row col-md-12">
+        <div class="row col-md-12 justify-content-center">
             <div class="col-md-3 text-left mt-4">
                 <label class="control-label"><?php echo $lng['users']['Username']; ?></label>
                 <div class="agileits-main">
@@ -105,6 +105,8 @@ if (isset($_POST['register'])) {
                     <input type="text" placeholder="Bagdada/Iraq" required="" name="address">
                 </div>
             </div>
+        </div>
+        <div class="row col-md-12 justify-content-center">
             <div class="col-md-3 text-left mt-4">
                 <label class="control-label"><?php echo $lng['users']['Email']; ?></label>
                 <div class="agileits-main">
@@ -116,7 +118,7 @@ if (isset($_POST['register'])) {
                 <label class="control-label"><?php echo $lng['users']['Phone_number']; ?></label>
                 <div class="agileits-main">
                     <i class="fas fa-phone"></i>
-                    <input type="tel" placeholder="07702247788" required="" name="phone">
+                    <input type="text" placeholder="07702247788" required="" name="phone">
                 </div>
             </div>
             <div class="col-md-3 text-left mt-4">
@@ -126,20 +128,24 @@ if (isset($_POST['register'])) {
                     <input type="text" placeholder="Car Sell" required="" name="company">
                 </div>
             </div>
+        </div>
+        <div class="row col-md-12 justify-content-center">
             <div class="col-md-3 text-left mt-4">
                 <label class="control-label"><?php echo $lng['users']['Website']; ?></label>
                 <div class="agileits-main">
                     <i class="fas fa-network-wired"></i>
-                    <input type="url" placeholder="https://seyare.net" required="" name="website">
+                    <input type="text" placeholder="https://seyare.net" required="" name="website">
                 </div>
             </div>
         </div>
         <div class="row submit col-md-12">
+            <div class="col-md-1"></div>
             <div class="col-md-3 text-left mt-4">
                 <input type="submit" class="btn btn-primary submit-fs btn-custom"
                        value="<?php echo $lng['users']['register']; ?>" name="register">
 
             </div>
+            <div class="col-md-8"
         </div>
         <div class="clearfix"></div>
     </form>

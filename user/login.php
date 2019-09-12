@@ -7,7 +7,8 @@ if (!empty($_GET['query'])) {
 include "../include/include.php";
 
 global $lng;
-
+global $crt_lang_code;
+global $text_direction;
 if (@$_SESSION['user']) {
     header("location:../vehicle/add.php");
     exit(0);
@@ -40,8 +41,17 @@ $information = $result->fetch_assoc();
     <link href="../css/nivo_themes/default/default.css" rel="stylesheet">
 
     <link rel="stylesheet" href="/css/all.css" crossorigin="anonymous">
+    <?php
+    if ($text_direction == 'rtl') {
+        ?>
+        <link href="/css/custom_rtl.css" rel="stylesheet">
+        <?php
+    } else {
+        ?>
+        <link href="/css/custom.css" rel="stylesheet">
+    <?php } ?>
     <script>
-        exdate=new Date();
+        exdate = new Date();
         exdate.setDate(exdate.getDate() + 365);
 
     </script>
@@ -66,11 +76,13 @@ include "../template/header.php";
             <div>
                 <div class="type-user1">
                     <a href="login.php?type=login_user<?php if (isset($go)) echo "&go=" . $go; ?>"
-                       class="link-size typing-glow mr-5"><i class="far fa-user"></i>&nbsp;&nbsp;<?php echo $lng['login']['User']; ?></a>
+                       class="link-size typing-glow mr-5"><i
+                                class="far fa-user"></i>&nbsp;&nbsp;<?php echo $lng['login']['User']; ?></a>
                 </div>
                 <div class="type-user2">
                     <a href="login.php?type=login_dealer<?php if (isset($go)) echo "&go=" . $go; ?>"
-                       class="link-size typing-glow ml-5"><i class="fas fa-car"></i>&nbsp;&nbsp;<?php echo $lng['login']['Delaer']; ?></a>
+                       class="link-size typing-glow ml-5"><i
+                                class="fas fa-car"></i>&nbsp;&nbsp;<?php echo $lng['login']['Delaer']; ?></a>
                 </div>
             </div>
         <?php } ?>

@@ -30,8 +30,6 @@ session_start();
     <title>Carpass Greece national KM Registration</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/custom.css" rel="stylesheet">
-
 
     <link href="css/loaders.css" rel="stylesheet">
     <link href="css/swiper.min.css" rel="stylesheet">

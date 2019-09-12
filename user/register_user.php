@@ -77,12 +77,12 @@ if (isset($_POST['register'])) {
     }
 </style>
 
-<div class="register-div">
+<div class="register-div container">
     <?php if ($response != "") { ?>
         <p><label class="control-label mt-3"><?php echo $response; ?></label></p>
     <?php } ?>
     <form method="post">
-        <div class="row col-md-12">
+        <div class="row col-md-12 justify-content-center">
             <div class="col-md-3 text-left mt-4">
                 <label class="control-label"><?php echo $lng['users']['Fullname']; ?></label>
                 <div class="agileits-main">
@@ -104,6 +104,8 @@ if (isset($_POST['register'])) {
                     <input type="text" placeholder="Sulaymanyah/Iraq" required="" name="address">
                 </div>
             </div>
+        </div>
+        <div class="row col-md-12 justify-content-center">
             <div class="col-md-3 text-left mt-4">
                 <label class="control-label"><?php echo $lng['users']['Email']; ?></label>
                 <div class="agileits-main">
@@ -115,14 +117,16 @@ if (isset($_POST['register'])) {
                 <label class="control-label"><?php echo $lng['users']['Phone_number']; ?></label>
                 <div class="agileits-main">
                     <i class="fas fa-phone"></i>
-                    <input type="tel" placeholder="07702247788" required="" name="phone">
+                    <input type="text" placeholder="07702247788" required="" name="phone">
                 </div>
             </div>
         </div>
-        <div class="text-center submit mt-5">
-            <input type="submit" class="btn btn-primary submit-fs btn-custom btn_register"
-                   value="<?php echo $lng['users']['register']; ?>"
-                   name="register">
+        <div class="col-md-12 row justify-content-center submit mt-5">
+            <div class="col-md-3 text-left mt-4">
+                <input type="submit" class="btn btn-primary submit-fs btn-custom btn_register"
+                       value="<?php echo $lng['users']['register']; ?>"
+                       name="register">
+            </div>
 
         </div>
         <div class="clearfix"></div>

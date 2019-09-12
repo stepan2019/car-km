@@ -58,25 +58,7 @@ if (isset($_POST['add_car'])) {
     $plate = $_POST['plate'] . '/' . $after_fix;
     $pre_fix = $_POST['plate'];
     $vin = $_POST['vin'];
-    if ($plate && $vin) {
-        global $config_live_site;
-        global $mail_setting;
-        // add activation code to db record
-        $mail2send = new mails();
-        $mail2send->init($email, 'Carpass');
-        $mail2send->to = $mail_setting['username'];
-        $mail2send->to_name = 'Car register';
-        $mail2send->setSubject(cleanStr('Hello admin there is vehicle ADD to carpass database'));
-        $msg = nl2br(cleanStr('<div>
-                                        <p> with plate number' . $plate . ' and vin number ' . $vin . '</p>
-                                        <p> Please check the vehicle . </p>
-                                    </div><div>User Email : ' . $email . '</div>')) . '';
-        $mail2send->setMessage($msg);
-        $is_sendMail = $mail2send->send();
-        if (!$is_sendMail) {
-            $response = "Sorry, is failed to register";
-        }
-    }
+
     if (isset($_POST['make']) && isset($_POST['model']) && isset($_POST['year']) && isset($_POST['crash'])) {
         $make = $_POST['make'];
         $model = $_POST['model'];
@@ -116,6 +98,23 @@ if (isset($_POST['add_car'])) {
             $result = $config->add_vehicle($user_id, $type, $plate, $pre_fix, $after_fix, $vin, $make, $model, $year, $km, $date, $crash, $front, $back, $lefty, $righty, $total);
             if ($result) {
                 // $response = "Successfully to add";
+                global $config_live_site;
+                global $mail_setting;
+                // add activation code to db record
+                $mail2send = new mails();
+                $mail2send->init($email, 'Carpass');
+                $mail2send->to = $mail_setting['username'];
+                $mail2send->to_name = 'Car register';
+                $mail2send->setSubject(cleanStr('Hello admin there is vehicle ADD to carpass database'));
+                $msg = nl2br(cleanStr('<div>
+                                        <p> with plate number' . $plate . ' and vin number ' . $vin . '</p>
+                                        <p> Please check the vehicle . </p>
+                                    </div><div>User Email : ' . $email . '</div>')) . '';
+                $mail2send->setMessage($msg);
+                $is_sendMail = $mail2send->send();
+                if (!$is_sendMail) {
+                    $response = $mail2send->send_error;
+                }
                 ?>
                 <script src="../js/jquery.min.js"></script>
                 <script>
@@ -135,8 +134,8 @@ if (isset($_POST['add_car'])) {
                     <div class="modal-dialog" role="document" style="max-width: 800px;margin: 200px auto;">
                         <div class="modal-content" style="background-color: #1d4964; border-radius: 4px;">
                             <div class="modal-body text-center">
-                                <p class="dashboard-txt"><?php echo $lng['Payment']['Thank_you'];?></p>
-                                <p class="dashboard-txt"><?php echo $lng['Payment']['please_click'];?></p>
+                                <p class="dashboard-txt"><?php echo $lng['Payment']['Thank_you']; ?></p>
+                                <p class="dashboard-txt"><?php echo $lng['Payment']['please_click']; ?></p>
                                 <?php
                                 $result = $config->getPrice();
                                 $currentPrice = $result->fetch_assoc();
@@ -145,7 +144,7 @@ if (isset($_POST['add_car'])) {
                                 if ($val == 0) {
                                     ?>
                                     <button class="btn btn-primary submit-fs btn-custom"
-                                            onclick="modalClose()"><?php echo $lng['Payment']['generate_report'];?>
+                                            onclick="modalClose()"><?php echo $lng['Payment']['generate_report']; ?>
                                     </button>
                                     <?php
                                 } else {
@@ -185,10 +184,11 @@ if (isset($_POST['add_car'])) {
                                     }
 
                                 </script>
-                                <p class="dashboard-txt">After that you get Full Information about vehicle KM.</p>
+                                <p class="dashboard-txt"><?php echo $lng['Payment']['after']; ?></p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary btn-custom" data-dismiss="modal">Close
+                                <button type="button" class="btn btn-primary btn-custom"
+                                        data-dismiss="modal"><?php echo $lng['Payment']['Close']; ?>
                                 </button>
                             </div>
                         </div>
@@ -279,7 +279,7 @@ include "../template/header.php";
                                onkeyup="this.value = this.value.toUpperCase();" class="col-md-10">
                     </div>
                     <div class="row">
-                        <select name="after_fix" required="" id="add_provin" class="col-md-7 col-sm-7"
+                        <select name="after_fix" required="" id="add_provin" class="col-md-6 col-sm-6"
                                 style="border:solid 1px black;font-weight:bolder;font-size:25px;height:45px;">
                             <option disabled selected></option>
 
@@ -287,7 +287,8 @@ include "../template/header.php";
                             $getProvinList = $config->getProvinList();
                             while ($getProvinList_fetch = $getProvinList->fetch_assoc()) {
                                 ?>
-                                <option value="<?php echo $getProvinList_fetch[$crt_lang_code]; ?>" style="font-size:25px;">
+                                <option value="<?php echo $getProvinList_fetch[$crt_lang_code]; ?>"
+                                        style="font-size:25px;">
                                     <?php echo $getProvinList_fetch[$crt_lang_code]; ?>
                                 </option>
                                 <?php
@@ -295,7 +296,7 @@ include "../template/header.php";
                             ?>
                         </select>
                         <div style="font-size:25px;border:solid 1px black;background:white;text-align: center;font-weight:bolder;"
-                             class="col-md-3 col-sm-5">العراق
+                             class="col-md-4 col-sm-4">العراق
                         </div>
                     </div>
                 </div>
