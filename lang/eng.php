@@ -44,6 +44,7 @@ $lng['general']['Request_New'] = 'Request New';
 $lng['general']['Request_make_model'] = 'You can request to us the new make or model if there doesnt exist.';
 $lng['general']['search'] = 'Search';
 $lng['general']['download'] = 'Download';
+$lng['general']['select_crashed_car'] = 'You must select the Car Crashed Status if car has been crashed.';
 
 
 

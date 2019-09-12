@@ -1,5 +1,7 @@
 body{
     direction: rtl;
+    font-family: 'Calibri ', lato,sans-serif;
+    background-color: #f1edd4;
 }
 .explain_div{
     text-align: right;
