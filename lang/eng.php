@@ -138,6 +138,7 @@ $lng['Payment']['Close'] = 'Close';
 $lng['Payment']['Copun_code'] = 'Coupon Code';
 $lng['Payment']['Submit'] = 'Submit';
 $lng['Payment']['generate_report'] = 'Generate Report';
+$lng['Payment']['coupon'] = 'Coupon';
 
 
 
@@ -161,6 +162,7 @@ $lng['Pdf']['no'] = 'no';
 $lng['Pdf']['front'] = 'front';
 $lng['Pdf']['left'] = 'left';
 $lng['Pdf']['right'] = 'right';
+$lng['Pdf']['back'] = 'back';
 $lng['Pdf']['yes'] = 'yes';
 $lng['Pdf']['add_date'] = 'Add Date';
 $lng['Pdf']['Explamation'] = 'Explanation';

@@ -170,7 +170,7 @@ if (isset($_POST['add_car'])) {
                                             <input type="button" name="paySubBtn" value="PayPal" id="paySubBtn"
                                                    class="btn btn-primary submit-fs btn-custom"/>
                                         <?php } ?>
-                                        <input type="button" name="coupon" value="Coupon" id="coupon_btn"
+                                        <input type="button" name="coupon" value="<?php echo $lng['Payment']['coupon'];?>" id="coupon_btn"
                                                class="btn btn-primary submit-fs btn-custom"/>
                                     </form>
 
