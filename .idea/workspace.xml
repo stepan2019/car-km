@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cc247929-1d62-4f87-8878-de2e31666a78" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/lang/eng.php" beforeDir="false" afterPath="$PROJECT_DIR$/lang/eng.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vehicle/add.php" beforeDir="false" afterPath="$PROJECT_DIR$/vehicle/add.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vehicle/payments.php" beforeDir="false" afterPath="$PROJECT_DIR$/vehicle/payments.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vehicle/pdf.php" beforeDir="false" afterPath="$PROJECT_DIR$/vehicle/pdf.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -21,8 +18,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/vehicle/add.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="265">
-              <caret line="139" column="100" selection-start-line="139" selection-start-column="100" selection-end-line="139" selection-end-column="100" />
+            <state relative-caret-position="397">
+              <caret line="139" selection-start-line="139" selection-end-line="139" />
               <folding>
                 <element signature="n#style#0;n#input#0;n#div#0;n#div#1;n#div#0;n#form#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#select#0;n#div#1;n#div#1;n#div#0;n#form#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -46,7 +43,7 @@
         <entry file="file://$PROJECT_DIR$/lang/eng.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="356">
-              <caret line="135" column="32" selection-start-line="135" selection-start-column="17" selection-end-line="135" selection-end-column="32" />
+              <caret line="135" column="55" lean-forward="true" selection-start-line="135" selection-start-column="55" selection-end-line="135" selection-end-column="55" />
             </state>
           </provider>
         </entry>
@@ -227,18 +224,18 @@
       <workItem from="1568021042040" duration="17295000" />
       <workItem from="1568063093371" duration="40000" />
       <workItem from="1568105602927" duration="38844000" />
-      <workItem from="1568276864614" duration="5623000" />
+      <workItem from="1568276864614" duration="6045000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="61802000" />
+    <option name="totallyTimeSpent" value="62224000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1652452" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1652452" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -251,7 +248,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.32936078" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.32936078" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -529,6 +526,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/lang/eng.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="356">
+          <caret line="135" column="55" lean-forward="true" selection-start-line="135" selection-start-column="55" selection-end-line="135" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/vehicle/pdf.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="924">
@@ -536,17 +540,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lang/eng.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="356">
-          <caret line="135" column="32" selection-start-line="135" selection-start-column="17" selection-end-line="135" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/vehicle/add.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="265">
-          <caret line="139" column="100" selection-start-line="139" selection-start-column="100" selection-end-line="139" selection-end-column="100" />
+        <state relative-caret-position="397">
+          <caret line="139" selection-start-line="139" selection-end-line="139" />
           <folding>
             <element signature="n#style#0;n#input#0;n#div#0;n#div#1;n#div#0;n#form#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#select#0;n#div#1;n#div#1;n#div#0;n#form#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />

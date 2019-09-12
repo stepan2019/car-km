@@ -137,7 +137,6 @@ if (isset($_POST['add_car'])) {
                             <div class="modal-body text-center">
                                 <p class="dashboard-txt"><?php echo $lng['Payment']['Thank_you'];?></p>
                                 <p class="dashboard-txt"><?php echo $lng['Payment']['please_click'];?></p>
-                                <p class="dashboard-txt"><?php echo $lng['Payment']['generate_report'];?></p>
                                 <?php
                                 $result = $config->getPrice();
                                 $currentPrice = $result->fetch_assoc();
