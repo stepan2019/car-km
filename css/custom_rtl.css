@@ -1015,6 +1015,7 @@ input[name="website"] {
     border: none;
     background: #002147;
     border-radius: 5px;
+	font-weight:bold;
 }
 
 .submit-fs {

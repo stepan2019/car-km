@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cc247929-1d62-4f87-8878-de2e31666a78" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/config.php" beforeDir="false" afterPath="$PROJECT_DIR$/config.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/custom.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/custom.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/css/custom_rtl.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/custom_rtl.css" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -31,11 +31,20 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/css/custom_rtl.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="246">
-              <caret line="1012" column="28" selection-start-line="1012" selection-start-column="28" selection-end-line="1012" selection-end-column="28" />
+            <state relative-caret-position="180">
+              <caret line="1009" column="14" selection-start-line="1009" selection-start-column="1" selection-end-line="1009" selection-end-column="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/css/custom.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="206">
+              <caret line="1017" column="21" selection-start-line="1017" selection-start-column="21" selection-end-line="1017" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -100,7 +109,6 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/setting/db_connect.php" />
-        <option value="$PROJECT_DIR$/css/custom.css" />
         <option value="$PROJECT_DIR$/admin/vehiclelist.php" />
         <option value="$PROJECT_DIR$/template/css/style.css" />
         <option value="$PROJECT_DIR$/admin/newfields.php" />
@@ -127,6 +135,7 @@
         <option value="$PROJECT_DIR$/index.php" />
         <option value="$PROJECT_DIR$/config.php" />
         <option value="$PROJECT_DIR$/css/custom_rtl.css" />
+        <option value="$PROJECT_DIR$/css/custom.css" />
       </list>
     </option>
   </component>
@@ -203,12 +212,12 @@
       <workItem from="1568021042040" duration="17295000" />
       <workItem from="1568063093371" duration="40000" />
       <workItem from="1568105602927" duration="38844000" />
-      <workItem from="1568276864614" duration="2757000" />
+      <workItem from="1568276864614" duration="2979000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="58936000" />
+    <option name="totallyTimeSpent" value="59158000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -260,13 +269,6 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/css/custom.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
-          <caret line="1020" column="20" lean-forward="true" selection-start-line="1020" selection-start-column="20" selection-end-line="1020" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/vehiclelist.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="352">
@@ -534,8 +536,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/css/custom_rtl.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="246">
-          <caret line="1012" column="28" selection-start-line="1012" selection-start-column="28" selection-end-line="1012" selection-end-column="28" />
+        <state relative-caret-position="180">
+          <caret line="1009" column="14" selection-start-line="1009" selection-start-column="1" selection-end-line="1009" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/custom.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="206">
+          <caret line="1017" column="21" selection-start-line="1017" selection-start-column="21" selection-end-line="1017" selection-end-column="21" />
         </state>
       </provider>
     </entry>
