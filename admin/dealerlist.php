@@ -14,6 +14,7 @@
                 <th>Phone</th>
                 <th>Company</th>
                 <th>Website</th>
+                <th>Active</th>
                 <th>Block</th>
                 <th class="text-center">Action</th>
             </tr>
@@ -32,6 +33,15 @@
                 <td><?php echo $dealer['phone']; ?></td>
                 <td><?php echo $dealer['company']; ?></td>
                 <td><?php echo $dealer['website']; ?></td>
+                <td>
+                    <input type="checkbox" value="<?php echo $dealer['active']; ?>" name="dealer_active" data-id="<?php echo $dealer['id']; ?>"
+                        <?php
+                            if($dealer['active'] == 1) {
+                                echo "checked";
+                            }
+                        ?>
+                    >
+                </td>
                 <td>
                     <input type="checkbox" value="<?php echo $dealer['block']; ?>" name="dealer_block" data-id="<?php echo $dealer['id']; ?>"
                         <?php

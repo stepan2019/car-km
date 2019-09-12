@@ -75,7 +75,7 @@
     }
 ?>
 
-<div class="text-center dashboard-txt mb-4">You can add new Make and Model and Province if there doesn't exist.</div>
+<div class="text-center dashboard-txt mb-4">You can add new Make and Model if there doesn't exist.</div>
 <hr>
 <div class="row col-md-12">
     <div class="col-md-1"></div>

@@ -12,7 +12,8 @@
 
         $result = $config->login_dealer($email, $password);
         $isBlock = $config->blockCheck($email, "dealer");
-        if($result == 1 && !$isBlock) {
+        $isActive = $config->activeCheck($email, "dealer");
+        if($result == 1 && !$isBlock && $isActive)	{
             $_SESSION['user'] = $email;
             $_SESSION['type'] = "dealer";
             if(isset($goTo) && $goTo == "goVehicle"){

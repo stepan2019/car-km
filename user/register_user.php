@@ -54,7 +54,7 @@ if (isset($_POST['register'])) {
             $mail2admin->setMessage($msg);
             $is_sendMail = $mail2admin->send();
             if ($is_sendMail) {
-                header("location:/user/login.php?type=login_user");
+                $response = 'You are registered. you got mail. you have to activate your account.';
             } else {
                 $response = $mail2send->send_error;
             }

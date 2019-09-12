@@ -248,7 +248,7 @@ if (isset($_GET['query'])) {
                     1 - Logical that means the KM is Logical as we have Registered by Carpass.<br>
                     2 - Not Logical, That means the km is change after registration by Carpass.<br>
                     3 - No Judgment, that mean we have no any data of this vehicle, that is first Registration by
-                    Carpass.
+                    Car-KM.
                 </p>
             </div>
         </div>

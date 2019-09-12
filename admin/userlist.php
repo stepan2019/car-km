@@ -29,7 +29,15 @@
                     <td><?php echo $user['address']; ?></td>
                     <td><?php echo $user['email']; ?></td>
                     <td><?php echo $user['phone']; ?></td>
-                    <td><?php echo ($user['active']) ? 'Yes' : 'No'; ?></td>
+                    <td>
+                        <input type="checkbox" value="<?php echo $user['active']; ?>" name="user_active" data-id="<?php echo $user['id']; ?>"
+                            <?php
+                            if($user['active'] == 1) {
+                                echo "checked";
+                            }
+                            ?>
+                        >
+                    </td>
                     <td>
                         <input type="checkbox" value="<?php echo $user['block']; ?>" name="user_block"
                                data-id="<?php echo $user['id']; ?>"

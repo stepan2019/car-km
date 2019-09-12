@@ -13,7 +13,8 @@
 
         $result = $config->login_user($email, $password);
         $isBlock = $config->blockCheck($email, "user");
-        if($result == 1 && !$isBlock)	{
+        $isActive = $config->activeCheck($email, "user");
+        if($result == 1 && !$isBlock && $isActive)	{
             $_SESSION['user'] = $email;
             $_SESSION['type'] = "user";
             if(isset($goTo) && $goTo == "goVehicle"){

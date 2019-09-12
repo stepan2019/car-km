@@ -30,7 +30,7 @@ class Car
 
     public function getInvoiceHistory()
     {
-        $query = "select * from invoices";
+        $query = "select * from invoices order by `id` DESC";
         $result = $this->connectdb->query($query);
         return $result;
 
@@ -92,13 +92,12 @@ class Car
         return $result;
 
     }
-
-// register
     public function userEmailCheck($email){
         $query = "select email from user where email='$email'";
         $result = $this->connectdb->query($query);
         return $result->num_rows;
     }
+// register
     public
     function register_user($name, $address, $email, $phone, $password)
     {
@@ -131,11 +130,13 @@ class Car
         $result = $this->connectdb->query($query);
         return $result;
     }
+
     public function dealerEmailCheck($email){
         $query = "select email from dealer where email='$email'";
         $result = $this->connectdb->query($query);
         return $result->num_rows;
     }
+
     public
     function register_dealer($name, $address, $email, $phone, $company, $website, $password)
     {
@@ -269,9 +270,22 @@ class Car
         else
             return false;
     }
+    function activeCheck($email, $type)
+    {
+        if ($type == "user")
+            $query = "select * from user where email = '$email'";
+        else
+            $query = "select * from dealer where email = '$email'";
+        $result = $this->connectdb->query($query);
 
-    // add vehicle
-    public function add_vehicle($user_id, $type, $plate, $pre_fix, $after_fix, $vin, $make, $model, $year, $km, $date, $crash, $front, $back, $lefty, $righty, $total)
+        $obj = $result->fetch_assoc();
+        $isActive = $obj['active'];
+        return $isActive;
+    }
+
+// add vehicle
+    public
+    function add_vehicle($user_id, $type, $plate, $vin, $make, $model, $year, $km, $date, $crash, $front, $back, $lefty, $righty, $total)
     {
         $query = "select id from vehicle where vin = '$vin'";
         $result = $this->connectdb->query($query);
@@ -390,29 +404,6 @@ class Car
         $result = $this->connectdb->query($query);
         return $result;
     }
-
-    public function add_provin($english, $arabic, $greek, $kurdish)
-    {
-        $query = "insert into province(en, ar, el, Ku) values('$english', '$arabic', '$greek', '$kurdish')";
-        $result = $this->connectdb->query($query);
-        return $result;
-    }
-
-    public function update_provin($id, $english, $arabic, $greek, $kurdish)
-    {
-        $query = "update province set en='$english', ar='$arabic', el='$greek', Ku='$kurdish' where id = '$id'";
-        $result = $this->connectdb->query($query);
-        return $result;
-    }
-
-    public
-    function getMakeList()
-    {
-        $query = "select * from make order by name ASC";
-        $result = $this->connectdb->query($query);
-        return $result;
-    }
-
     public function getProvinList()
     {
         $query = "select * from province";
@@ -426,6 +417,44 @@ class Car
         $result = $this->connectdb->query($query);
         return $result;
     }
+    public function add_provin($english, $arabic, $greek, $kurdish)
+    {
+        $query = "insert into province(en, ar, el, Ku) values('$english', '$arabic', '$greek', '$kurdish')";
+        $result = $this->connectdb->query($query);
+        return $result;
+    }
+
+    public function update_provin($id, $english, $arabic, $greek, $kurdish)
+    {
+        $query = "update province set en='$english', ar='$arabic', el='$greek', Ku='$kurdish' where id = '$id'";
+        $result = $this->connectdb->query($query);
+        return $result;
+    }
+    
+    public function existProvinByCode($new_provin, $lang_id)
+    {
+        $query = "select * from province where name = '$new_provin' and  lang_id = '$lang_id'";
+        $result = $this->connectdb->query($query);
+        $exist = $result->num_rows;
+
+        if ($exist > 0) return true;
+        return false;
+    }
+    public function deleteProvince($id)
+    {
+        $query = "delete from province where id = '$id'";
+        $result = $this->connectdb->query($query);
+        return $result;
+    }
+
+    public
+    function getMakeList()
+    {
+        $query = "select * from make order by name ASC";
+        $result = $this->connectdb->query($query);
+        return $result;
+    }
+    
 
     public
     function getMaekIdByName($name)
@@ -446,15 +475,7 @@ class Car
         return false;
     }
 
-    public function existProvinByCode($new_provin, $lang_id)
-    {
-        $query = "select * from province where name = '$new_provin' and  lang_id = '$lang_id'";
-        $result = $this->connectdb->query($query);
-        $exist = $result->num_rows;
-
-        if ($exist > 0) return true;
-        return false;
-    }
+    
 
     public
     function deleteMake($makelist)
@@ -469,12 +490,7 @@ class Car
         return $result;
     }
 
-    public function deleteProvince($id)
-    {
-        $query = "delete from province where id = '$id'";
-        $result = $this->connectdb->query($query);
-        return $result;
-    }
+    
 
 // add model
     public
@@ -559,7 +575,7 @@ class Car
     public
     function getUserList()
     {
-        $query = "select * from user order by name ASC";
+        $query = "select * from user order by `id` DESC";
         $result = $this->connectdb->query($query);
         return $result;
     }
@@ -567,7 +583,7 @@ class Car
     public
     function getDealerList()
     {
-        $query = "select * from dealer order by name ASC";
+        $query = "select * from dealer order by `id` DESC";
         $result = $this->connectdb->query($query);
         return $result;
     }
@@ -628,11 +644,24 @@ class Car
         $result = $this->connectdb->query($query);
         return $result;
     }
+    function userActive($id, $isChecked)
+    {
+        $query = "update user set active = '$isChecked' where id = '$id'";
+        $result = $this->connectdb->query($query);
+        return $result;
+    }
 
     public
     function dealerBlock($id, $isChecked)
     {
         $query = "update dealer set block = '$isChecked' where id = '$id'";
+        $result = $this->connectdb->query($query);
+        return $result;
+    }
+    public
+    function dealerActive($id, $isChecked)
+    {
+        $query = "update dealer set active = '$isChecked' where id = '$id'";
         $result = $this->connectdb->query($query);
         return $result;
     }
@@ -652,7 +681,7 @@ class Car
     public
     function getVehicleList()
     {
-        $query = "select * from vehicle";
+        $query = "select * from vehicle order by `id` DESC";
         $result = $this->connectdb->query($query);
         return $result;
     }
