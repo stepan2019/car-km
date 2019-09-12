@@ -1,9 +1,9 @@
 <?php
-exit('sdfsdf');
 include "include/include.php";
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 global $crt_lang_code;
 global $lng;
+exit('sdfsdf');
 
 include $root . "/setting/config.php";
 // include "setting/config.php";
