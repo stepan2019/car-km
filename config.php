@@ -14,9 +14,9 @@
 
 	$config_table_prefix='';
 
-	$config_live_site='https://car-km.com';
+	$config_live_site='https://127.0.0.80';
 
-	$config_abs_path='/home/carkm/public_html';
+	$config_abs_path='E:/workspace/car-km';
 
 	$config_demo=0;
 

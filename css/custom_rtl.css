@@ -1010,7 +1010,7 @@ input[name="website"] {
 .agileits-main input[type="text"], .agileits-main input[type="password"], .agileits-main input[type="email"], .agileits-main input[type="date"], .agileits-main input[type="number"], .agileits-main input[type="submit"], .agileits-main select {
     font-size: 1em;
     color: #fff;
-    padding: .9em 1em .9em 3em;
+    padding: .9em 3em .9em 1em;
     outline: none;
     border: none;
     background: #002147;
