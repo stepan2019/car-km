@@ -24,49 +24,49 @@ if (isset($_POST['register'])) {
     $settingResult = $config->getEmailSetting();
 
     $setting = $settingResult->fetch_assoc();
+    $is_useemail = $config->dealerEmailCheck($email);
+    if($is_useemail){
+        $response = 'Your email address already exists';
+    }else{
 
-    $result = $config->register_dealer($name, $address, $email, $phone, $company, $website, $password);
+        $result = $config->register_dealer($name, $address, $email, $phone, $company, $website, $password);
 
-    global $config_live_site;
-    // add activation code to db record
-    $activation_code = generate_random();
-    $res_act = $db->query("update dealer set activation='$activation_code' where `email` = '$email'");
-    $type = "dealder";
-    $account = urlencode($_POST['email']);
-    if (!$mail_setting['html_mails'])
-        $act_link = $config_live_site . '/activate_account.php?account=' . $account . '&activation=' . $activation_code . '&type=' . $type;
-    else {
-        $lnk = $config_live_site . '/activate_account.php?account=' . $account . '&activation=' . $activation_code . '&type=' . $type;
-        $act_link = '<a href="' . $lnk . '">' . $lnk . '</a>';
-    }
-    //send Active mail to dealer
-    $mail2send = new mails();
-    $mail2send->init($_POST['email'], $_POST['name']);
-    $mail2send->to = $email;
-    $mail2send->to_name = $name;
-    $mail2send->setSubject(cleanStr('Thank you for registration on Car-KM'));
-    $msg = nl2br(cleanStr('<div><p>After activation you can ADD your vehicle,</p><p> please click on this link to activate your account. </p><p>Then link to activate</p>
-                <p>' . $act_link . '</p></div>')) . '';
-    $mail2send->setMessage($msg);
-    $is_sendMail = $mail2send->send();
-    $mail2admin = new mails();
-    $mail2admin->init($mail_setting['username'], $_POST['name']);
-    $mail2admin->to = $mail_setting['username'];
-    $mail2admin->to_name = 'Car-KM Admin';
-    $mail2admin->setSubject(cleanStr('Dealer Registration'));
-    $msg = nl2br(cleanStr('<div><p>Dealer email address : '.$email.',</p><p> Dealer name : '.$name.'. </p><p>Please check this user</p>
-                </div>')) . '';
-    $mail2admin->setMessage($msg);
-    $is_sendMail = $mail2admin->send();
-    if ($is_sendMail) {
-        header("location:/user/login.php?type=login_dealer");
-    } else {
-        $response = $mail2send->send_error;
-    }
-    if ($result) {
-        header("location:/user/login.php?type=login_dealer");
-    } else {
-        $response = "Sorry, is failed to register";
+        global $config_live_site;
+        // add activation code to db record
+        $activation_code = generate_random();
+        $res_act = $db->query("update dealer set activation='$activation_code' where `email` = '$email'");
+        $type = "dealder";
+        $account = urlencode($_POST['email']);
+        if (!$mail_setting['html_mails'])
+            $act_link = $config_live_site . '/activate_account.php?account=' . $account . '&activation=' . $activation_code . '&type=' . $type;
+        else {
+            $lnk = $config_live_site . '/activate_account.php?account=' . $account . '&activation=' . $activation_code . '&type=' . $type;
+            $act_link = '<a href="' . $lnk . '">' . $lnk . '</a>';
+        }
+        //send Active mail to dealer
+        $mail2send = new mails();
+        $mail2send->init($_POST['email'], $_POST['name']);
+        $mail2send->to = $email;
+        $mail2send->to_name = $name;
+        $mail2send->setSubject(cleanStr('Thank you for registration on carpass'));
+        $msg = nl2br(cleanStr('<div><p>After activation you can ADD your vehicle,</p><p> please click on this link to activate your account. </p><p>Then link to activate</p>
+                    <p>' . $act_link . '</p></div>')) . '';
+        $mail2send->setMessage($msg);
+        $is_sendMail = $mail2send->send();
+        $mail2admin = new mails();
+        $mail2admin->init($mail_setting['username'], $_POST['name']);
+        $mail2admin->to = $mail_setting['username'];
+        $mail2admin->to_name = 'Carpass Admin';
+        $mail2admin->setSubject(cleanStr('Dealer Registration'));
+        $msg = nl2br(cleanStr('<div><p>Dealer email address : '.$email.',</p><p> Dealer name : '.$name.'. </p><p>Please check this user</p>
+                    </div>')) . '';
+        $mail2admin->setMessage($msg);
+        $is_sendMail = $mail2admin->send();
+        if ($is_sendMail) {
+            header("location:/user/login.php?type=login_dealer");
+        } else {
+            $response = $mail2send->send_error;
+        }
     }
 }
 ?>
@@ -79,6 +79,9 @@ if (isset($_POST['register'])) {
 </style>
 
 <div class="register-div">
+    <?php if ($response != "") { ?>
+        <p><label class="control-label mt-3"><?php echo $response; ?></label></p>
+    <?php } ?>
     <form method="post">
         <div class="row col-md-12">
             <div class="col-md-3 text-left mt-4">
@@ -135,9 +138,7 @@ if (isset($_POST['register'])) {
             <div class="col-md-3 text-left mt-4">
                 <input type="submit" class="btn btn-primary submit-fs btn-custom"
                        value="<?php echo $lng['users']['register']; ?>" name="register">
-                <?php if ($response != "") { ?>
-                    <p><label class="control-label mt-3"><?php echo $response; ?></label></p>
-                <?php } ?>
+
             </div>
         </div>
         <div class="clearfix"></div>
