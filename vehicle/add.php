@@ -270,7 +270,7 @@ include "../template/header.php";
         <form method="post">
             <div class="row col-md-12">
                 <div class="col-md-1"></div>
-                <div class="col-md-4 text-left mt-1">
+                <div class="col-md-4 mt-1">
                     <label class="control-label"><?php echo $lng['general']['Plate_Number']; ?></label>
                     <div class="only-plate row">
                         <!--<i class="fas fa-list-ol"></i>-->
