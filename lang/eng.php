@@ -79,6 +79,8 @@ $lng['users']['Phone_number'] = 'Phone Number';
 $lng['users']['Username'] = 'Username';
 $lng['users']['Company'] = 'Company';
 $lng['users']['Website'] = 'Webiste';
+$lng['users']['register_mail'] = 'You are registered. you got mail. you have to activate your account.';
+$lng['users']['mail_exists'] = 'Your email address already exists';
 
 
 $lng['listings']['recommend_this'] = 'Share';

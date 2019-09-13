@@ -20,7 +20,7 @@ if (isset($_POST['register'])) {
     $password = md5($_POST['password']);
     $is_useemail = $config->userEmailCheck($email);
     if ($is_useemail) {
-        $response = 'Your email address already exists';
+        $response = $lng['users']['mail_exists'];
     } else {
         $result = $config->register_user($name, $address, $email, $phone, $password);
         if ($result) {
@@ -54,7 +54,7 @@ if (isset($_POST['register'])) {
             $mail2admin->setMessage($msg);
             $is_sendMail = $mail2admin->send();
             if ($is_sendMail) {
-                $response = 'You are registered. you got mail. you have to activate your account.';
+                $response = $lng['users']['register_mail'];
             } else {
                 $response = $mail2send->send_error;
             }

@@ -26,7 +26,7 @@ if (isset($_POST['register'])) {
     $setting = $settingResult->fetch_assoc();
     $is_useemail = $config->dealerEmailCheck($email);
     if($is_useemail){
-        $response = 'Your email address already exists';
+        $response = $lng['users']['mail_exists'];
     }else{
 
         $result = $config->register_dealer($name, $address, $email, $phone, $company, $website, $password);
@@ -63,7 +63,7 @@ if (isset($_POST['register'])) {
         $mail2admin->setMessage($msg);
         $is_sendMail = $mail2admin->send();
         if ($is_sendMail) {
-            $response = 'You are registered. you got mail. you have to activate your account.';
+            $response = $lng['users']['register_mail'];
         } else {
             $response = $mail2send->send_error;
         }
