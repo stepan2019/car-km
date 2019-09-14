@@ -45,7 +45,7 @@ include "header.php";
 <div class="contact-sec dashboard-panel parallax-section">
 
     <div class="container privacy mt-3">
-        <h2>Term and Services</h2>
+        <h2><?php echo $lng['general']['terms_service'];?></h2>
         <div class="row pt-2">
             <div class="col-md-2"></div>
             <div class="col-md-8 privacy-box">

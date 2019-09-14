@@ -46,6 +46,8 @@ $lng['general']['search'] = 'Search';
 $lng['general']['download'] = 'Download';
 $lng['general']['select_crashed_car'] = 'You must select the Car Crashed Status if car has been crashed.';
 $lng['general']['national_information'] = 'National CarPass Information.';
+$lng['general']['privacy_policy'] = 'Privacy Policy Of Carpass';
+$lng['general']['terms_service'] = 'Term and Services';
 
 
 
