@@ -31,7 +31,10 @@ $policy = $result->fetch_assoc();
     <link rel="stylesheet" href="../css/animate.min.css">
     <link rel="stylesheet" href="../css/nivo-lightbox.css">
     <link rel="stylesheet" href="../css/nivo_themes/default/default.css">
-
+    <script>
+        exdate=new Date();
+        exdate.setDate(exdate.getDate() + 365);
+    </script>
     <link rel="stylesheet" href="/css/all.css" crossorigin="anonymous">
 </head>
 <body>
