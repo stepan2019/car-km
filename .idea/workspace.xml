@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cc247929-1d62-4f87-8878-de2e31666a78" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/lang/eng.php" beforeDir="false" afterPath="$PROJECT_DIR$/lang/eng.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/template/privacy.php" beforeDir="false" afterPath="$PROJECT_DIR$/template/privacy.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/template/terms.php" beforeDir="false" afterPath="$PROJECT_DIR$/template/terms.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -61,17 +59,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lang/eng.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="418">
-              <caret line="49" column="30" selection-start-line="49" selection-start-column="17" selection-end-line="49" selection-end-column="30" />
+            <state relative-caret-position="396">
+              <caret line="48" selection-start-line="48" selection-end-line="49" selection-end-column="55" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/setting/config.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="224">
-              <caret line="945" column="52" selection-start-line="945" selection-start-column="52" selection-end-line="945" selection-end-column="52" />
+            <state relative-caret-position="202">
+              <caret line="944" column="5" lean-forward="true" selection-start-line="944" selection-start-column="5" selection-end-line="944" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -79,17 +77,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/template/privacy.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="219">
-              <caret line="46" column="8" lean-forward="true" selection-start-line="46" selection-start-column="8" selection-end-line="46" selection-end-column="64" />
+            <state relative-caret-position="197">
+              <caret line="62" column="5" lean-forward="true" selection-start-line="62" selection-start-column="5" selection-end-line="62" selection-end-column="5" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/template/terms.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="47" column="53" selection-start-line="47" selection-start-column="53" selection-end-line="47" selection-end-column="53" />
+            <state relative-caret-position="396">
+              <caret line="57" lean-forward="true" selection-start-line="57" selection-end-line="57" />
             </state>
           </provider>
         </entry>
@@ -185,9 +183,10 @@
         <option value="$PROJECT_DIR$/admin/home.php" />
         <option value="$PROJECT_DIR$/admin/policy.php" />
         <option value="$PROJECT_DIR$/admin/terms.php" />
-        <option value="$PROJECT_DIR$/template/privacy.php" />
         <option value="$PROJECT_DIR$/lang/eng.php" />
         <option value="$PROJECT_DIR$/template/terms.php" />
+        <option value="$PROJECT_DIR$/template/privacy.php" />
+        <option value="$PROJECT_DIR$/../carpass/setting/config.php" />
       </list>
     </option>
   </component>
@@ -213,7 +212,7 @@
             <path>
               <item name="car-km" type="b2602c69:ProjectViewProjectNode" />
               <item name="car-km" type="462c0819:PsiDirectoryNode" />
-              <item name="lang" type="462c0819:PsiDirectoryNode" />
+              <item name="admin" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="car-km" type="b2602c69:ProjectViewProjectNode" />
@@ -229,10 +228,10 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/admin" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../carpass/setting/config.php" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/template/css/style-rtl.css" />
+    <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/../carpass/setting/config.php" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -267,16 +266,15 @@
       <workItem from="1568276864614" duration="15198000" />
       <workItem from="1568306828506" duration="6341000" />
       <workItem from="1568392296969" duration="1496000" />
-      <workItem from="1568469700212" duration="3510000" />
+      <workItem from="1568469700212" duration="3766000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="82724000" />
+    <option name="totallyTimeSpent" value="82980000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17004265" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -592,13 +590,6 @@
     <entry file="file://$PROJECT_DIR$/admin/about.php">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/setting/config.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="224">
-          <caret line="945" column="52" selection-start-line="945" selection-start-column="52" selection-end-line="945" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/policy.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="836">
@@ -627,24 +618,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/template/terms.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="57" lean-forward="true" selection-start-line="57" selection-end-line="57" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/template/privacy.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="219">
-          <caret line="46" column="8" lean-forward="true" selection-start-line="46" selection-start-column="8" selection-end-line="46" selection-end-column="64" />
+        <state relative-caret-position="197">
+          <caret line="62" column="5" lean-forward="true" selection-start-line="62" selection-start-column="5" selection-end-line="62" selection-end-column="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lang/eng.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="49" column="30" selection-start-line="49" selection-start-column="17" selection-end-line="49" selection-end-column="30" />
+        <state relative-caret-position="396">
+          <caret line="48" selection-start-line="48" selection-end-line="49" selection-end-column="55" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/template/terms.php">
+    <entry file="file://$PROJECT_DIR$/setting/config.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="47" column="53" selection-start-line="47" selection-start-column="53" selection-end-line="47" selection-end-column="53" />
+        <state relative-caret-position="202">
+          <caret line="944" column="5" lean-forward="true" selection-start-line="944" selection-start-column="5" selection-end-line="944" selection-end-column="5" />
         </state>
       </provider>
     </entry>
