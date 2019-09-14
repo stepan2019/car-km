@@ -112,7 +112,7 @@ jQuery(document).ready(function($){
       $('.dashboard-panel').css('height', $(window).height());
     });
   };
-  fullHeight();
+  // fullHeight();
 
 });
 

@@ -42,7 +42,7 @@ $terms = $result->fetch_assoc();
 include "header.php";
 ?>
 
-<div class="contact-sec dashboard-panel parallax-section">
+<div class="contact-sec dashboard-panel parallax-section" style="height:auto!important;">
 
     <div class="container privacy mt-3">
         <h2><?php echo $lng['general']['terms_service'];?></h2>
