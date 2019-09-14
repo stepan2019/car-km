@@ -1,7 +1,7 @@
 <?php
 $response = "";
 
-
+include "../include/include.php";
 global $lng;
 global $crt_lang_code;
 if (isset($_GET['lang_id'])) {
