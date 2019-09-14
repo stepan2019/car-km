@@ -927,6 +927,32 @@ class Car
         $result = $this->connectdb->query($query);
         return $result;
     }
+    public
+    function add_terms_content($content, $lang_id)
+    {
+        $getcontent = $this->getTermsContentByCode($lang_id);
+
+        $query = "insert into terms(content, lang_id) values('$content', '$lang_id')";
+        if ($getcontent->num_rows) {
+            $query = "update terms set `content` = '$content', `lang_id` = '$lang_id' where `lang_id`= '$lang_id'";
+        }
+
+        $result = $this->connectdb->query($query);
+        return $result;
+    }
+    public
+    function add_poiicy_content($content, $lang_id)
+    {
+        $getcontent = $this->getPolicyContentByCode($lang_id);
+
+        $query = "insert into policy(content, lang_id) values('$content', '$lang_id')";
+        if ($getcontent->num_rows) {
+            $query = "update policy set `content` = '$content', `lang_id` = '$lang_id' where `lang_id`= '$lang_id'";
+        }
+
+        $result = $this->connectdb->query($query);
+        return $result;
+    }
 
     public
     function getAboutContent()
@@ -940,6 +966,20 @@ class Car
     function getAboutContentByCode($lang_id)
     {
         $query = "select * from about where lang_id='" . $lang_id . "'  order by id DESC LIMIT 1";
+        $result = $this->connectdb->query($query);
+        return $result;
+    }
+    public
+    function getTermsContentByCode($lang_id)
+    {
+        $query = "select * from terms where lang_id='" . $lang_id . "'  order by id DESC LIMIT 1";
+        $result = $this->connectdb->query($query);
+        return $result;
+    }
+    public
+    function getPolicyContentByCode($lang_id)
+    {
+        $query = "select * from policy where lang_id='" . $lang_id . "'  order by id DESC LIMIT 1";
         $result = $this->connectdb->query($query);
         return $result;
     }

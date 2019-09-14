@@ -93,6 +93,8 @@
 							<li><a class="nav-link" href="home.php?query=mails_settings">E-mail option</a></li>
 							<li><a class="nav-link" href="home.php?query=send-mail">Send news mail</a></li>
                             <li><a class="nav-link" href="home.php?query=information">Information</a></li>
+                            <li><a class="nav-link" href="home.php?query=terms">Terms and Service</a></li>
+                            <li><a class="nav-link" href="home.php?query=policy">Privacy Policy</a></li>
                             <li><a class="nav-link" href="home.php?query=db_tools">Backup</a></li>
                         </ul>
                     </li>
