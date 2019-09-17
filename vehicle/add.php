@@ -58,6 +58,7 @@ if (isset($_POST['add_car'])) {
     $plate = $_POST['plate'] . '/' . $after_fix;
     $pre_fix = $_POST['plate'];
     $vin = $_POST['vin'];
+//    print_r($_POST);exit;
 
     if (isset($_POST['make']) && isset($_POST['model']) && isset($_POST['year']) && isset($_POST['crash'])) {
         $make = $_POST['make'];
@@ -119,7 +120,7 @@ if (isset($_POST['add_car'])) {
                 <script src="../js/jquery.min.js"></script>
                 <script>
                     $(function () {
-                        $('#pdf_form > input').val("<?php echo $vin; ?>");
+                        //$('#pdf_form > input').val("<?php //echo $vin; ?>//");
                         $("#historyPDF").modal();
                         $('#paySubBtn').click(function (e) {
                             e.preventDefault();
